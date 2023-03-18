@@ -2,6 +2,10 @@
 # @ Author KeShiFu
 # @ Date 2023/03/17
 # @ Time 23:13
+from Lib.Util import Util
+
+key = ["Z", "X", "C", "V", "B", "N", "M", "A", "S", "D", "F", "G", "H", "J", "Q", "W", "E", "R", "T", "Y", "U"]
+
 
 class MusicScore:
     """
@@ -21,7 +25,57 @@ class MusicScore:
         :param time: 刻师傅时间参数
         :return: 呱呱格式，呱呱时间参数
         """
-        pass
+        data_tmp = data.upper().replace("\n", "")
+        data_end = ""
+        for i in data_tmp:
+            if i in ["/", "(", ")", " "] or i in key:
+                data_end += i
+        data_tmp = data_end
+        arr_tmp = data_tmp.split("/")
+        # 将每拍放入数组
+        arr = []
+        for i in arr_tmp:
+            if len(i) > 0:
+                arr.append(i)
+        arr_data = []
+        tmp = ""
+        tmp_bracket = False  # 记录是否在括号内
+        length_max = 1  # 记录每拍最多音个数
+        for i in arr:
+            arr_tmp.clear()
+            for j in range(len(i)):
+                if tmp_bracket:
+                    tmp += i[j]
+                    if i[j + 1] == ")":
+                        tmp_bracket = False
+                        arr_tmp.append(tmp)
+                        tmp = ""
+                else:
+                    a = i[j]
+                    if i[j] in key or i[j] == " ":
+                        arr_tmp.append(i[j])
+                    elif i[j] == "(":
+                        tmp_bracket = True
+            length_max = Util.lcm(length_max, len(arr_tmp))
+            arr_data.append(arr_tmp.copy())
+        time0 = int((time * 1000) / length_max)
+        arr.clear()
+        for i in arr_data:
+            tmp = ""
+            num = length_max / len(i)  # 每个单元后面的等号个数
+            for j in i:
+                tmp += j + "=" * int(num)
+            arr.append(tmp.replace(" ", "").replace("====", "+").replace("==", "-"))
+        data_end = ""
+        for i in range(len(arr)):
+            data_end += arr[i]
+            if (i + 1) % 4 == 0:
+                data_end += "\n"
+        # 处理后面
+        data_end += (4 - (len(arr) % 4)) * "+"
+        if data_end[-5:] == "\n++++":
+            data_end = data_end[:-5]
+        return data_end, time0
 
     @staticmethod
     def yiToGua(data, time):
@@ -33,6 +87,11 @@ class MusicScore:
         """
 
         data_init = data.upper().replace("\n", "")
+        data_end = ""
+        for i in data_init:
+            if i in ["=", "(", ")", " "] or i in key:
+                data_end += i
+        data_init = data_end
         data_tmp = ''
         tmp = False  # 记录位置是否在括号内
         # 全部转为等号
@@ -72,6 +131,8 @@ class MusicScore:
                 data_end += "\n"
         # 处理后面
         data_end += (4 - (len(arr) % 4)) * "+"
+        if data_end[-5:] == "\n++++":
+            data_end = data_end[:-5]
         return data_end, time
 
     @staticmethod
@@ -82,58 +143,63 @@ class MusicScore:
         :param time: 呱呱时间参数
         :return: 刻师傅格式，刻师傅时间参数
         """
-        date_tmp = data.upper().replace(" ", "").replace("\n", "")
+        data_tmp = data.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
         data_end = ""
-        # 将所有符号变为=
-        for i in date_tmp:
-            if i == "+":
-                data_end += "===="
-            elif i == "-":
-                data_end += "=="
-            elif i == "=":
-                data_end += "="
-            elif i.encode('UTF-8').isalpha():
+        for i in data_tmp:
+            if i == "=" or i in key:
                 data_end += i
-        tmp01 = 0  # 记录每个音
-        tmp02 = 0  # 记录每节
-        date02 = "("
-        for i in range(len(data_end)):
-            if data_end[i] == "=":
-                if data_end[i - 1].isalpha():
-                    date02 += ")"
-                tmp01 += 1
-                if tmp01 == 4:
-                    tmp02 += 1
-                    date02 += " /"
-                if tmp02 == 4:
-                    date02 += "\n"
-                try:
-                    if data_end[i + 1].isalpha():
-                        date02 += "("
-                except IndexError:
-                    pass
-                tmp01 %= 4
-                tmp02 %= 4
-            else:
-                date02 += data_end[i]
-
-        # 去括号后面加斜杠
+        data_tmp = data_end
+        # 去掉前面和后面的=
+        while data_tmp[-1] == "=":
+            data_tmp = data_tmp[:-1]
+        while data_tmp[0] == "=":
+            data_tmp = data_tmp[1:]
+        # 补充后面=
+        data_tmp += (4 - (data_tmp.count("=") % 4)) * "="
+        arr = []
+        tmp_num = 0
+        tmp_str = ""
+        for i in data_tmp:
+            tmp_str += i
+            if i == "=":
+                tmp_num += 1
+            if tmp_num == 4:
+                arr.append(tmp_str)
+                tmp_str = ""
+                tmp_num = 0
+        tmp_bracket = False  # 记录是否在括号内
+        for i in range(len(arr)):
+            tmp = ""
+            for j in range(len(arr[i])):
+                if arr[i][j] == "=":
+                    if j == 0:
+                        tmp += " "
+                    elif arr[i][j - 1] == "=":
+                        tmp += " "
+                    elif arr[i][j - 1] in key:
+                        pass
+                elif arr[i][j] in key:
+                    if tmp_bracket:
+                        tmp += arr[i][j]
+                        if arr[i][j + 1] == "=":
+                            tmp += ")"
+                            tmp_bracket = False
+                    elif arr[i][j + 1] in key:
+                        tmp += "(" + arr[i][j]
+                        tmp_bracket = True
+                    else:
+                        tmp += arr[i][j]
+            arr[i] = tmp + "/"
         data_end = ""
-        i = 0
-        while i < len(date02):
-            try:
-                if date02[i] == "(" and date02[i + 2] == ")":
-                    data_end += date02[i + 1]
-                    i += 3
-                else:
-                    data_end += date02[i]
-                    i += 1
-            except IndexError:
-                data_end += date02[i]
-                i += 1
-        if data_end[-1].isalpha():
-            data_end += "/" * (4 - tmp02)
-        return data_end, 0.6
+        for i in range(len(arr)):
+            data_end += arr[i]
+            if (i + 1) % 4 == 0:
+                data_end += "\n"
+        # 后面处理
+        data_end += "    /" * (4 - (len(arr) % 4))
+        if data_end[-21:] == "\n    /    /    /    /":
+            data_end = data_end[:-21]
+        return data_end, (time * 4) / 1000
 
     @staticmethod
     def GuaToYi(data, time):
@@ -144,10 +210,14 @@ class MusicScore:
         :return: 伊蕾娜格式，伊蕾娜时间参数
         """
         data_tmp = data.replace("+", "====").replace("-", "==").replace("\n", "").upper()
+        data_end = ""
+        for i in data_tmp:
+            if i == "=" or i in key:
+                data_end += i
+        data_tmp = data_end
         # 去掉后面的等号
         while data_tmp[-1] == "=":
             data_tmp = data_tmp[:-1]
-        data_tmp = data.replace("+", "====").replace("-", "==").replace("\n", "")
         # 去掉前面的等号
         while data_tmp[0] == "=":
             data_tmp = data_tmp[1:]
@@ -155,9 +225,10 @@ class MusicScore:
         tmp = False  # 是否在括号内
         for i in range(len(data_tmp)):
             if data_tmp[i] != "=":
-                if data_tmp[i + 1] != "=":
-                    data_end += "("
-                    tmp = True
+                if i < len(data_tmp) - 1:
+                    if data_tmp[i + 1] != "=":
+                        data_end += "("
+                        tmp = True
                 data_end += data_tmp[i]
             if data_tmp[i] == "=" and i > 0:
                 if data_tmp[i - 1] == "=":
@@ -166,3 +237,15 @@ class MusicScore:
                     data_end += ")"
                     tmp = False
         return data_end, time
+
+    @staticmethod
+    def FormatKe(data):
+        """
+        格式换刻师傅琴谱，将以前的空音用空格代替
+        判断传入数据书否存在L，如果存在，则L表示空音，转为空格
+        :param data:格式化前
+        :return:格式化后
+        """
+        if data.count("L") > 0:
+            return data.replace(" ", "").replace("L", " ")
+        return data
