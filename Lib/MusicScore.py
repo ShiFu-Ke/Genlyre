@@ -2,6 +2,7 @@
 # @ Author KeShiFu
 # @ Date 2023/03/17
 # @ Time 23:13
+from re import sub
 from Lib.Util import Util
 
 key = ["Z", "X", "C", "V", "B", "N", "M", "A", "S", "D", "F", "G", "H", "J", "Q", "W", "E", "R", "T", "Y", "U"]
@@ -18,13 +19,13 @@ class MusicScore:
     """
 
     @staticmethod
-    def keToGua(data, time):
+    def keToGua(data):
         """
         刻师傅格式转呱呱格式
         :param data: 刻师傅格式内容
-        :param time: 刻师傅时间参数
         :return: 呱呱格式，呱呱时间参数
         """
+        time = float(data[:data.find("\n")])
         data_tmp = data.upper().replace("\n", "")
         data_end = ""
         for i in data_tmp:
@@ -58,7 +59,6 @@ class MusicScore:
                         tmp_bracket = True
             length_max = Util.lcm(length_max, len(arr_tmp))
             arr_data.append(arr_tmp.copy())
-        time0 = int((time * 1000) / length_max)
         arr.clear()
         for i in arr_data:
             tmp = ""
@@ -75,17 +75,17 @@ class MusicScore:
         data_end += (4 - (len(arr) % 4)) * "+"
         if data_end[-5:] == "\n++++":
             data_end = data_end[:-5]
-        return data_end, time0
+        data_end = str(int((time * 1000) / length_max) / 2) + "\n" + data_end
+        return data_end
 
     @staticmethod
-    def yiToGua(data, time):
+    def yiToGua(data):
         """
         伊蕾娜格式转呱呱格式
         :param data: 伊蕾娜格式内容
-        :param time: 伊蕾娜参数
         :return: 呱呱格式，呱呱时间参数
         """
-
+        time = int(data[:data.find("\n")])
         data_init = data.upper().replace("\n", "")
         data_end = ""
         for i in data_init:
@@ -133,16 +133,17 @@ class MusicScore:
         data_end += (4 - (len(arr) % 4)) * "+"
         if data_end[-5:] == "\n++++":
             data_end = data_end[:-5]
-        return data_end, time
+        data_end = str(time) + "\n" + data_end
+        return data_end
 
     @staticmethod
-    def GuaToke(data, time):
+    def guaToke(data):
         """
         呱呱格式转刻师傅格式
         :param data: 呱呱格式内容
-        :param time: 呱呱时间参数
         :return: 刻师傅格式，刻师傅时间参数
         """
+        time = int(data[:data.find("\n")])
         data_tmp = data.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
         data_end = ""
         for i in data_tmp:
@@ -199,16 +200,17 @@ class MusicScore:
         data_end += "    /" * (4 - (len(arr) % 4))
         if data_end[-21:] == "\n    /    /    /    /":
             data_end = data_end[:-21]
-        return data_end, (time * 4) / 1000
+        data_end = str(((time * 4) / 1000) * 2) + "\n" + data_end
+        return data_end
 
     @staticmethod
-    def GuaToYi(data, time):
+    def guaToYi(data):
         """
         呱呱格式转伊蕾娜格式
         :param data: 呱呱格式内容
-        :param time: 呱呱时间参数
         :return: 伊蕾娜格式，伊蕾娜时间参数
         """
+        time = int(data[:data.find("\n")])
         data_tmp = data.replace("+", "====").replace("-", "==").replace("\n", "").upper()
         data_end = ""
         for i in data_tmp:
@@ -225,7 +227,9 @@ class MusicScore:
         tmp = False  # 是否在括号内
         for i in range(len(data_tmp)):
             if data_tmp[i] != "=":
-                if i < len(data_tmp) - 1:
+                if tmp:
+                    pass
+                elif i < len(data_tmp) - 1:
                     if data_tmp[i + 1] != "=":
                         data_end += "("
                         tmp = True
@@ -236,10 +240,87 @@ class MusicScore:
                 if tmp:
                     data_end += ")"
                     tmp = False
-        return data_end, time
+        if data_end.rfind("(") > data_end.rfind(")"):
+            data_end += ")"
+        data_end = str(time) + "\n" + data_end
+        return data_end
 
     @staticmethod
-    def FormatKe(data):
+    def isKe(data):
+        """
+        刻师傅琴谱格式测试
+        :param data:琴谱内容
+        :return: 格式正确返回True，否则返回False；提示信息
+        """
+        try:
+            float(data[:data.find("\n")])
+            data_tmp = data[:data.find("\n")]
+            if "." not in data_tmp:
+                return False, "首行必须是小数，整数请加\".0\"（如：1.0）！"
+            tmp = 0
+            for i in data.upper():
+                if i in key:
+                    tmp = 1
+                    break
+            if tmp == 0:
+                return False, "琴谱内容为空！"
+            tmp = 0
+            hang = 1  # 行位置
+            lie = 1  # 列位置
+            try:
+                for i in data:
+                    lie += 1
+                    if i == "\n":
+                        hang += 1
+                        lie = 0
+                    if i == "(":
+                        tmp += 1
+                    elif i == ")":
+                        tmp -= 1
+                    if tmp not in [0, 1]:
+                        return False, "第" + str(hang) + "行，第" + str(lie) + "列存在不匹配的括号！"
+            except IndexError:
+                return False, "存在不匹配的括号！"
+            if tmp != 0:
+                return False, "第" + str(hang) + "行，第" + str(lie) + "列存在不匹配的括号！"
+            return True, "文件格式正确！"
+        except Exception:
+            return False, "首行必须是数字(必须小数，如：1.0)！"
+
+    @staticmethod
+    def isGua(data):
+        """
+        呱呱琴谱格式测试
+        :param data: 琴谱内容
+        :return: 格式正确返回True，否则返回False；提示信息
+        """
+        try:
+            int(data[:data.find("\n")])
+        except Exception:
+            return False, "首行必须是数字！"
+        for i in data.upper():
+            if i in key:
+                return True, "格式正确！"
+        return False, "琴谱内容为空！"
+
+    @staticmethod
+    def isYi(data):
+        """
+        伊蕾娜琴谱格式测试
+        :param data: 琴谱内容
+        :return: 格式正确返回True，否则返回False；提示信息
+        """
+        try:
+            int(data[:data.find("\n")])
+        except Exception:
+            return False, "首行必须是数字！"
+        for i in data.upper():
+            if i in key:
+                return True, "格式正确！"
+        return False, "琴谱内容为空！"
+
+    @staticmethod
+    def formatKe(data):
         """
         格式换刻师傅琴谱，将以前的空音用空格代替
         判断传入数据书否存在L，如果存在，则L表示空音，转为空格
@@ -248,4 +329,63 @@ class MusicScore:
         """
         if data.count("L") > 0:
             return data.replace(" ", "").replace("L", " ")
+        return data
+
+    @staticmethod
+    def fwToLj(data):
+        """
+        风物之诗琴谱转老旧的诗琴谱
+        :param data: 琴谱按键
+        :return: 转换后按键
+        """
+        data01 = "ZXCVBNMASDFGHJQWERTYU"
+        data02 = "AZXCVBNMASDFGHJQSERTH"
+        out = ""
+        for j in data:
+            if j in data01:
+                out += data02[data01.find(j)]
+            else:
+                out += j
+        out = sub("MM", "M", out)
+        out = sub("SS", "S", out)
+        out = sub("HH", "H", out)
+        return out
+
+    @staticmethod
+    def nuToJp(number):
+        """
+        数字转键盘
+        :param number: 数字格式的琴谱
+        :return: 键盘格式的琴谱
+        """
+        # 加第一行数字
+        data = number.split("\n")[0] + "\n"
+        number = number[number.find("\n") + 1:]
+        key_up = 'QWERTYU'
+        key_mid = 'ASDFGHJ'
+        key_down = 'ZXCVBNM'
+        i = 0
+        length = len(number)
+        while i < length:
+            try:
+                if 1 <= int(number[i]) <= 7:
+                    data += key_mid[int(number[i]) - 1]
+                    i += 1
+                    continue
+            except ValueError:
+                pass
+            if number[i] == '+' and number[i + 1].isalnum():
+                data += key_up[int(number[i + 1]) - 1]
+                i += 2
+                continue
+            if number[i] == '-' and number[i + 1].isalnum():
+                data += key_down[int(number[i + 1]) - 1]
+                i += 2
+                continue
+            if number[i] == '0':
+                data += "L"
+                i += 1
+                continue
+            data += number[i]
+            i += 1
         return data

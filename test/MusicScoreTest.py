@@ -4,16 +4,22 @@
 # @ Time 23:54
 from Lib.MusicScore import MusicScore
 
-# text_yi = "as (fe) f rv cdv (cd) dfgv l"
-# print("yi->gua:\n" + MusicScore.yiToGua(text_yi, 100)[0])
-# text_gua = """
-# A=S-FE==F-R=V-C=D=V-CD-
-# D=F=G=V==La-=+ad=bnh=
+# text_yi = """100
+# as (fe) f rv cdv (cd) dfgv l
 # """
-# print("gua->ke:\n" + str(MusicScore.GuaToke(text_gua, 121)[0]))
-text_ke = """AS (FE)/FR/V CD/V (CD) /
-DFGV/ A  /    /(AD)(BNH)  /"""
-time = 0.456
-arr = MusicScore.keToGua(text_ke, time)
-print("转换前：\n" + text_ke + "\n速度：" + str(time) + "\n\n转换后：\n" + arr[0] + "\n速度：" + str(arr[1]))
-print(MusicScore.FormatKe("L A S"))
+# print("yi->gua:\n" + MusicScore.yiToGua(text_yi))
+# text_gua = """100
+# A=S-FE==F-R=V-C=D=V-CD-
+# D=F=G=V==La-=+ad=b===
+# """
+# print("gua->ke:\n" + str(MusicScore.guaToke(text_gua)))
+# print("gua->yi:\n" + str(MusicScore.guaToYi(text_gua)))
+# text_ke = """0.6
+# AS (FE)/FR/V CD/V (CD) /
+# DFGV/ A  /    /(AD)(BNH)  /"""
+# print("转换前：\n" + text_ke + "\n\n转换后：\n" + MusicScore.keToGua(text_ke))
+# print(MusicScore.formatKe("L A S"))
+text_ke01 = """1
+vbng()jkiunhj
+()("""
+print(MusicScore.isGua(text_ke01)[1])
