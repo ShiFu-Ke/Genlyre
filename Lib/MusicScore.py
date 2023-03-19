@@ -52,7 +52,6 @@ class MusicScore:
                         arr_tmp.append(tmp)
                         tmp = ""
                 else:
-                    a = i[j]
                     if i[j] in key or i[j] == " ":
                         arr_tmp.append(i[j])
                     elif i[j] == "(":
