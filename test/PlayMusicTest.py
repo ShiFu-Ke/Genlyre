@@ -3,7 +3,7 @@
 # @ Date 2023/03/19
 # @ Time 21:16
 
-from Lib.Play import Play
+from Lib.PlayMusic import PlayMusic
 from time import sleep
 from Lib.MusicScore import MusicScore
 
@@ -264,11 +264,11 @@ text = MusicScore.guaToke(test_gua)  # 测试呱呱谱
 for i in range(1):
     sleep(3)
     print("\n第{}次测试".format(i + 1))
-    play = Play()
-    play.start(text, 1)  # 开始
+    playMusic = PlayMusic()
+    playMusic.start(text, 1)  # 开始
     sleep(10)
-    play.suspend_continue()  # 暂停
+    playMusic.suspend_continue()  # 暂停
     sleep(3)
-    play.suspend_continue()  # 继续
+    playMusic.suspend_continue()  # 继续
     sleep(10)
-    play.finish()  # 结束
+    playMusic.finish()  # 结束

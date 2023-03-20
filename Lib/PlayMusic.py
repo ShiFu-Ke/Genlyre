@@ -12,7 +12,7 @@ from Lib.MusicScore import MusicScore
 from Lib.Util import Util
 
 
-class Play:
+class PlayMusic:
     """
     弹琴逻辑
     """
@@ -88,7 +88,7 @@ class Play:
         :param key:按键值
         """
         key = key.upper()
-        vk_code = Play.key_map[key]
+        vk_code = PlayMusic.key_map[key]
         keybd_event(vk_code, MapVirtualKey(vk_code, 0), 0, 0)
 
     @staticmethod
@@ -98,7 +98,7 @@ class Play:
         :param key: 按键值
         """
         key = key.upper()
-        vk_code = Play.key_map[key]
+        vk_code = PlayMusic.key_map[key]
         keybd_event(vk_code, MapVirtualKey(vk_code, 0), KEYEVENTF_KEYUP, 0)
 
     @staticmethod
@@ -110,9 +110,9 @@ class Play:
         if key in ["L", "l"]:
             sleep(0.01)
             return
-        Play.key_down(key)
+        PlayMusic.key_down(key)
         sleep(0.01)
-        Play.key_up(key)
+        PlayMusic.key_up(key)
 
     @staticmethod
     def play_note(t, note, time_div, time_div_div, time_interval):
@@ -136,9 +136,9 @@ class Play:
                         j += 1
                         break
                     else:
-                        Play.key_press(note[j])
+                        PlayMusic.key_press(note[j])
             elif note[j].isalpha():
-                Play.key_press(note[j])
+                PlayMusic.key_press(note[j])
                 sleep(play_time)
                 j += 1
             elif note[j] == '1':
@@ -184,8 +184,8 @@ class Play:
             Notes = x.split()
             time_div = len(Notes)
             for y in Notes:
-                time_div_div = Play.count_note(y)
-                Play.play_note(t, y, time_div, time_div_div, time_interval)
+                time_div_div = PlayMusic.count_note(y)
+                PlayMusic.play_note(t, y, time_div, time_div_div, time_interval)
 
     @staticmethod
     def play(t, data_play, lyre):
@@ -200,7 +200,7 @@ class Play:
             print("老旧")
             data_play = MusicScore.fwToLj(data_play)
         while True:
-            Play.play_music(t, data_play[data_play.find("\n") + 1:].replace("\n", ""), tt)
+            PlayMusic.play_music(t, data_play[data_play.find("\n") + 1:].replace("\n", ""), tt)
             break
 
 
@@ -248,7 +248,7 @@ class MyThread(Thread):
             for i in self.arr:
                 if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
                     i += "L"
-                Play.play(self, i, self.lyre)
+                PlayMusic.play(self, i, self.lyre)
             print("演奏完成")
         except Exception:
             if not self.ready:
