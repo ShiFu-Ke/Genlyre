@@ -9,7 +9,7 @@ from win32api import keybd_event, MapVirtualKey
 from win32con import KEYEVENTF_KEYUP
 
 from Lib.MusicScore import MusicScore
-from Lib.Util import Util
+from util.Util import Util
 
 
 class PlayMusic:
@@ -26,13 +26,23 @@ class PlayMusic:
     def __init__(self):
         self.t = None
 
-    def start(self, data, lyre):
+    def start(self, filePath, scoreType, lyre):
         """
         开始弹琴
         调用此方法自动创建守护进程进行演奏
-        :param data:琴谱数据
+        :param filePath: 琴谱文件路径
+        :param scoreType: 琴谱格式；1：刻师傅，2：呱呱，3：伊蕾娜
         :param lyre: 1.风物；2.老旧
         """
+        file = open(filePath, encoding='utf-8')
+        data = file.read()
+        file.close()
+        if scoreType == 1:
+            pass
+        elif scoreType == 2:
+            data = MusicScore.guaToke(data)
+        elif scoreType == 3:
+            data = MusicScore.guaToke(MusicScore.yiToGua(data))
         data.replace(" ", "L")
         self.t = MyThread()
         self.t.setDaemon(True)

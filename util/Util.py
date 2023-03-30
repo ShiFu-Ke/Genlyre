@@ -4,12 +4,46 @@
 # @ Time 22:24
 from inspect import isclass
 from ctypes import pythonapi, c_long, py_object
+from os import path, system
 
 
 class Util:
     """
     工具类
     """
+
+    @staticmethod
+    def init():
+        """
+        软件启动时调用
+        """
+        # 判断是否存在默认键盘映射文件，不存在就创建
+        testMap = """Numpad1::A
+Numpad2::S
+Numpad3::D
+Numpad4::F
+Numpad5::G
+Numpad6::H
+Numpad7::J
+Numpad8::Q
+Numpad9::W
+NumpadAdd::E
+NumLock::R
+NumpadDiv::T
+NumpadMult::Y
+NumpadSub::U"""
+        if not path.exists("..\\keyMap\\default.ahk"):
+            file = open("..\\keyMap\\default.ahk", 'w', encoding="UTF-8")
+            file.write(testMap)
+            file.close()
+
+    @staticmethod
+    def stop():
+        """
+        软件关闭是调用
+        """
+        # 再次关闭映射插件，防止中途异常没有正确关闭
+        system("TASKKILL /IM KeyboardMapping.exe /F")
 
     @staticmethod
     def lcm(a, b):

@@ -7,6 +7,6 @@ from time import sleep
 from Lib.KeyboardMapping import KeyboardMapping
 
 keyboardMapping = KeyboardMapping()  # 创建对象
-keyboardMapping.start("text")  # 调用开启键盘映射成员方法
-sleep(10)
+keyboardMapping.start("default")  # 调用开启键盘映射成员方法
+sleep(20)
 keyboardMapping.stop()  # 调用结束映射成员方法

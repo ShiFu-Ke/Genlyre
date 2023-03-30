@@ -1,0 +1,7 @@
+PyQt5-Frameless-Window
+darkdetect
+colorthief
+scipy
+pillow
+sphinx-markdown-tables==0.0.17
+sphinx-rtd-theme==1.1.1

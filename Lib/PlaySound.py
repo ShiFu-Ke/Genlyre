@@ -18,6 +18,7 @@ class PlaySound:
         t.daemon = True
         t.start()
         self.state = True
+        self.lyre = 1
 
     def on_key_event(self):
         """
@@ -26,23 +27,26 @@ class PlaySound:
         hook(self.callback)
         wait()
 
-    @staticmethod
-    def play_key(key: str):
+    def play_key(self, key: str):
         """
         发声音一次
         :param key: 键位
         :return:
         """
-        playsound("..\\sound\\" + key + ".mp3")
+        if self.lyre == 1:
+            playsound("..\\sound\\FengWu\\" + key + ".mp3")
+        elif self.lyre == 2:
+            playsound("..\\sound\\LaoJiu\\" + key + ".mp3")
+        elif self.lyre == 3:
+            playsound("..\\sound\\JingHua\\" + key + ".mp3")
 
-    @staticmethod
-    def play_sound(key: str):
+    def play_sound(self, key: str):
         """
         自动创建放声音的线程
         :param key: 键位
         :return:
         """
-        t = Thread(target=PlaySound.play_key, args=key)
+        t = Thread(target=self.play_key, args=key)
         t.daemon = True
         t.start()
 
@@ -56,8 +60,8 @@ class PlaySound:
             return
         event.name = event.name[0].upper() + event.name[1:]
         if event.event_type == 'down' and event.name in PlaySound.keyList:
-            print(event.name, ' is down')
-            PlaySound.play_sound(event.name)
+            # print("[" + event.name + "]", end=",")
+            self.play_sound(event.name)
 
     def start(self):
         """
@@ -70,3 +74,10 @@ class PlaySound:
         关闭琴
         """
         self.state = False
+
+    def setLyre(self, lyre: int):
+        """
+        设置琴的类型
+        :param lyre: 琴的类型；1：风物、2：老旧、3：镜花
+        """
+        self.lyre = lyre

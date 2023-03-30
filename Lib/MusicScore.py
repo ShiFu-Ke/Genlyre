@@ -3,7 +3,7 @@
 # @ Date 2023/03/17
 # @ Time 23:13
 from re import sub
-from Lib.Util import Util
+from util.Util import Util
 
 key = ["Z", "X", "C", "V", "B", "N", "M", "A", "S", "D", "F", "G", "H", "J", "Q", "W", "E", "R", "T", "Y", "U"]
 
