@@ -8,6 +8,7 @@ import yaml
 class ConfigUtil:
     """
     配置文件操作
+    pyyaml==1.13
     """
 
     @staticmethod
@@ -20,19 +21,19 @@ class ConfigUtil:
         :return: 键值对或对应的值
         """
         try:
-            file = open("..\\config.yaml", "r", encoding="utf-8")
+            file = open("data/config.yaml", "r", encoding="utf-8")
             data = yaml.load(file.read())
             file.close()
-        except Exception:
-            return None
-        if key01 is None:
-            return data
-        if key02 is None:
-            return data.get(key01)
-        if key03 is None:
-            return data.get(key01).get(key02)
-        else:
-            return data.get(key01).get(key02).get(key03)
+            if key01 is None:
+                return data
+            if key02 is None:
+                return data.get(key01)
+            if key03 is None:
+                return data.get(key01).get(key02)
+            else:
+                return data.get(key01).get(key02).get(key03)
+        except Exception as e:
+            return "None"
 
     @staticmethod
     def wYaml(data, key01=None, key02=None, key03=None):
@@ -45,6 +46,7 @@ class ConfigUtil:
         :return:
         """
         tmp = ConfigUtil.rYaml()
+        cfg = {}
         if key01 is None:
             tmp = data
         elif key02 is None:
@@ -53,10 +55,5 @@ class ConfigUtil:
             tmp[key01][key02] = data
         else:
             tmp[key01][key02][key03] = data
-        with open("..\\config.yaml", "w", encoding="utf-8") as f:
+        with open("data/config.yaml", "w", encoding="utf-8") as f:
             yaml.dump(tmp, f)
-        print(tmp)
-
-
-print(ConfigUtil.rYaml("a"))
-ConfigUtil.wYaml({"a": 1, "b": [1, 2, 3]})

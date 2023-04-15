@@ -4,10 +4,8 @@ import sys
 
 from PyQt5.QtCore import Qt, QLocale, QTranslator
 from PyQt5.QtWidgets import QApplication
-
 from app.common.config import cfg, Language
 from app.view.main_window import MainWindow
-
 
 # enable dpi scale
 if cfg.get(cfg.dpiScale) == "Auto":

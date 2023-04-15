@@ -34,6 +34,7 @@ class ScrollArea(QScrollArea):
     def wheelEvent(self, e):
         self.smoothScroll.wheelEvent(e)
 
+
 class SmoothScrollBar(QScrollBar):
     """ Smooth scroll bar """
 

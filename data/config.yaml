@@ -1,0 +1,4 @@
+autoPlay:
+  key: {begin: F2, cease: F9, pauseResume: F4}
+  songList:
+  - ["D:/\u684C\u9762/We Will Rock You\uFF08\u811A\u672C\u7434\u8C31\uFF09.txt", 1]

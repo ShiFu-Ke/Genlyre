@@ -19,7 +19,5 @@ from Lib.MusicScore import MusicScore
 # DFGV/ A  /    /(AD)(BNH)  /"""
 # print("转换前：\n" + text_ke + "\n\n转换后：\n" + MusicScore.keToGua(text_ke))
 # print(MusicScore.formatKe("L A S"))
-text_ke01 = """1
-vbng()jkiunhj
-()("""
-print(MusicScore.isGua(text_ke01)[1])
+
+print(MusicScore.isKe("D:\\桌面\\1.txt")[1])

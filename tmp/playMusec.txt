@@ -1,0 +1,101 @@
+    @staticmethod
+    def count_note(note):
+        """
+        为连接的音符数计数
+        :param note: 相连的音符（中间无空格） 字符串类型
+        """
+        j = 0
+        count = 0
+        while j < len(note):
+            if note[j] == '(':
+                count += 1
+                while 1:
+                    j += 1
+                    if note[j] == ')':
+                        j += 1
+                        break
+            else:
+                count += 1
+                j += 1
+        return count
+
+    @staticmethod
+    def play_music(t, music, time_interval):
+        """
+        播放曲谱
+        :param t: 线程
+        :param music: 曲谱 字符串类型
+        :param time_interval: 单个小节的时值
+        """
+        music_section = music.split("/")
+        for j in range(len(music_section)):
+            if music_section[j][-2:] == " ":
+                music_section[j] += '1'
+        for x in music_section:
+            Notes = x.split()
+            time_div = len(Notes)
+            for y in Notes:
+                time_div_div = PlayMusic.count_note(y)
+                PlayMusic.play_note(t, y, time_div, time_div_div, time_interval)
+
+    @staticmethod
+    def play(t, data_play, lyre):
+        """
+        弹琴
+        :param t: 线程
+        :param data_play: 琴键
+        :param lyre: 1.风物；2.老旧
+        """
+        tt = float(data_play.split("\n")[0])
+        if lyre == 2:
+            print("老旧")
+            data_play = MusicScore.fwToLj(data_play)
+        while True:
+            PlayMusic.play_music(t, data_play[data_play.find("\n") + 1:].replace("\n", ""), tt)
+            break
+
+    @staticmethod
+    def key_press(key):
+        """
+        点击按键（按下并抬起）
+        :param key: 按键值
+        """
+        if key in ["L", "l"]:
+            # sleep(0.01)
+            return
+        PlayMusic.key_down(key)
+        # sleep(0.01)
+        PlayMusic.key_up(key)
+
+    @staticmethod
+    def play_note(t, note, time_div, time_div_div, time_interval):
+        """
+        播放连接的音符
+        :param t: 线程
+        :param note: 相连的音符（中间无空格） 字符串类型
+        :param time_div: 音符时值一次分割
+        :param time_div_div: 音符时值二次分割
+        :param time_interval: 单个小节的时值
+        """
+        play_time = time_interval / time_div / time_div_div
+        j = 0
+        while j < len(note):
+            t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+            if note[j] == '(':
+                while 1:
+                    j += 1
+                    if note[j] == ')':
+                        sleep(play_time)
+                        j += 1
+                        break
+                    else:
+                        PlayMusic.key_press(note[j])
+            elif note[j].isalpha():
+                PlayMusic.key_press(note[j])
+                sleep(play_time)
+                j += 1
+            elif note[j] == '1':
+                sleep(play_time)
+                j += 1
+            else:
+                j += 1

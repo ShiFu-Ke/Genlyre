@@ -4,11 +4,14 @@ from PyQt5.QtCore import Qt, pyqtSignal, QEasingCurve
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFrame, QWidget
 
+from Lib.PlaySound import PlaySound
 from qfluentwidgets import (NavigationInterface, NavigationItemPostion, MessageBox,
                             isDarkTheme, PopUpAniStackedWidget)
 from qfluentwidgets import FluentIcon as FIF
 from qframelesswindow import FramelessWindow
 
+from .score_conversion_interface import ScoreConversionInterface
+from .autoPlay_interface import AutoPlayInterface
 from .title_bar import CustomTitleBar
 from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
@@ -34,7 +37,7 @@ class StackedWidget(QFrame):
         super().__init__(parent=parent)
         self.hBoxLayout = QHBoxLayout(self)
         self.view = PopUpAniStackedWidget(self)
-
+        playSound = PlaySound()
         self.hBoxLayout.setContentsMargins(0, 0, 0, 0)
         self.hBoxLayout.addWidget(self.view)
 
@@ -78,6 +81,8 @@ class MainWindow(FramelessWindow):
         self.scrollInterface = ScrollInterface(self)
         self.statusInfoInterface = StatusInfoInterface(self)
         self.settingInterface = SettingInterface(self)
+        self.autoPlayInterface = AutoPlayInterface(self)
+        self.scoreConversionInterface = ScoreConversionInterface(self)
 
         self.stackWidget.addWidget(self.homeInterface)
         self.stackWidget.addWidget(self.basicInputInterface)
@@ -88,6 +93,8 @@ class MainWindow(FramelessWindow):
         self.stackWidget.addWidget(self.scrollInterface)
         self.stackWidget.addWidget(self.statusInfoInterface)
         self.stackWidget.addWidget(self.settingInterface)
+        self.stackWidget.addWidget(self.autoPlayInterface)
+        self.stackWidget.addWidget(self.scoreConversionInterface)
 
         # initialize layout
         self.initLayout()
@@ -123,6 +130,8 @@ class MainWindow(FramelessWindow):
         self.statusInfoInterface.setObjectName('statusInfoInterface')
         self.scrollInterface.setObjectName('scrollInterface')
         self.settingInterface.setObjectName('settingsInterface')
+        self.autoPlayInterface.setObjectName('autoPlayInterface')
+        self.scoreConversionInterface.setObjectName("scoreConversionInterface")
 
         # add navigation items
         self.navigationInterface.addItem(
@@ -134,8 +143,24 @@ class MainWindow(FramelessWindow):
         self.navigationInterface.addSeparator()
 
         self.navigationInterface.addItem(
+            routeKey=self.autoPlayInterface.objectName(),
+            icon=Icon.AUTO,
+            text=self.tr('Auto play'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.autoPlayInterface, t),
+            position=NavigationItemPostion.SCROLL
+        )
+
+        self.navigationInterface.addItem(
+            routeKey=self.scoreConversionInterface.objectName(),
+            icon=Icon.CONVERSION,
+            text=self.tr('Music score conversion'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.scoreConversionInterface, t),
+            position=NavigationItemPostion.SCROLL
+        )
+
+        self.navigationInterface.addItem(
             routeKey=self.basicInputInterface.objectName(),
-            icon=Icon.CHECKBOX,
+            icon=Icon.BLIBLI,
             text=self.tr('Basic input'),
             onClick=lambda t: self.switchTo(self.basicInputInterface, t),
             position=NavigationItemPostion.SCROLL
@@ -184,12 +209,12 @@ class MainWindow(FramelessWindow):
         )
 
         # add custom widget to bottom
-        self.navigationInterface.addWidget(
-            routeKey='avatar',
-            widget=AvatarWidget('app/resource/images/shoko.png'),
-            onClick=self.showMessageBox,
-            position=NavigationItemPostion.BOTTOM
-        )
+        # self.navigationInterface.addWidget(
+        #     routeKey='avatar',
+        #     widget=AvatarWidget('app/resource/images/shoko.png'),
+        #     onClick=self.showMessageBox,
+        #     position=NavigationItemPostion.BOTTOM
+        # )
 
         self.navigationInterface.addItem(
             routeKey=self.settingInterface.objectName(),
@@ -199,7 +224,7 @@ class MainWindow(FramelessWindow):
             position=NavigationItemPostion.BOTTOM
         )
 
-        #!IMPORTANT: don't forget to set the default route key if you enable the return button
+        # !IMPORTANT: don't forget to set the default route key if you enable the return button
         self.navigationInterface.setDefaultRouteKey(
             self.homeInterface.objectName())
 
@@ -212,13 +237,13 @@ class MainWindow(FramelessWindow):
     def initWindow(self):
         self.resize(960, 780)
         self.setMinimumWidth(580)
-        self.setWindowIcon(QIcon('app/resource/images/logo.png'))
-        self.setWindowTitle('PyQt-Fluent-Widgets')
+        self.setWindowIcon(QIcon('app/resource/images/logo01.png'))
+        self.setWindowTitle('Genlyre')
         self.titleBar.setAttribute(Qt.WA_StyledBackground)
 
         desktop = QApplication.desktop().availableGeometry()
         w, h = desktop.width(), desktop.height()
-        self.move(w//2 - self.width()//2, h//2 - self.height()//2)
+        self.move(w // 2 - self.width() // 2, h // 2 - self.height() // 2)
 
         cfg.themeChanged.connect(self.setQss)
         self.setQss()
@@ -233,12 +258,13 @@ class MainWindow(FramelessWindow):
 
     def resizeEvent(self, e):
         self.titleBar.move(46, 0)
-        self.titleBar.resize(self.width()-46, self.titleBar.height())
+        self.titleBar.resize(self.width() - 46, self.titleBar.height())
 
     def showMessageBox(self):
         w = MessageBox(
             self.tr('This is a help message'),
-            self.tr('You clicked a customized navigation widget. You can add more custom widgets by calling `NavigationInterface.addWidget()` 😉'),
+            self.tr(
+                'You clicked a customized navigation widget. You can add more custom widgets by calling `NavigationInterface.addWidget()` 😉'),
             self
         )
         w.exec()

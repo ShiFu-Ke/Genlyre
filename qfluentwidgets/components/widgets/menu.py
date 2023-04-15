@@ -248,7 +248,7 @@ class RoundMenu(QWidget):
         return self._title
 
     def clear(self):
-        """ clear all actions """
+        """ clearSong all actions """
         for i in range(len(self._actions)-1, -1, -1):
             self.removeAction(self._actions[i])
 

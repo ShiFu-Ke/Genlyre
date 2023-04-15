@@ -154,6 +154,16 @@
         <source>Source code</source>
         <translation>源代码</translation>
     </message>
+        <message>
+        <location filename="../../view/gallery_interface.py" line="87"/>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+    <message>
+        <location filename="../../view/gallery_interface.py" line="87"/>
+        <source>Help</source>
+        <translation>帮助</translation>
+    </message>
 </context>
 <context>
     <name>LayoutInterface</name>
@@ -229,6 +239,16 @@
         <location filename="../../view/main_window.py" line="136"/>
         <source>Basic input</source>
         <translation>基本输入</translation>
+    </message>
+    <message>
+        <location filename="../../view/main_window.py" line="137"/>
+        <source>Auto play</source>
+        <translation>自动演奏</translation>
+    </message>
+    <message>
+        <location filename="../../view/main_window.py" line="138"/>
+        <source>Music score conversion</source>
+        <translation>琴谱转换</translation>
     </message>
     <message>
         <location filename="../../view/main_window.py" line="143"/>
@@ -449,8 +469,8 @@
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="93"/>
-        <source>Material</source>
-        <translation>材料</translation>
+        <source>Shortcut keys</source>
+        <translation>快捷键</translation>
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="95"/>
@@ -494,8 +514,8 @@
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="116"/>
-        <source>Discover new features and learn useful tips about PyQt-Fluent-Widgets</source>
-        <translation>发现新功能并了解有关 PyQt-Fluent-Widgets 的使用技巧</translation>
+        <source>Discover new features and learn useful tips about Genlyr</source>
+        <translation>发现新功能并了解有关 Genlyr 的使用技巧</translation>
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="125"/>
@@ -504,8 +524,8 @@
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="125"/>
-        <source>Help us improve PyQt-Fluent-Widgets by providing feedback</source>
-        <translation>通过提供反馈帮助我们改进 PyQt-Fluent-Widgets</translation>
+        <source>Help us improve Genlyre by providing feedback</source>
+        <translation>通过提供反馈帮助我们改进 Genlyre</translation>
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="132"/>
@@ -590,8 +610,8 @@
     <name>ToolBar</name>
     <message>
         <location filename="../../view/gallery_interface.py" line="20"/>
-        <source>Documentation</source>
-        <translation>在线文档</translation>
+        <source>Use reference</source>
+        <translation>使用参考</translation>
     </message>
     <message>
         <location filename="../../view/gallery_interface.py" line="22"/>
@@ -645,6 +665,134 @@
         <location filename="../../common/translator.py" line="15"/>
         <source>Layout</source>
         <translation>布局</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="16"/>
+        <source>Auto play</source>
+        <translation>自动演奏</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="17"/>
+        <source>After importing the score, it can be played automatically.</source>
+        <translation>导入琴谱后可以自动演奏。</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="18"/>
+        <source>Music score conversion</source>
+        <translation>琴谱转换</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="19"/>
+        <source>You can convert the music score to the desired format from here.</source>
+        <translation>你可以从这里将琴谱转换成想要的格式。</translation>
+    </message>
+</context>
+<context>
+    <name>AutoPlayInterface</name>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="58"/>
+        <source>Format of KeShiFu</source>
+        <translation>刻师傅格式</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="59"/>
+        <source>Format of GuaGua</source>
+        <translation>呱呱格式</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="60"/>
+        <source>Input</source>
+        <translation>导入</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="61"/>
+        <source>Delete</source>
+        <translation>删除</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="62"/>
+        <source>Empty</source>
+        <translation>清空</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="63"/>
+        <source>Windsong Lyre</source>
+        <translation>风物之诗琴</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="64"/>
+        <source>Vintage Lyre</source>
+        <translation>老旧的诗琴</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="65"/>
+        <source>Begin</source>
+        <translation>开始</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="66"/>
+        <source>Pause/Resume</source>
+        <translation>暂停/继续</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="67"/>
+        <source>Cease</source>
+        <translation>停止</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="68"/>
+        <source>Message prompt</source>
+        <translation>消息提示</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="69"/>
+        <source>Format of musical score:</source>
+        <translation>琴谱格式：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="70"/>
+        <source>Select lyre:</source>
+        <translation>选择琴：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="71"/>
+        <source>No element selected</source>
+        <translation>请先选中曲目</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="72"/>
+        <source>Partial import succeeded</source>
+        <translation>部分导入成功</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="73"/>
+        <source>Import failed</source>
+        <translation>导入失败</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="74"/>
+        <source>Are you sure?</source>
+        <translation>确定？</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="75"/>
+        <source>Shortcut key settings:</source>
+        <translation>快捷键设置：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="76"/>
+        <source>Begin:</source>
+        <translation>开始：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="77"/>
+        <source>Pause/Resume:</source>
+        <translation>暂停/继续：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="78"/>
+        <source>Cease:</source>
+        <translation>停止：</translation>
     </message>
 </context>
 </TS>

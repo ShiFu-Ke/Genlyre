@@ -16,6 +16,7 @@ class PlayMusic:
     """
     弹琴逻辑
     """
+    keys = ["Z", "X", "C", "V", "B", "N", "M", "A", "S", "D", "F", "G", "H", "J", "Q", "W", "E", "R", "T", "Y", "U"]
     key_map = {
         "0": 49, "1": 50, "2": 51, "3": 52, "4": 53, "5": 54, "6": 55, "7": 56, "8": 57, "9": 58,
         "A": 65, "B": 66, "C": 67, "D": 68, "E": 69, "F": 70, "G": 71, "H": 72, "I": 73, "J": 74,
@@ -25,15 +26,23 @@ class PlayMusic:
 
     def __init__(self):
         self.t = None
+        self.state = False
 
-    def start(self, filePath, scoreType, lyre):
+    def start(self, filePath, scoreType, lyre, pAdd):
         """
         开始弹琴
         调用此方法自动创建守护进程进行演奏
         :param filePath: 琴谱文件路径
         :param scoreType: 琴谱格式；1：刻师傅，2：呱呱，3：伊蕾娜
         :param lyre: 1.风物；2.老旧
+        :param pAdd: 琶音提速
         """
+        print(pAdd)
+        if self.t is None or self.t.ready:
+            self.state = False
+        if self.state:
+            return
+        self.state = True
         file = open(filePath, encoding='utf-8')
         data = file.read()
         file.close()
@@ -46,50 +55,57 @@ class PlayMusic:
         data.replace(" ", "L")
         self.t = MyThread()
         self.t.setDaemon(True)
-        if self.t.ready:
-            try:
-                self.t.lyre = lyre
-                data_tmp = data.split("\n")
-                self.t.arr.clear()
-                tmp = -1
-                for i in data_tmp:
-                    try:
-                        if "." in i:
-                            self.t.arr.append("")
-                            tmp += 1
-                    except IndexError:
-                        pass
-                    if i.replace(" ", "") != "":
-                        self.t.arr[tmp] += i + "\n"
-            except Exception:
-                return
-            for i in range(len(self.t.arr)):
-                self.t.arr[i] = MusicScore.nuToJp(self.t.arr[i])
-            self.t.start()
-            self.t.ready = False
-            self.t.state = True
+        try:
+            self.t.lyre = lyre
+            self.t.pADD = pAdd
+            data_tmp = data.split("\n")
+            self.t.arr.clear()
+            tmp = -1
+            for i in data_tmp:
+                try:
+                    if "." in i:
+                        self.t.arr.append("")
+                        tmp += 1
+                except IndexError:
+                    pass
+                if i.replace(" ", "") != "":
+                    self.t.arr[tmp] += i + "\n"
+        except Exception:
+            return
+        for i in range(len(self.t.arr)):
+            self.t.arr[i] = MusicScore.nuToJp(self.t.arr[i])
+        self.t.start()
+        self.t.ready = False
+        self.t.state = True
 
     def suspend_continue(self):
         """
         暂停按钮触发
         """
-        if not self.t.ready:
-            if self.t.state:
-                print("暂停")
-                self.t.pause()
-                self.t.state = False
-            else:
-                print("继续")
-                self.t.resume()
-                self.t.state = True
+        try:
+            if not self.t.ready:
+                if self.t.state:
+                    print("暂停")
+                    self.t.pause()
+                    self.t.state = False
+                else:
+                    print("继续")
+                    self.t.resume()
+                    self.t.state = True
+        except Exception:
+            pass
 
     def finish(self):
         """
         结束按钮触发
         """
-        if not self.t.ready:
-            self.t.kile()
-            self.t = None
+        try:
+            if not self.t.ready:
+                self.t.kile()
+                self.t = None
+                self.state = False
+        except Exception:
+            pass
 
     @staticmethod
     def key_down(key):
@@ -112,106 +128,103 @@ class PlayMusic:
         keybd_event(vk_code, MapVirtualKey(vk_code, 0), KEYEVENTF_KEYUP, 0)
 
     @staticmethod
-    def key_press(key):
+    def playMusic(t, data, lyre, pAdd=0):
         """
-        点击按键（按下并抬起）
-        :param key: 按键值
-        """
-        if key in ["L", "l"]:
-            sleep(0.01)
-            return
-        PlayMusic.key_down(key)
-        sleep(0.01)
-        PlayMusic.key_up(key)
-
-    @staticmethod
-    def play_note(t, note, time_div, time_div_div, time_interval):
-        """
-        播放连接的音符
-        :param t: 线程
-        :param note: 相连的音符（中间无空格） 字符串类型
-        :param time_div: 音符时值一次分割
-        :param time_div_div: 音符时值二次分割
-        :param time_interval: 单个小节的时值
-        """
-        play_time = time_interval / time_div / time_div_div
-        j = 0
-        while j < len(note):
-            t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-            if note[j] == '(':
-                while 1:
-                    j += 1
-                    if note[j] == ')':
-                        sleep(play_time)
-                        j += 1
-                        break
-                    else:
-                        PlayMusic.key_press(note[j])
-            elif note[j].isalpha():
-                PlayMusic.key_press(note[j])
-                sleep(play_time)
-                j += 1
-            elif note[j] == '1':
-                sleep(play_time)
-                j += 1
-            else:
-                j += 1
-
-    @staticmethod
-    def count_note(note):
-        """
-        为连接的音符数计数
-        :param note: 相连的音符（中间无空格） 字符串类型
-        """
-        j = 0
-        count = 0
-        while j < len(note):
-            if note[j] == '(':
-                count += 1
-                while 1:
-                    j += 1
-                    if note[j] == ')':
-                        j += 1
-                        break
-            else:
-                count += 1
-                j += 1
-        return count
-
-    @staticmethod
-    def play_music(t, music, time_interval):
-        """
-        播放曲谱
-        :param t: 线程
-        :param music: 曲谱 字符串类型
-        :param time_interval: 单个小节的时值
-        """
-        music_section = music.split("/")
-        for j in range(len(music_section)):
-            if music_section[j][-2:] == " ":
-                music_section[j] += '1'
-        for x in music_section:
-            Notes = x.split()
-            time_div = len(Notes)
-            for y in Notes:
-                time_div_div = PlayMusic.count_note(y)
-                PlayMusic.play_note(t, y, time_div, time_div_div, time_interval)
-
-    @staticmethod
-    def play(t, data_play, lyre):
-        """
-        弹琴
-        :param t: 线程
-        :param data_play: 琴键
+        开始演奏
+        :param t:线程
+        :param data: 琴谱
         :param lyre: 1.风物；2.老旧
+        :param pAdd: 琶音提速，默认值为0
         """
-        tt = float(data_play.split("\n")[0])
+        if "L" in data:
+            data = data.replace("L", " ")
+        time = float(data[:data.find("\n")])
+        data_tmp = data.upper().replace("\n", "")
+        data_end = ""
+        for i in data_tmp:
+            if i in ["/", "(", ")", "[", "]", " "] or i in PlayMusic.keys:
+                data_end += i
+        # 如果是老旧，转换谱
         if lyre == 2:
             print("老旧")
-            data_play = MusicScore.fwToLj(data_play)
-        while True:
-            PlayMusic.play_music(t, data_play[data_play.find("\n") + 1:].replace("\n", ""), tt)
-            break
+            data_end = MusicScore.fwToLj(data_end)
+        # 找琶音长度
+        p_num = 0
+        p_data = data_end[data_end.find("["):]
+        while p_data.find("[") > -1:
+            p_tmpLen = p_data.find("]") - p_data.find("[") - 1
+            if p_tmpLen > p_num:
+                p_num = p_tmpLen
+            p_data = p_data[p_data.find("]") + 1:]
+        p_num += pAdd
+
+        # 将每拍放入数组
+        data_tmp = data_end
+        arr_tmp = data_tmp.split("/")
+        arr = []
+        for i in arr_tmp:
+            if len(i) > 0:
+                arr.append(i)
+        for i in range(len(arr)):
+            if "[" in arr[i]:
+                p_tmp = ""
+                p_kh = False
+                p_py = False
+                p_numTmp = 0  # 记录琶音中音的个数
+                for j in arr[i]:
+                    if j == "(":
+                        p_kh = True
+                    elif j == ")":
+                        p_kh = False
+                    elif j == "[":
+                        p_py = True
+                        p_numTmp = 0
+                    elif j == "]":
+                        p_tmp += " " * (p_num - p_numTmp + 1)
+                        p_py = False
+                        continue
+                    if p_py:  # 如果是琶音
+                        if j not in ["[", "]"]:
+                            p_tmp += j
+                            p_numTmp += 1
+                        continue
+                    if j not in ["[", "]"]:
+                        p_tmp += j
+                    if not p_kh:
+                        p_tmp += " " * p_num
+                arr[i] = p_tmp
+        arr_data = []
+        p_tmpLen = ""
+        tmp_bracket = False  # 记录是否在括号内
+        length_max = 1  # 记录每拍最多音个数
+        for i in arr:
+            arr_tmp.clear()
+            for j in range(len(i)):
+                if tmp_bracket:
+                    p_tmpLen += i[j]
+                    if i[j + 1] == ")":
+                        tmp_bracket = False
+                        arr_tmp.append(p_tmpLen)
+                        p_tmpLen = ""
+                else:
+                    if i[j] in PlayMusic.keys or i[j] == " ":
+                        arr_tmp.append(i[j])
+                    elif i[j] == "(":
+                        tmp_bracket = True
+            length_max = Util.lcm(length_max, len(arr_tmp))
+            arr_data.append(arr_tmp.copy())
+        arr.clear()
+        # 开始演奏
+        for i in arr_data:
+            length = len(i)
+            time_tmp = time / length
+            for j in i:
+                for k in j:
+                    if k in PlayMusic.keys:
+                        PlayMusic.key_down(k)
+                        PlayMusic.key_up(k)
+                sleep(time_tmp)
+                t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
 
 
 class MyThread(Thread):
@@ -225,12 +238,14 @@ class MyThread(Thread):
         self.flag.set()  # 设置为True
         self.arr = []
         self.lyre = 1
+        self.pADD = 0
         self.ready = True
         self.state = False
 
-    def init(self, arr, lyre):
+    def init(self, arr, lyre, pADD):
         self.arr = arr
         self.lyre = lyre
+        self.pADD = pADD
 
     def pause(self):
         self.flag.clear()  # 设置为False, 让线程阻塞
@@ -258,7 +273,8 @@ class MyThread(Thread):
             for i in self.arr:
                 if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
                     i += "L"
-                PlayMusic.play(self, i, self.lyre)
+                PlayMusic.playMusic(self, i, self.lyre, self.pADD)
+            self.ready = True
             print("演奏完成")
         except Exception:
             if not self.ready:

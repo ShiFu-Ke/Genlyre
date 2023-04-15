@@ -17,7 +17,7 @@ class PlaySound:
         t = Thread(target=self.on_key_event)
         t.daemon = True
         t.start()
-        self.state = True
+        self.state = False
         self.lyre = 1
 
     def on_key_event(self):

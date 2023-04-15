@@ -26,7 +26,7 @@ class MusicScore:
         :return: 呱呱格式，呱呱时间参数
         """
         time = float(data[:data.find("\n")])
-        data_tmp = data.upper().replace("\n", "")
+        data_tmp = data.upper().replace("\n", "").replace("L", " ")
         data_end = ""
         for i in data_tmp:
             if i in ["/", "(", ")", " "] or i in key:
@@ -63,7 +63,7 @@ class MusicScore:
             tmp = ""
             num = length_max / len(i)  # 每个单元后面的等号个数
             for j in i:
-                tmp += j + "=" * int(num)
+                tmp += j.replace(" ", "") + "=" * int(num)
             arr.append(tmp.replace(" ", "").replace("====", "+").replace("==", "-"))
         data_end = ""
         for i in range(len(arr)):
@@ -245,25 +245,32 @@ class MusicScore:
         return data_end
 
     @staticmethod
-    def isKe(data):
+    def isKe(filePath):
         """
         刻师傅琴谱格式测试
-        :param data:琴谱内容
+        :param filePath:琴谱路径
         :return: 格式正确返回True，否则返回False；提示信息
         """
+        try:
+            file = open(filePath, encoding='utf-8')
+            data = file.read()
+            file.close()
+        except Exception:
+            return False, "文件不存在！"
         try:
             float(data[:data.find("\n")])
             data_tmp = data[:data.find("\n")]
             if "." not in data_tmp:
                 return False, "首行必须是小数，整数请加\".0\"（如：1.0）！"
-            tmp = 0
+            tmp01 = 0
             for i in data.upper():
                 if i in key:
-                    tmp = 1
+                    tmp01 = 1
                     break
-            if tmp == 0:
+            if tmp01 == 0:
                 return False, "琴谱内容为空！"
-            tmp = 0
+            tmp01 = 0
+            tmp02 = 0
             hang = 1  # 行位置
             lie = 1  # 列位置
             try:
@@ -273,26 +280,39 @@ class MusicScore:
                         hang += 1
                         lie = 0
                     if i == "(":
-                        tmp += 1
+                        tmp01 += 1
                     elif i == ")":
-                        tmp -= 1
-                    if tmp not in [0, 1]:
+                        tmp01 -= 1
+                    elif i == "[":
+                        tmp02 += 1
+                    elif i == "]":
+                        tmp02 -= 1
+                    elif i == "/":
+                        if tmp01 != 0 or tmp02 != 0:
+                            return False, "第" + str(hang) + "行，第" + str(lie) + "列存在不匹配的括号！"
+                    if tmp01 not in [0, 1] or tmp02 not in [0, 1]:
                         return False, "第" + str(hang) + "行，第" + str(lie) + "列存在不匹配的括号！"
             except IndexError:
                 return False, "存在不匹配的括号！"
-            if tmp != 0:
+            if tmp01 != 0:
                 return False, "第" + str(hang) + "行，第" + str(lie) + "列存在不匹配的括号！"
             return True, "文件格式正确！"
         except Exception:
             return False, "首行必须是数字(必须小数，如：1.0)！"
 
     @staticmethod
-    def isGua(data):
+    def isGua(filePath):
         """
         呱呱琴谱格式测试
-        :param data: 琴谱内容
+        :param filePath: 琴谱路径
         :return: 格式正确返回True，否则返回False；提示信息
         """
+        try:
+            file = open(filePath, encoding='utf-8')
+            data = file.read()
+            file.close()
+        except Exception:
+            return False, "文件不存在！"
         try:
             int(data[:data.find("\n")])
         except Exception:
@@ -303,12 +323,18 @@ class MusicScore:
         return False, "琴谱内容为空！"
 
     @staticmethod
-    def isYi(data):
+    def isYi(filePath):
         """
         伊蕾娜琴谱格式测试
-        :param data: 琴谱内容
+        :param filePath: 琴谱路径
         :return: 格式正确返回True，否则返回False；提示信息
         """
+        try:
+            file = open(filePath, encoding='utf-8')
+            data = file.read()
+            file.close()
+        except Exception:
+            return False, "文件不存在！"
         try:
             int(data[:data.find("\n")])
         except Exception:
