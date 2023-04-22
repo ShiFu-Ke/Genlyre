@@ -21,6 +21,11 @@ class Icon(FluentIconBase, Enum):
     LYRE = "lyre"
     AUTO = "auto"
     CONVERSION = "conversion"
+    KRY = "key"
+    MUSICSCORE = "musicScore"
+    HELP = "help"
+    HELP01 = "help01"
+    DOWNLOAD = "download"
 
     def path(self, theme=Theme.AUTO):
         if theme == Theme.AUTO:

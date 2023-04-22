@@ -4,7 +4,7 @@ from PyQt5.QtGui import QColor, QCursor
 from PyQt5.QtWidgets import (QApplication, QFrame, QGraphicsDropShadowEffect,
                              QHBoxLayout, QLabel, QWidget)
 
-from ...common import setStyleSheet
+from ...common import FluentStyleSheet
 
 
 class ToolTip(QFrame):
@@ -64,7 +64,7 @@ class ToolTip(QFrame):
         """ set style sheet """
         self.container.setObjectName("container")
         self.label.setObjectName("contentLabel")
-        setStyleSheet(self, 'tool_tip')
+        FluentStyleSheet.TOOL_TIP.apply(self)
         self.label.adjustSize()
         self.adjustSize()
 
@@ -100,7 +100,7 @@ class ToolTip(QFrame):
 
 
 class ToolTipFilter(QObject):
-    """ Tool button with a tool tip """
+    """ Tool tip filter """
 
     def __init__(self, parent: QWidget, showDelay=300):
         """

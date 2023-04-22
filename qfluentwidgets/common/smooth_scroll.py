@@ -1,7 +1,7 @@
 # coding:utf-8
 from collections import deque
 from enum import Enum
-from math import cos, pi
+from math import cos, pi, ceil
 
 from PyQt5.QtCore import QDateTime, Qt, QTimer, QPoint
 from PyQt5.QtGui import QWheelEvent
@@ -40,7 +40,8 @@ class SmoothScroll:
         self.smoothMode = smoothMode
 
     def wheelEvent(self, e):
-        if self.smoothMode == SmoothMode.NO_SMOOTH:
+        # only process the wheel events triggered by mouse, fixes issue #75
+        if self.smoothMode == SmoothMode.NO_SMOOTH or abs(e.angleDelta().y()) % 120 != 0:
             QAbstractScrollArea.wheelEvent(self.widget, e)
             return
 

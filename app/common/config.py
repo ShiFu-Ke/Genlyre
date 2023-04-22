@@ -40,13 +40,11 @@ class Config(QConfig):
 YEAR = 2023
 AUTHOR = "keshifu"
 VERSION = "v1.0.0"
-HELP_URL = "https://pyqt-fluent-widgets.readthedocs.io"  # 帮助
-REPO_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets"
-EXAMPLE_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/tree/master/examples"
-FEEDBACK_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/issues"  # 反馈的链接
-UPDATE_URL = "http://192.168.10.50"  # 下载的链接
-RELEASE_URL = "https://github.com/zhiyiYo/PyQt-Fluent-Widgets/releases/latest"
-BLIBLI_URL = "https://space.bilibili.com/660801861"
+HOME_URL = "https://space.bilibili.com/660801861"
+HELP_URL = "https://space.bilibili.com/660801861"  # 帮助
+DOWNLOAD_URL = "https://keshifu.lanzouy.com/b03w2hfje"  # 下载链接
+FEEDBACK_URL = "https://f.wps.cn/g/8neqcjae/"  # 反馈的链接
+RECRUIT_URL = "https://f.wps.cn/g/u3lDO1V2/"  # 招募
 
 cfg = Config()
 qconfig.load('app/config/config.json', cfg)

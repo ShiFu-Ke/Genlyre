@@ -161,10 +161,13 @@ class PlayMusic:
         # 将每拍放入数组
         data_tmp = data_end
         arr_tmp = data_tmp.split("/")
+        print(arr_tmp)
         arr = []
         for i in arr_tmp:
             if len(i) > 0:
                 arr.append(i)
+            elif i == "":
+                arr.append(" ")
         for i in range(len(arr)):
             if "[" in arr[i]:
                 p_tmp = ""

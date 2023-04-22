@@ -1,29 +1,26 @@
 # coding: utf-8
-from typing import List
+from os import system
+
 from PyQt5.QtCore import Qt, pyqtSignal, QEasingCurve
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QFrame, QWidget
-
-from Lib.PlaySound import PlaySound
-from qfluentwidgets import (NavigationInterface, NavigationItemPostion, MessageBox,
-                            isDarkTheme, PopUpAniStackedWidget)
-from qfluentwidgets import FluentIcon as FIF
 from qframelesswindow import FramelessWindow
 
-from .score_conversion_interface import ScoreConversionInterface
+from Lib.PlaySound import PlaySound
+from qfluentwidgets import FluentIcon as FIF
+from qfluentwidgets import (NavigationInterface, NavigationItemPosition, MessageBox,
+                            isDarkTheme, PopUpAniStackedWidget)
+from util import Util
 from .autoPlay_interface import AutoPlayInterface
-from .title_bar import CustomTitleBar
 from .gallery_interface import GalleryInterface
 from .home_interface import HomeInterface
-from .basic_input_interface import BasicInputInterface
-from .dialog_interface import DialogInterface
-from .layout_interface import LayoutInterface
-from .material_interface import MaterialInterface
-from .menu_interface import MenuInterface
-from .scroll_interface import ScrollInterface
-from .status_info_interface import StatusInfoInterface
+from .keyMapping_interface import KeyMappingInterface
+from .lyre_interface import LyreInterface
+from .practice_piano_interface import PracticePianoInterface
+from .score_conversion_interface import ScoreConversionInterface
 from .setting_interface import SettingInterface, cfg
-from ..components.avatar_widget import AvatarWidget
+from .title_bar import CustomTitleBar
+from .write_scores_interface import WriteScoresInterface
 from ..common.icon import Icon
 from ..common.signal_bus import signalBus
 
@@ -73,28 +70,22 @@ class MainWindow(FramelessWindow):
 
         # create sub interface
         self.homeInterface = HomeInterface(self)
-        self.basicInputInterface = BasicInputInterface(self)
-        self.dialogInterface = DialogInterface(self)
-        self.layoutInterface = LayoutInterface(self)
-        self.menuInterface = MenuInterface(self)
-        self.materialInterface = MaterialInterface(self)
-        self.scrollInterface = ScrollInterface(self)
-        self.statusInfoInterface = StatusInfoInterface(self)
         self.settingInterface = SettingInterface(self)
         self.autoPlayInterface = AutoPlayInterface(self)
         self.scoreConversionInterface = ScoreConversionInterface(self)
+        self.lyreInterface = LyreInterface(self)
+        self.keyMappingInterface = KeyMappingInterface(self)
+        self.writeScoresInterface = WriteScoresInterface(self)
+        self.practicePianoInterface = PracticePianoInterface(self)
 
         self.stackWidget.addWidget(self.homeInterface)
-        self.stackWidget.addWidget(self.basicInputInterface)
-        self.stackWidget.addWidget(self.dialogInterface)
-        self.stackWidget.addWidget(self.layoutInterface)
-        self.stackWidget.addWidget(self.materialInterface)
-        self.stackWidget.addWidget(self.menuInterface)
-        self.stackWidget.addWidget(self.scrollInterface)
-        self.stackWidget.addWidget(self.statusInfoInterface)
         self.stackWidget.addWidget(self.settingInterface)
         self.stackWidget.addWidget(self.autoPlayInterface)
         self.stackWidget.addWidget(self.scoreConversionInterface)
+        self.stackWidget.addWidget(self.lyreInterface)
+        self.stackWidget.addWidget(self.keyMappingInterface)
+        self.stackWidget.addWidget(self.writeScoresInterface)
+        self.stackWidget.addWidget(self.practicePianoInterface)
 
         # initialize layout
         self.initLayout()
@@ -103,6 +94,11 @@ class MainWindow(FramelessWindow):
         self.initNavigation()
 
         self.initWindow()
+
+    def closeEvent(self, event):
+        """重写关闭窗口的方法"""
+        Util.cmd("TASKKILL /IM KeyboardMapping.exe /F")
+        super().closeEvent(event)
 
     def initLayout(self):
         self.hBoxLayout.setSpacing(0)
@@ -122,16 +118,13 @@ class MainWindow(FramelessWindow):
 
     def initNavigation(self):
         self.homeInterface.setObjectName('homeInterface')
-        self.basicInputInterface.setObjectName('basicInputInterface')
-        self.dialogInterface.setObjectName('dialogInterface')
-        self.layoutInterface.setObjectName('layoutInterface')
-        self.menuInterface.setObjectName('menuInterface')
-        self.materialInterface.setObjectName('materialInterface')
-        self.statusInfoInterface.setObjectName('statusInfoInterface')
-        self.scrollInterface.setObjectName('scrollInterface')
-        self.settingInterface.setObjectName('settingsInterface')
         self.autoPlayInterface.setObjectName('autoPlayInterface')
         self.scoreConversionInterface.setObjectName("scoreConversionInterface")
+        self.lyreInterface.setObjectName("lyreInterface")
+        self.keyMappingInterface.setObjectName("keyMappingInterface")
+        self.writeScoresInterface.setObjectName("writeScoresInterface")
+        self.practicePianoInterface.setObjectName("practicePianoInterface")
+        self.settingInterface.setObjectName('settingsInterface')
 
         # add navigation items
         self.navigationInterface.addItem(
@@ -147,7 +140,7 @@ class MainWindow(FramelessWindow):
             icon=Icon.AUTO,
             text=self.tr('Auto play'),  # 菜单文本标题
             onClick=lambda t: self.switchTo(self.autoPlayInterface, t),
-            position=NavigationItemPostion.SCROLL
+            position=NavigationItemPosition.SCROLL
         )
 
         self.navigationInterface.addItem(
@@ -155,73 +148,47 @@ class MainWindow(FramelessWindow):
             icon=Icon.CONVERSION,
             text=self.tr('Music score conversion'),  # 菜单文本标题
             onClick=lambda t: self.switchTo(self.scoreConversionInterface, t),
-            position=NavigationItemPostion.SCROLL
+            position=NavigationItemPosition.SCROLL
         )
 
         self.navigationInterface.addItem(
-            routeKey=self.basicInputInterface.objectName(),
-            icon=Icon.BLIBLI,
-            text=self.tr('Basic input'),
-            onClick=lambda t: self.switchTo(self.basicInputInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.dialogInterface.objectName(),
-            icon=Icon.MESSAGE,
-            text=self.tr('Dialogs'),
-            onClick=lambda t: self.switchTo(self.dialogInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.layoutInterface.objectName(),
-            icon=Icon.LAYOUT,
-            text=self.tr('Layout'),
-            onClick=lambda t: self.switchTo(self.layoutInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.materialInterface.objectName(),
-            icon=FIF.PALETTE,
-            text=self.tr('Material'),
-            onClick=lambda t: self.switchTo(self.materialInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.menuInterface.objectName(),
-            icon=Icon.MENU,
-            text=self.tr('Menus'),
-            onClick=lambda t: self.switchTo(self.menuInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.scrollInterface.objectName(),
-            icon=Icon.SCROLL,
-            text=self.tr('Scrolling'),
-            onClick=lambda t: self.switchTo(self.scrollInterface, t),
-            position=NavigationItemPostion.SCROLL
-        )
-        self.navigationInterface.addItem(
-            routeKey=self.statusInfoInterface.objectName(),
-            icon=Icon.CHAT,
-            text=self.tr('Status & info'),
-            onClick=lambda t: self.switchTo(self.statusInfoInterface, t),
-            position=NavigationItemPostion.SCROLL
+            routeKey=self.writeScoresInterface.objectName(),
+            icon=Icon.MUSICSCORE,
+            text=self.tr('Write music scores'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.writeScoresInterface, t),
+            position=NavigationItemPosition.SCROLL
         )
 
-        # add custom widget to bottom
-        # self.navigationInterface.addWidget(
-        #     routeKey='avatar',
-        #     widget=AvatarWidget('app/resource/images/shoko.png'),
-        #     onClick=self.showMessageBox,
-        #     position=NavigationItemPostion.BOTTOM
-        # )
+        self.navigationInterface.addItem(
+            routeKey=self.lyreInterface.objectName(),
+            icon=Icon.LYRE,
+            text=self.tr('Lyre'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.lyreInterface, t),
+            position=NavigationItemPosition.SCROLL
+        )
+
+        self.navigationInterface.addItem(
+            routeKey=self.keyMappingInterface.objectName(),
+            icon=Icon.KRY,
+            text=self.tr('Keyboard Mapping'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.keyMappingInterface, t),
+            position=NavigationItemPosition.SCROLL
+        )
+
+        self.navigationInterface.addItem(
+            routeKey=self.practicePianoInterface.objectName(),
+            icon=Icon.HELP,
+            text=self.tr('Practice the piano'),  # 菜单文本标题
+            onClick=lambda t: self.switchTo(self.practicePianoInterface, t),
+            position=NavigationItemPosition.SCROLL
+        )
 
         self.navigationInterface.addItem(
             routeKey=self.settingInterface.objectName(),
             icon=FIF.SETTING,
             text='Settings',
             onClick=lambda t: self.switchTo(self.settingInterface, t),
-            position=NavigationItemPostion.BOTTOM
+            position=NavigationItemPosition.BOTTOM
         )
 
         # !IMPORTANT: don't forget to set the default route key if you enable the return button
@@ -260,19 +227,9 @@ class MainWindow(FramelessWindow):
         self.titleBar.move(46, 0)
         self.titleBar.resize(self.width() - 46, self.titleBar.height())
 
-    def showMessageBox(self):
-        w = MessageBox(
-            self.tr('This is a help message'),
-            self.tr(
-                'You clicked a customized navigation widget. You can add more custom widgets by calling `NavigationInterface.addWidget()` 😉'),
-            self
-        )
-        w.exec()
-
-    def switchToSample(self, routeKey, index):
+    def switchToSample(self, routeKey):
         """ switch to sample """
         interfaces = self.findChildren(GalleryInterface)
         for w in interfaces:
             if w.objectName() == routeKey:
                 self.stackWidget.setCurrentWidget(w)
-                w.scrollToCard(index)

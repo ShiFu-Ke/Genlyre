@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QFrame, QWidget, QAbstractButton, QApplication
 
 from ...common.config import isDarkTheme
 from ...common.icon import FluentIcon as FIF
-from ...common.style_sheet import setStyleSheet
+from ...common.style_sheet import FluentStyleSheet
 from .setting_card import SettingCard
 from ..layout.v_box_layout import VBoxLayout
 
@@ -46,7 +46,7 @@ class ExpandButton(QAbstractButton):
         # draw icon
         painter.translate(self.width()//2, self.height()//2)
         painter.rotate(self.__angle)
-        FIF.ARROW_DOWN.render(painter, QRectF(-6, -6, 9.6, 9.6))
+        FIF.ARROW_DOWN.render(painter, QRectF(-5, -5, 9.6, 9.6))
 
     def enterEvent(self, e):
         self.setHover(True)
@@ -119,8 +119,8 @@ class ExpandSettingCard(QFrame):
         # initialize style sheet
         self.view.setObjectName('view')
         self.setProperty('isExpand', False)
-        setStyleSheet(self.card, 'expand_setting_card')
-        setStyleSheet(self, 'expand_setting_card')
+        FluentStyleSheet.EXPAND_SETTING_CARD.apply(self.card)
+        FluentStyleSheet.EXPAND_SETTING_CARD.apply(self)
 
         self.card.installEventFilter(self)
         self.aniGroup.finished.connect(self.__onAniFinished)

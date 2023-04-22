@@ -2,6 +2,7 @@
 # @ Author KeShiFu
 # @ Date 2023/03/18
 # @ Time 22:24
+import subprocess
 from inspect import isclass
 from ctypes import pythonapi, c_long, py_object
 from os import path, system
@@ -32,8 +33,8 @@ NumLock::R
 NumpadDiv::T
 NumpadMult::Y
 NumpadSub::U"""
-        if not path.exists("..\\keyMap\\default.ahk"):
-            file = open("..\\keyMap\\default.ahk", 'w', encoding="UTF-8")
+        if not path.exists("../data/default.ahk"):
+            file = open("../data/default.ahk", 'w', encoding="UTF-8")
             file.write(testMap)
             file.close()
 
@@ -77,3 +78,14 @@ NumpadSub::U"""
             # and you should call it again with exc=NULL to revert the effect"""
             pythonapi.PyThreadState_SetAsyncExc(tid, None)
             raise SystemError("PyThreadState_SetAsyncExc failed")
+
+    @staticmethod
+    def cmd(text):
+        # 执行的命令
+        command = text
+        # 创建子进程并执行命令，在后台运行
+        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        # 获取命令的输出信息，包括标准输出和错误输出
+        output, errors = p.communicate()
+        # 输出结果
+        print(output.decode('gbk'))

@@ -6,7 +6,7 @@ from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QHBoxLayout, QFrame
 from qfluentwidgets import (ScrollArea, PushButton, ToolButton, FluentIcon,
                             isDarkTheme, IconWidget, Theme, ToolTipFilter)
 from ..common.icon import Icon
-from ..common.config import cfg, FEEDBACK_URL, BLIBLI_URL
+from ..common.config import cfg, FEEDBACK_URL, HELP_URL
 
 
 class ToolBar(QWidget):
@@ -57,9 +57,8 @@ class ToolBar(QWidget):
 
         self.themeButton.clicked.connect(self.toggleTheme)
         self.documentButton.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(BLIBLI_URL)))
-        self.feedbackButton.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
+            lambda: QDesktopServices.openUrl(QUrl(HELP_URL)))
+        self.feedbackButton.clicked.connect(lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
 
     def toggleTheme(self):
         theme = Theme.LIGHT if isDarkTheme() else Theme.DARK

@@ -11,9 +11,8 @@ from ..common.config import cfg
 class SampleCard(QFrame):
     """ Sample card """
 
-    def __init__(self, icon, title, content, routeKey, index, parent=None):
+    def __init__(self, icon, title, content, routeKey, parent=None):
         super().__init__(parent=parent)
-        self.index = index
         self.routekey = routeKey
 
         self.iconWidget = IconWidget(icon, self)
@@ -45,7 +44,7 @@ class SampleCard(QFrame):
 
     def mouseReleaseEvent(self, e):
         super().mouseReleaseEvent(e)
-        signalBus.switchToSampleCard.emit(self.routekey, self.index)
+        signalBus.switchToSampleCard.emit(self.routekey)
 
 
 class SampleCardView(QWidget):
@@ -70,9 +69,9 @@ class SampleCardView(QWidget):
         self.__setQss()
         cfg.themeChanged.connect(self.__setQss)
 
-    def addSampleCard(self, icon, title, content, routeKey, index):
+    def addSampleCard(self, icon, title, content, routeKey):
         """ add sample card """
-        card = SampleCard(icon, title, content, routeKey, index, self)
+        card = SampleCard(icon, title, content, routeKey, self)
         self.flowLayout.addWidget(card)
 
     def __setQss(self):

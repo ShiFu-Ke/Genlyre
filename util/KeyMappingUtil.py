@@ -182,7 +182,3 @@ class KeyMappingUtil:
         file = open("..\\keyMap\\" + fileName + ".ahk", 'w', encoding="UTF-8")
         file.write(test)
         file.close()
-
-
-k = KeyMappingUtil()
-print(k.newCfgFile("test")[1])

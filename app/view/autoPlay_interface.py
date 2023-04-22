@@ -76,7 +76,8 @@ class AutoPlayInterface(GalleryInterface):
         label_MusicalScore = self.myLabel("Format of musical score:")
         # 下拉框
         self.comboBox_head = ComboBox()  # 琴谱格式
-        self.comboBox_head.addItems([self.tr("Format of KeShiFu"), self.tr('Format of GuaGua')])
+        # self.comboBox_head.addItems([self.tr("Format of KeShiFu"), self.tr('Format of GuaGua')])
+        self.comboBox_head.addItems([self.tr("Format of KeShiFu")])
         self.comboBox_head.setCurrentIndex(0)
         self.comboBox_head.setMinimumWidth(165)
         self.comboBox_head.currentIndexChanged.connect(lambda: self.setScoreType())
@@ -118,7 +119,7 @@ class AutoPlayInterface(GalleryInterface):
         self.comboBox_lyre.currentIndexChanged.connect(lambda: self.setLyre())
         # 下拉框
         self.comboBox_pADD = ComboBox()  # 琶音加速
-        self.comboBox_pADD.addItems(["0", "1", "2", "3"])
+        self.comboBox_pADD.addItems([str(i) for i in range(10)])
         self.comboBox_pADD.setCurrentIndex(0)
         self.comboBox_pADD.setMinimumWidth(10)
         self.comboBox_pADD.currentIndexChanged.connect(lambda: self.setPaDD())
@@ -341,20 +342,20 @@ class AutoPlayInterface(GalleryInterface):
         label.setObjectName('sourcePathLabel')  # 风格设置
         return label
 
-    def choiceFile(self, beginPath=""):
+    def choiceFile(self):
         """
         文件选择对话框
         :param self: 父窗口对象
-        :param beginPath: 窗口开始路径
         """
-        if not path.exists(beginPath):
+        url = ConfigUtil.rYaml("autoPlay", "fileUrl")
+        if url is None or not path.isdir(url):
             key = OpenKey(HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
-            beginPath = QueryValueEx(key, "Desktop")[0]
-        files = QFileDialog.getOpenFileNames(self,
-                                             "选择脚本琴谱",
-                                             beginPath,
-                                             "Text Files (*.txt)")[0]
-        return files
+            url = QueryValueEx(key, "Desktop")[0]
+        flies = QFileDialog.getOpenFileNames(self, self.tr("Choice music score"),
+                                             url, self.tr("Music score ") + "(*.txt)")[0]
+        if len(flies) > 0:
+            ConfigUtil.wYaml(flies[0][:flies[0].rfind("/")], "autoPlay", "fileUrl")
+        return flies
 
     def showMessageDialog(self, text):
         """

@@ -2,15 +2,15 @@
 from qframelesswindow import WindowEffect
 from PyQt5.QtCore import (QEasingCurve, QEvent, QPropertyAnimation, QRect,
                           Qt, QSize, QRectF, pyqtSignal, QPoint, QTimer)
-from PyQt5.QtGui import QIcon, QColor, QPainter, QPen, QPixmap, QRegion, QCursor
+from PyQt5.QtGui import QIcon, QColor, QPainter, QPen, QPixmap, QRegion, QCursor, QTextCursor
 from PyQt5.QtWidgets import (QAction, QApplication, QMenu, QProxyStyle, QStyle,
                              QGraphicsDropShadowEffect, QListWidget, QWidget, QHBoxLayout,
-                             QListWidgetItem)
+                             QListWidgetItem, QLineEdit, QTextEdit)
 
 from ...common.smooth_scroll import SmoothScroll
 from ...common.icon import FluentIcon as FIF
 from ...common.icon import MenuIconEngine
-from ...common.style_sheet import setStyleSheet
+from ...common.style_sheet import FluentStyleSheet
 from ...common.config import isDarkTheme
 
 
@@ -44,13 +44,12 @@ class DWMMenu(QMenu):
             Qt.FramelessWindowHint | Qt.Popup | Qt.NoDropShadowWindowHint)
         self.setAttribute(Qt.WA_StyledBackground)
         self.setStyle(CustomMenuStyle())
-        setStyleSheet(self, 'menu')
+        FluentStyleSheet.MENU.apply(self)
 
     def event(self, e: QEvent):
         if e.type() == QEvent.WinIdChange:
             self.windowEffect.addMenuShadowEffect(self.winId())
         return QMenu.event(self, e)
-
 
 
 class MenuSeparator(QWidget):
@@ -166,13 +165,15 @@ class MenuActionListWidget(QListWidget):
         """ set the height of item """
         for i in range(self.count()):
             item = self.item(i)
-            item.setSizeHint(item.sizeHint().width(), i)
+            item.setSizeHint(item.sizeHint().width(), height)
 
         self.adjustSize()
 
 
 class RoundMenu(QWidget):
     """ Round corner menu """
+
+    closedSignal = pyqtSignal()
 
     def __init__(self, title="", parent=None):
         super().__init__(parent=parent)
@@ -207,7 +208,7 @@ class RoundMenu(QWidget):
         self.hBoxLayout.addWidget(self.view, 1, Qt.AlignCenter)
 
         self.hBoxLayout.setContentsMargins(12, 8, 12, 20)
-        setStyleSheet(self, 'menu')
+        FluentStyleSheet.MENU.apply(self)
 
         self.view.itemClicked.connect(self._onItemClicked)
         self.view.itemEntered.connect(self._onItemEntered)
@@ -248,7 +249,7 @@ class RoundMenu(QWidget):
         return self._title
 
     def clear(self):
-        """ clearSong all actions """
+        """ clear all actions """
         for i in range(len(self._actions)-1, -1, -1):
             self.removeAction(self._actions[i])
 
@@ -426,6 +427,10 @@ class RoundMenu(QWidget):
             return
 
         w = self.view.itemWidget(self.lastHoverSubMenuItem)
+
+        if w.menu.parentMenu.isHidden():
+            return
+
         pos = w.mapToGlobal(QPoint(w.width()+5, -5))
         w.menu.exec(pos)
 
@@ -491,6 +496,10 @@ class RoundMenu(QWidget):
         self.isHideBySystem = True
         e.accept()
 
+    def closeEvent(self, e):
+        e.accept()
+        self.closedSignal.emit()
+
     def menuActions(self):
         return self._actions
 
@@ -508,8 +517,9 @@ class RoundMenu(QWidget):
 
         # get the rect of menu item
         margin = view.viewportMargins()
-        rect = view.visualItemRect(self.menuItem).translated(view.mapToGlobal(QPoint()))
-        rect= rect.translated(margin.left(), margin.top()+2)
+        rect = view.visualItemRect(self.menuItem).translated(
+            view.mapToGlobal(QPoint()))
+        rect = rect.translated(margin.left(), margin.top()+2)
         if self.parentMenu.geometry().contains(pos) and not rect.contains(pos) and \
                 not self.geometry().contains(pos):
             view.clearSelection()
@@ -563,7 +573,8 @@ class RoundMenu(QWidget):
 
         rect = QApplication.screenAt(QCursor.pos()).availableGeometry()
         w, h = self.width() + 5, self.height() + 5
-        pos.setX(min(pos.x() - self.layout().contentsMargins().left(), rect.right() - w))
+        pos.setX(
+            min(pos.x() - self.layout().contentsMargins().left(), rect.right() - w))
         pos.setY(min(pos.y() - 4, rect.bottom() - h))
 
         if ani:
@@ -604,17 +615,8 @@ class RoundMenu(QWidget):
         self.exec(pos, ani)
 
 
-class LineEditMenu(RoundMenu):
-    """ Line edit menu """
-
-    def __init__(self, parent):
-        super().__init__("", parent)
-        self.animation = QPropertyAnimation(self, b"geometry")
-        self.animation.setDuration(300)
-        self.animation.setEasingCurve(QEasingCurve.OutQuad)
-        self.setProperty("selectAll", bool(self.parent().text()))
-        self.selectionStart = parent.selectionStart()
-        self.selectionLength = parent.selectionLength()
+class EditMenu(RoundMenu):
+    """ Edit menu """
 
     def createActions(self):
         self.cutAct = QAction(
@@ -651,30 +653,32 @@ class LineEditMenu(RoundMenu):
             shortcut="Ctrl+A",
             triggered=self.parent().selectAll
         )
-        self.action_list = [self.cutAct, self.copyAct,
-                            self.pasteAct, self.cancelAct, self.selectAllAct]
+        self.action_list = [
+            self.cutAct, self.copyAct,
+            self.pasteAct, self.cancelAct, self.selectAllAct
+        ]
 
-    def _onItemClicked(self, item):
-        if self.selectionLength:
-            self.parent().setSelection(self.selectionStart, self.selectionLength)
+    def _parentText(self):
+        raise NotImplementedError
 
-        super()._onItemClicked(item)
+    def _parentSelectedText(self):
+        raise NotImplementedError
 
     def exec(self, pos, ani=True):
         self.clear()
         self.createActions()
 
         if QApplication.clipboard().mimeData().hasText():
-            if self.parent().text():
-                if self.parent().selectedText():
+            if self._parentText():
+                if self._parentSelectedText():
                     self.addActions(self.action_list)
                 else:
                     self.addActions(self.action_list[2:])
             else:
                 self.addAction(self.pasteAct)
         else:
-            if self.parent().text():
-                if self.parent().selectedText():
+            if self._parentText():
+                if self._parentSelectedText():
                     self.addActions(
                         self.action_list[:2] + self.action_list[3:])
                 else:
@@ -683,3 +687,49 @@ class LineEditMenu(RoundMenu):
                 return
 
         super().exec(pos, ani)
+
+
+class LineEditMenu(EditMenu):
+    """ Line edit menu """
+
+    def __init__(self, parent: QLineEdit):
+        super().__init__("", parent)
+        self.selectionStart = parent.selectionStart()
+        self.selectionLength = parent.selectionLength()
+
+    def _onItemClicked(self, item):
+        if self.selectionStart >= 0:
+            self.parent().setSelection(self.selectionStart, self.selectionLength)
+
+        super()._onItemClicked(item)
+
+    def _parentText(self):
+        return self.parent().text()
+
+    def _parentSelectedText(self):
+        return self.parent().selectedText()
+
+
+class TextEditMenu(EditMenu):
+    """ Text edit menu """
+
+    def __init__(self, parent: QTextEdit):
+        super().__init__("", parent)
+        cursor = parent.textCursor()
+        self.selectionStart = cursor.selectionStart()
+        self.selectionLength = cursor.selectionEnd() - self.selectionStart + 1
+
+    def _parentText(self):
+        return self.parent().toPlainText()
+
+    def _parentSelectedText(self):
+        return self.parent().textCursor().selectedText()
+
+    def _onItemClicked(self, item):
+        if self.selectionStart >= 0:
+            cursor = self.parent().textCursor()
+            cursor.setPosition(self.selectionStart)
+            cursor.movePosition(
+                QTextCursor.Right, QTextCursor.KeepAnchor, self.selectionLength)
+
+        super()._onItemClicked(item)

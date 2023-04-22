@@ -4,7 +4,7 @@ from PyQt5.QtGui import (QBrush, QColor, QPixmap,
                          QPainter, QPen, QIntValidator, QRegExpValidator, QIcon)
 from PyQt5.QtWidgets import QApplication, QLabel, QWidget, QPushButton, QFrame, QVBoxLayout
 
-from ...common.style_sheet import setStyleSheet, getStyleSheet
+from ...common.style_sheet import FluentStyleSheet
 from ..widgets import Slider, ScrollArea, PushButton, PrimaryPushButton
 from ..widgets.line_edit import LineEdit
 from .mask_dialog_base import MaskDialogBase
@@ -94,7 +94,7 @@ class BrightnessSlider(Slider):
         """ set color """
         self.color = QColor(color)
         self.setValue(self.color.value())
-        qss = getStyleSheet('color_dialog')
+        qss = FluentStyleSheet.COLOR_DIALOG.content()
         qss = qss.replace('--slider-hue', str(self.color.hue()))
         qss = qss.replace('--slider-saturation', str(self.color.saturation()))
         self.setStyleSheet(qss)
@@ -134,7 +134,8 @@ class ColorLineEdit(LineEdit):
     valueChanged = pyqtSignal(str)
 
     def __init__(self, value, parent=None):
-        super().__init__(str(value), parent)
+        super().__init__(parent)
+        self.setText(str(value))
         self.setFixedSize(136, 33)
         self.setClearButtonEnabled(True)
         self.setValidator(QIntValidator(0, 255, self))
@@ -156,7 +157,7 @@ class HexColorLineEdit(ColorLineEdit):
         self.setValidator(QRegExpValidator(QRegExp(r'[A-Fa-f0-9]{6}')))
         self.setTextMargins(4, 0, 33, 0)
         self.prefixLabel = QLabel('#', self)
-        self.prefixLabel.move(10, 7)
+        self.prefixLabel.move(7, 2)
         self.prefixLabel.setObjectName('prefixLabel')
 
     def setColor(self, color):
@@ -261,7 +262,7 @@ class ColorDialog(MaskDialogBase):
         self.yesButton.setObjectName('yesButton')
         self.cancelButton.setObjectName('cancelButton')
         self.buttonGroup.setObjectName('buttonGroup')
-        setStyleSheet(self, 'color_dialog')
+        FluentStyleSheet.COLOR_DIALOG.apply(self)
         self.titleLabel.adjustSize()
         self.editLabel.adjustSize()
 
@@ -310,10 +311,9 @@ class ColorDialog(MaskDialogBase):
 
     def __onYesButtonClicked(self):
         """ yes button clicked slot """
+        self.accept()
         if self.color != self.oldColor:
             self.colorChanged.emit(self.color)
-
-        self.close()
 
     def updateStyle(self):
         """ update style sheet """
@@ -323,7 +323,7 @@ class ColorDialog(MaskDialogBase):
 
     def __connectSignalToSlot(self):
         """ connect signal to slot """
-        self.cancelButton.clicked.connect(self.close)
+        self.cancelButton.clicked.connect(self.reject)
         self.yesButton.clicked.connect(self.__onYesButtonClicked)
 
         self.huePanel.colorChanged.connect(self.__onHueChanged)

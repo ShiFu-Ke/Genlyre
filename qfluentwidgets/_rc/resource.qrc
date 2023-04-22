@@ -35,8 +35,8 @@
         <file>images/icons/Embed_white.svg</file>
         <file>images/icons/Feedback_black.svg</file>
         <file>images/icons/Feedback_white.svg</file>
-        <file>images/icons/FluorescentPen_black.svg</file>
-        <file>images/icons/FluorescentPen_white.svg</file>
+        <file>images/icons/Highlight_black.svg</file>
+        <file>images/icons/Highlight_white.svg</file>
         <file>images/icons/FolderAdd_black.svg</file>
         <file>images/icons/FolderAdd_white.svg</file>
         <file>images/icons/Font_black.svg</file>
@@ -69,8 +69,8 @@
         <file>images/icons/Update_white.svg</file>
         <file>images/icons/Video_black.svg</file>
         <file>images/icons/Video_white.svg</file>
-        <file>images/icons/Web_black.svg</file>
-        <file>images/icons/Web_white.svg</file>
+        <file>images/icons/Globe_black.svg</file>
+        <file>images/icons/Globe_white.svg</file>
         <file>images/icons/Zoom_black.svg</file>
         <file>images/icons/Zoom_white.svg</file>
         <file>images/icons/Language_black.svg</file>
@@ -103,12 +103,66 @@
         <file>images/icons/Constract_white.svg</file>
         <file>images/icons/Code_black.svg</file>
         <file>images/icons/Code_white.svg</file>
-        <file>images/state_tool_tip/close_normal.svg</file>
-        <file>images/state_tool_tip/close_hover.svg</file>
-        <file>images/state_tool_tip/close_pressed.svg</file>
-        <file>images/state_tool_tip/completed.svg</file>
-        <file>images/state_tool_tip/info.svg</file>
-        <file>images/state_tool_tip/running.svg</file>
+        <file>images/icons/Completed_black.svg</file>
+        <file>images/icons/Completed_white.svg</file>
+        <file>images/icons/Mail_black.svg</file>
+        <file>images/icons/Mail_white.svg</file>
+        <file>images/icons/Edit_black.svg</file>
+        <file>images/icons/Edit_white.svg</file>
+        <file>images/icons/More_black.svg</file>
+        <file>images/icons/More_white.svg</file>
+        <file>images/icons/Phone_black.svg</file>
+        <file>images/icons/Phone_white.svg</file>
+        <file>images/icons/Pin_black.svg</file>
+        <file>images/icons/Pin_white.svg</file>
+        <file>images/icons/ZoomOut_black.svg</file>
+        <file>images/icons/ZoomOut_white.svg</file>
+        <file>images/icons/Microphone_black.svg</file>
+        <file>images/icons/Microphone_white.svg</file>
+        <file>images/icons/Camera_black.svg</file>
+        <file>images/icons/Camera_white.svg</file>
+        <file>images/icons/ZoomIn_black.svg</file>
+        <file>images/icons/ZoomIn_white.svg</file>
+        <file>images/icons/BookShelf_black.svg</file>
+        <file>images/icons/BookShelf_white.svg</file>
+        <file>images/icons/Tag_black.svg</file>
+        <file>images/icons/Tag_white.svg</file>
+        <file>images/icons/Heart_black.svg</file>
+        <file>images/icons/Heart_white.svg</file>
+        <file>images/icons/Photo_black.svg</file>
+        <file>images/icons/Photo_white.svg</file>
+        <file>images/icons/Send_black.svg</file>
+        <file>images/icons/Send_white.svg</file>
+        <file>images/icons/SendFill_black.svg</file>
+        <file>images/icons/SendFill_white.svg</file>
+        <file>images/icons/Share_black.svg</file>
+        <file>images/icons/Share_white.svg</file>
+        <file>images/icons/Unpin_black.svg</file>
+        <file>images/icons/Unpin_white.svg</file>
+        <file>images/icons/SaveAs_black.svg</file>
+        <file>images/icons/SaveAs_white.svg</file>
+        <file>images/icons/Save_black.svg</file>
+        <file>images/icons/Save_white.svg</file>
+        <file>images/icons/Ringer_black.svg</file>
+        <file>images/icons/Ringer_white.svg</file>
+        <file>images/icons/ZipFolder_black.svg</file>
+        <file>images/icons/ZipFolder_white.svg</file>
+        <file>images/icons/History_black.svg</file>
+        <file>images/icons/History_white.svg</file>
+        <file>images/icons/Print_black.svg</file>
+        <file>images/icons/Print_white.svg</file>
+        <file>images/icons/Media_black.svg</file>
+        <file>images/icons/Media_white.svg</file>
+        <file>images/icons/View_black.svg</file>
+        <file>images/icons/View_white.svg</file>
+        <file>images/icons/Hide_black.svg</file>
+        <file>images/icons/Hide_white.svg</file>
+        <file>images/icons/Delete_black.svg</file>
+        <file>images/icons/Delete_white.svg</file>
+        <file>images/icons/Accept_black.svg</file>
+        <file>images/icons/Accept_white.svg</file>
+        <file>images/icons/DateTime_black.svg</file>
+        <file>images/icons/DateTime_white.svg</file>
         <file>images/acrylic/noise.png</file>
         <file>images/folder_list_dialog/Close_white.png</file>
         <file>images/folder_list_dialog/Close_black.png</file>
@@ -118,6 +172,26 @@
         <file>images/check_box/Accept_white.svg</file>
         <file>images/check_box/PartialAccept_black.svg</file>
         <file>images/check_box/PartialAccept_white.svg</file>
+        <file>images/info_bar/Error_light.svg</file>
+        <file>images/info_bar/Error_dark.svg</file>
+        <file>images/info_bar/Success_light.svg</file>
+        <file>images/info_bar/Success_dark.svg</file>
+        <file>images/info_bar/Warning_light.svg</file>
+        <file>images/info_bar/Warning_dark.svg</file>
+        <file>images/info_bar/Info_light.svg</file>
+        <file>images/info_bar/Info_dark.svg</file>
+        <file>images/spin_box/Up_white.svg</file>
+        <file>images/spin_box/Up_black.svg</file>
+        <file>images/spin_box/Down_white.svg</file>
+        <file>images/spin_box/Down_black.svg</file>
+        <file>images/tree_view/TreeViewClose_black.svg</file>
+        <file>images/tree_view/TreeViewOpen_black.svg</file>
+        <file>images/tree_view/TreeViewClose_white.svg</file>
+        <file>images/tree_view/TreeViewOpen_white.svg</file>
+        <file>images/time_picker/Up_white.svg</file>
+        <file>images/time_picker/Up_black.svg</file>
+        <file>images/time_picker/Down_white.svg</file>
+        <file>images/time_picker/Down_black.svg</file>
 
         <file>qss/dark/color_dialog.qss</file>
         <file>qss/dark/dialog.qss</file>
@@ -136,6 +210,10 @@
         <file>qss/dark/slider.qss</file>
         <file>qss/dark/line_edit.qss</file>
         <file>qss/dark/check_box.qss</file>
+        <file>qss/dark/info_bar.qss</file>
+        <file>qss/dark/spin_box.qss</file>
+        <file>qss/dark/tree_view.qss</file>
+        <file>qss/dark/time_picker.qss</file>
 
         <file>qss/light/color_dialog.qss</file>
         <file>qss/light/dialog.qss</file>
@@ -154,5 +232,9 @@
         <file>qss/light/slider.qss</file>
         <file>qss/light/line_edit.qss</file>
         <file>qss/light/check_box.qss</file>
+        <file>qss/light/info_bar.qss</file>
+        <file>qss/light/spin_box.qss</file>
+        <file>qss/light/tree_view.qss</file>
+        <file>qss/light/time_picker.qss</file>
     </qresource>
 </RCC>

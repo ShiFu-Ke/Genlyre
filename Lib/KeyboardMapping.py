@@ -4,8 +4,8 @@
 # @ Time 22:34
 from ctypes import c_long, pythonapi, py_object
 from inspect import isclass
-from os import system
 from threading import Thread
+from util import Util
 
 
 class KeyboardMapping:
@@ -37,15 +37,16 @@ class KeyboardMapping:
             pythonapi.PyThreadState_SetAsyncExc(tid, None)
             raise SystemError("PyThreadState_SetAsyncExc failed")
 
-    def start(self, fileName):
+    def start(self, path):
         """
         开启键盘映射
-        :param fileName: 映射文件名称
+        :param path: 路径
         """
-        system('chcp 65001')  # 修改输出编码方式
+        # MyThread.cmd('chcp 65001')  # 修改输出编码方式
         self.t = MyThread()
         self.t.setDaemon(True)
-        self.t.fileName = fileName
+        self.t.fileName = "default"
+        self.t.path = path
         self.t.start()
 
     def stop(self):
@@ -53,9 +54,12 @@ class KeyboardMapping:
         关闭键盘映射
         :return:
         """
-        self.t.kile()
-        self.t = None
-        system("TASKKILL /IM KeyboardMapping.exe /F")
+        try:
+            self.t.kile()
+            self.t = None
+        except:
+            pass
+        Util.cmd("TASKKILL /IM KeyboardMapping.exe /F")
 
 
 class MyThread(Thread):
@@ -66,6 +70,7 @@ class MyThread(Thread):
     def __init__(self, *args, **kwargs):
         super(MyThread, self).__init__(*args, **kwargs)
         self.fileName = ""
+        self.path = ""
 
     def kile(self):
         try:
@@ -74,4 +79,6 @@ class MyThread(Thread):
             pass
 
     def run(self):
-        system("..\\bin\\KeyboardMapping.exe ..\\keyMap\\%s.ahk &" % self.fileName)
+        Util.cmd(self.path + "bin\\KeyboardMapping.exe " + self.path + "data\\%s.ahk &" % self.fileName)
+
+

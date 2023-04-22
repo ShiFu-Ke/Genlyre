@@ -251,6 +251,26 @@
         <translation>琴谱转换</translation>
     </message>
     <message>
+        <location filename="../../view/main_window.py" line="139"/>
+        <source>Lyre</source>
+        <translation>模拟原琴</translation>
+    </message>
+    <message>
+        <location filename="../../view/main_window.py" line="140"/>
+        <source>Keyboard Mapping</source>
+        <translation>键盘映射</translation>
+    </message>
+    <message>
+        <location filename="../../view/main_window.py" line="141"/>
+        <source>Write music scores</source>
+        <translation>扒谱工具</translation>
+    </message>
+    <message>
+        <location filename="../../view/main_window.py" line="142"/>
+        <source>Practice the piano</source>
+        <translation>练琴辅助</translation>
+    </message>
+    <message>
         <location filename="../../view/main_window.py" line="143"/>
         <source>Dialogs</source>
         <translation>对话框</translation>
@@ -552,6 +572,11 @@
         <source>Configuration takes effect after restart</source>
         <translation>配置在重启软件后生效</translation>
     </message>
+    <message>
+        <location filename="../../view/setting_interface.py" line="198"/>
+        <source>Updated successfully</source>
+        <translation>更新成功</translation>
+    </message>
 </context>
 <context>
     <name>StatusInfoInterface</name>
@@ -686,6 +711,46 @@
         <source>You can convert the music score to the desired format from here.</source>
         <translation>你可以从这里将琴谱转换成想要的格式。</translation>
     </message>
+    <message>
+        <location filename="../../common/translator.py" line="20"/>
+        <source>Lyre</source>
+        <translation>模拟原琴</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="21"/>
+        <source>You can play the piano here.</source>
+        <translation>你可以在这里弹琴。</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="22"/>
+        <source>Keyboard Mapping</source>
+        <translation>键盘映射</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="23"/>
+        <source>You can set keyboard mapping while playing.</source>
+        <translation>你在演奏的时候可以设置键盘映射。</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="24"/>
+        <source>Write music scores</source>
+        <translation>扒谱工具</translation>
+    </message>
+   <message>
+        <location filename="../../common/translator.py" line="25"/>
+        <source>You can conveniently write music scores here.</source>
+        <translation>你可以这里方便的扒谱。</translation>
+    </message>
+    <message>
+        <location filename="../../common/translator.py" line="26"/>
+        <source>Practice the piano</source>
+        <translation>练琴辅助</translation>
+    </message>
+   <message>
+        <location filename="../../common/translator.py" line="27"/>
+        <source>You can practice playing the piano here.</source>
+        <translation>你可以在这里练习弹琴。</translation>
+    </message>
 </context>
 <context>
     <name>AutoPlayInterface</name>
@@ -798,6 +863,812 @@
         <location filename="../../view/autoPlay_interface.py" line="78"/>
         <source>Arpeggio acceleration:</source>
         <translation>琶音加速：</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="79"/>
+        <source>Choice music score</source>
+        <translation>选择琴谱</translation>
+    </message>
+    <message>
+        <location filename="../../view/autoPlay_interface.py" line="1"/>
+        <source>Music score </source>
+        <translation>琴谱 </translation>
+    </message>
+</context>
+<context>
+<name>ScoreConversionInterface</name>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="1"/>
+        <source>Music score </source>
+        <translation>琴谱 </translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="2"/>
+        <source>Choice music score</source>
+        <translation>选择琴谱</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="3"/>
+        <source>Choice dir</source>
+        <translation>选择文件夹</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="4"/>
+        <source>Input music score：</source>
+        <translation>导入琴谱：</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="5"/>
+        <source>Output music directory：</source>
+        <translation>导出目录：</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="6"/>
+        <source>Choice</source>
+        <translation>选择</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="7"/>
+        <source>Conversion successful</source>
+        <translation>转换成功</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="8"/>
+        <source>Conversion failed</source>
+        <translation>转换失败</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="9"/>
+        <source>Conversion type:</source>
+        <translation>转换类型：</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="10"/>
+        <source>Conversion</source>
+        <translation>转换</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="11"/>
+        <source>Please input a file</source>
+        <translation>请导入琴谱</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="12"/>
+        <source>Please select a output path</source>
+        <translation>请选择导出目录</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="13"/>
+        <source>Mid to script</source>
+        <translation>mid转脚本</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="14"/>
+        <source>Mid to integration</source>
+        <translation>mid转整合</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="15"/>
+        <source>Mid to JS</source>
+        <translation>mid转js</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="16"/>
+        <source>Keyboard to number</source>
+        <translation>键盘转数字</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="17"/>
+        <source>Number to keyboard</source>
+        <translation>数字转键盘</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="18"/>
+        <source>Script to JS</source>
+        <translation>脚本转js</translation>
+    </message>
+    <message>
+        <location filename="../../view/score_conversion_interface.py" line="19"/>
+        <source>Windsong to vintage(keyboard)</source>
+        <translation>风物转老旧(键盘)</translation>
+    </message>
+</context>
+<context>
+<name>LyreInterface</name>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="1"/>
+        <source>Select lyre:</source>
+        <translation>选择琴：</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="2"/>
+        <source>Shortcut keys:</source>
+        <translation>快捷键开关：</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="3"/>
+        <source>off</source>
+        <translation>关</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="4"/>
+        <source>on</source>
+        <translation>开</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="5"/>
+        <source>Windsong Lyre</source>
+        <translation>风物之诗琴</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="6"/>
+        <source>Vintage Lyre</source>
+        <translation>老旧的诗琴</translation>
+    </message>
+    <message>
+        <location filename="../../view/lyre_interface.py" line="7"/>
+        <source>Floral Zither</source>
+        <translation>镜花之琴</translation>
+    </message>
+</context>
+<context>
+<name>KeyMappingInterface</name>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="1"/>
+        <source>Key type</source>
+        <translation>按键类型</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="2"/>
+        <source>key</source>
+        <translation>按键</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="3"/>
+        <source>LButton</source>
+        <translation>鼠标左键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="4"/>
+        <source>RButton</source>
+        <translation>鼠标右键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="5"/>
+        <source>MButton</source>
+        <translation>鼠标中键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="6"/>
+        <source>XButton1</source>
+        <translation>鼠标第四按键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="7"/>
+        <source>XButton2</source>
+        <translation>鼠标第五按键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="8"/>
+        <source>WheelDown</source>
+        <translation>滚轮向下</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="9"/>
+        <source>WheelUp</source>
+        <translation>滚轮向上</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="10"/>
+        <source>WheelLeft</source>
+        <translation>滚轮向左</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="11"/>
+        <source>WheelRight</source>
+        <translation>滚轮向右</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="12"/>
+        <source>CapsLock</source>
+        <translation>大小写锁定键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="13"/>
+        <source>Space</source>
+        <translation>空格键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="14"/>
+        <source>Tab</source>
+        <translation>Tab键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="15"/>
+        <source>Enter</source>
+        <translation>回车键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="16"/>
+        <source>Escape</source>
+        <translation>退出键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="17"/>
+        <source>Backspace</source>
+        <translation>退格键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="18"/>
+        <source>ScrollLock</source>
+        <translation>滚动锁定键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="19"/>
+        <source>Delete</source>
+        <translation>删除键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="20"/>
+        <source>Insert</source>
+        <translation>插入改写切换键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="21"/>
+        <source>Home</source>
+        <translation>Home键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="22"/>
+        <source>End</source>
+        <translation>End键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="23"/>
+        <source>PgUp</source>
+        <translation>向上翻页键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="24"/>
+        <source>PgDn</source>
+        <translation>向下翻页键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="25"/>
+        <source>Up</source>
+        <translation>向上方向键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="26"/>
+        <source>Down</source>
+        <translation>向下方向键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="27"/>
+        <source>Left</source>
+        <translation>向左方向键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="28"/>
+        <source>Right</source>
+        <translation>向右方向键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="29"/>
+        <source>NumLock</source>
+        <translation>小键盘开关</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="30"/>
+        <source>Numpad0</source>
+        <translation>小键盘0</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="31"/>
+        <source>Numpad1</source>
+        <translation>小键盘1</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="32"/>
+        <source>Numpad2</source>
+        <translation>小键盘2</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="33"/>
+        <source>Numpad3</source>
+        <translation>小键盘3</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="34"/>
+        <source>Numpad4</source>
+        <translation>小键盘4</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="35"/>
+        <source>Numpad5</source>
+        <translation>小键盘5</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="36"/>
+        <source>Numpad6</source>
+        <translation>小键盘6</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="37"/>
+        <source>Numpad7</source>
+        <translation>小键盘7</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="38"/>
+        <source>Numpad8</source>
+        <translation>小键盘8</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="39"/>
+        <source>Numpad9</source>
+        <translation>小键盘9</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="40"/>
+        <source>NumpadDiv</source>
+        <translation>小键盘除</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="41"/>
+        <source>NumpadMult</source>
+        <translation>小键盘乘</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="42"/>
+        <source>NumpadAdd</source>
+        <translation>小键盘加</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="43"/>
+        <source>NumpadSub</source>
+        <translation>小键盘减</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="44"/>
+        <source>NumpadEnter</source>
+        <translation>小键盘回车</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="45"/>
+        <source>LWin</source>
+        <translation>左Windows</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="46"/>
+        <source>RWin</source>
+        <translation>右Windows</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="47"/>
+        <source>LCtrl</source>
+        <translation>左Ctrl</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="48"/>
+        <source>RCtrl</source>
+        <translation>右Ctrl</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="49"/>
+        <source>LShift</source>
+        <translation>左Shift</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="50"/>
+        <source>RShift</source>
+        <translation>右Shift</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="51"/>
+        <source>LAlt</source>
+        <translation>左Alt</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="52"/>
+        <source>RAlt</source>
+        <translation>右Alt</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="53"/>
+        <source>Browser_Back</source>
+        <translation>后退</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="54"/>
+        <source>Browser_Forward</source>
+        <translation>前进</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="55"/>
+        <source>Browser_Refresh</source>
+        <translation>刷新</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="56"/>
+        <source>Browser_Stop</source>
+        <translation>停止</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="57"/>
+        <source>Browser_Search</source>
+        <translation>搜索</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="58"/>
+        <source>Browser_Favorites</source>
+        <translation>收藏夹</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="59"/>
+        <source>Browser_Home</source>
+        <translation>主页</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="60"/>
+        <source>Volume_Mute</source>
+        <translation>静音</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="61"/>
+        <source>Volume_Down</source>
+        <translation>调低音量</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="62"/>
+        <source>Volume_Up</source>
+        <translation>增加音量</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="63"/>
+        <source>Media_Next</source>
+        <translation>下一首</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="64"/>
+        <source>Media_Prev</source>
+        <translation>上一首</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="65"/>
+        <source>Media_Stop</source>
+        <translation>媒体停止</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="66"/>
+        <source>Media_Play_Pause</source>
+        <translation>Play/Pause</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="67"/>
+        <source>Launch_Mail</source>
+        <translation>电子邮件</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="68"/>
+        <source>Launch_Media</source>
+        <translation>播放器</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="69"/>
+        <source>Launch_App1</source>
+        <translation>此电脑</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="70"/>
+        <source>Launch_App2</source>
+        <translation>计算器</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="71"/>
+        <source>AppsKey</source>
+        <translation>菜单键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="72"/>
+        <source>PrintScreen</source>
+        <translation>捕获屏幕</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="73"/>
+        <source>Sleep</source>
+        <translation>休眠键</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="74"/>
+        <source>mouse</source>
+        <translation>鼠标</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="75"/>
+        <source>keyboard</source>
+        <translation>主键盘</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="76"/>
+        <source>Keypad</source>
+        <translation>小键盘</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="77"/>
+        <source>Function keys</source>
+        <translation>功能键</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="78"/>
+        <source>cursor control</source>
+        <translation>光标控制</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="79"/>
+        <source>Key modifier</source>
+        <translation>按键修饰符</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="80"/>
+        <source>multi-media</source>
+        <translation>多媒体</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="81"/>
+        <source>Special keys</source>
+        <translation>特殊键</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="87"/>
+        <source>off</source>
+        <translation>关</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="88"/>
+        <source>on</source>
+        <translation>开</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="89"/>
+        <source>Keyboard mapping switch</source>
+        <translation>键盘映射开关</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="90"/>
+        <source>Add</source>
+        <translation>添加</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="91"/>
+        <source>Delete mapping</source>
+        <translation>删除映射</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="89"/>
+        <source>Remind</source>
+        <translation>提示</translation>
+    </message>
+   <message>
+        <location filename="../../view/keyMapping_interface.py" line="90"/>
+        <source>Please click on update</source>
+        <translation>请点击更新按钮</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="90"/>
+        <source>Update</source>
+        <translation>更新</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="91"/>
+        <source>Update success</source>
+        <translation>更新成功</translation>
+    </message>
+</context>
+<context>
+<name>WriteScoresInterface</name>
+    <message>
+        <location filename="../../view/write_scores_interface.py" line="2"/>
+        <source>Speed:</source>
+        <translation>速度：</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="3"/>
+        <source>Play:</source>
+        <translation>播放：</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="4"/>
+        <source>Play all</source>
+        <translation>从开头播放</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="5"/>
+        <source>Play cursor</source>
+        <translation>从光标播放</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="6"/>
+        <source>Play select</source>
+        <translation>播放已选中</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="7"/>
+        <source>Stop playing</source>
+        <translation>停止播放</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="8"/>
+        <source>Select lyre:</source>
+        <translation>音源：</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="9"/>
+        <source>Output</source>
+        <translation>导出琴谱</translation>
+    </message>
+    <message>
+        <location filename="../../view/write_scores_interface.py" line="10"/>
+        <source>Windsong Lyre</source>
+        <translation>风物之诗琴</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="11"/>
+        <source>Vintage Lyre</source>
+        <translation>老旧的诗琴</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="12"/>
+        <source>Floral Zither</source>
+        <translation>镜花之琴</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="13"/>
+        <source>Arpeggio acceleration:</source>
+        <translation>琶音加速</translation>
+    </message>
+    <message>
+        <location filename="../../view/write_scores_interface.py" line="14"/>
+        <source>Save music score</source>
+        <translation>保存琴谱</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="15"/>
+        <source>Music score</source>
+        <translation>琴谱</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="16"/>
+        <source>Remind</source>
+        <translation>提示</translation>
+    </message>
+   <message>
+        <location filename="../../view/write_scores_interface.py" line="17"/>
+        <source>Save success</source>
+        <translation>保存成功</translation>
+    </message>
+    <message>
+        <location filename="../../view/write_scores_interface.py" line="18"/>
+        <source>Please check that your parentheses match</source>
+        <translation>请检查你的括号是否匹配</translation>
+    </message>
+</context>
+<context>
+<name>PracticePianoInterface</name>
+    <message>
+        <location filename="../../view/practice_piano_interface.py" line="1"/>
+        <source>If you are interested in this software, if you know python and can write waterfall streams, please sign up for this project. If you want to take part</source>
+        <translation>招募能人异士，如果你对这个软件有兴趣，如果你懂python，而且会写瀑布流，欢迎报名参加此项目。如果你想参加，请</translation>
+    </message>
+   <message>
+        <location filename="../../view/practice_piano_interface.py" line="2"/>
+        <source>Note: This software is completely free and there is no salary for participating in this program (0.0)</source>
+        <translation>注意：此软件完全免费，如果参加此项目也不会有工资（0.0）</translation>
+    </message>
+   <message>
+        <location filename="../../view/practice_piano_interface.py" line="3"/>
+        <source>click here</source>
+        <translation>点击此处</translation>
+    </message>
+</context>
+<context>
+<name>BannerWidget</name>
+    <message>
+        <location filename="../../view/home_interface.py" line="1"/>
+        <source>UP home page</source>
+        <translation>UP主页</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="2"/>
+        <source>Click here to watch the piano playing video.</source>
+        <translation>点击此处可以观看弹琴视频。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="3"/>
+        <source>Click here to view tutorials on how to use each feature.</source>
+        <translation>点击此处可以观看各功能的使用教程。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="4"/>
+        <source>Usage method</source>
+        <translation>使用方法</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="5"/>
+        <source>Download</source>
+        <translation>下载</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="6"/>
+        <source>Click to check for updates to the latest version of Genlyre.</source>
+        <translation>点击可以检查更新为最新版本的Genlyre。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="7"/>
+        <source>Help us improve Genlyre by providing feedback.</source>
+        <translation>提供反馈可以帮助我们改进Genlyre。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="8"/>
+        <source>Send feedback</source>
+        <translation>提供反馈</translation>
+    </message>
+</context>
+<context>
+<name>HomeInterface</name>
+    <message>
+        <location filename="../../view/home_interface.py" line="1"/>
+        <source>Quick jump</source>
+        <translation>快速跳转</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="2"/>
+        <source>Auto play</source>
+        <translation>自动演奏</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="3"/>
+        <source>Music score conversion</source>
+        <translation>琴谱转换</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="4"/>
+        <source>Write music scores</source>
+        <translation>扒谱工具</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="5"/>
+        <source>Lyre</source>
+        <translation>模拟原琴</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="6"/>
+        <source>Keyboard Mapping</source>
+        <translation>键盘映射</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="7"/>
+        <source>After importing the score, it can be played automatically.</source>
+        <translation>导入琴谱后可以自动演奏。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="8"/>
+        <source>You can convert the music score to the desired format from here.</source>
+        <translation>你可以从这里将琴谱转换成想要的格式。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="9"/>
+        <source>You can conveniently write music scores here.</source>
+        <translation>你可以这里方便的扒谱。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="10"/>
+        <source>You can play the piano here.</source>
+        <translation>你可以在这里弹琴。</translation>
+    </message>
+   <message>
+        <location filename="../../view/home_interface.py" line="11"/>
+        <source>You can set keyboard mapping while playing.</source>
+        <translation>你在演奏的时候可以设置键盘映射。</translation>
     </message>
 </context>
 </TS>

@@ -8,7 +8,7 @@ from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QApplication
 
 from .navigation_widget import NavigationPushButton, NavigationToolButton, NavigationWidget, NavigationSeparator
 from ..widgets.scroll_area import ScrollArea
-from ...common.style_sheet import setStyleSheet
+from ...common.style_sheet import FluentStyleSheet
 from ...common.icon import FluentIconBase
 from ...common.icon import FluentIcon as FIF
 
@@ -21,7 +21,7 @@ class NavigationDisplayMode(Enum):
     MENU = 3
 
 
-class NavigationItemPostion(Enum):
+class NavigationItemPosition(Enum):
     """ Navigation item position """
     TOP = 0
     SCROLL = 1
@@ -87,7 +87,7 @@ class NavigationPanel(QFrame):
 
         self.setProperty('menu', False)
         self.scrollWidget.setObjectName('scrollWidget')
-        setStyleSheet(self, 'navigation_interface')
+        FluentStyleSheet.NAVIGATION_INTERFACE.apply(self)
         self.__initLayout()
 
     def __initLayout(self):
@@ -112,7 +112,7 @@ class NavigationPanel(QFrame):
         self.topLayout.addWidget(self.returnButton, 0, Qt.AlignTop)
         self.topLayout.addWidget(self.menuButton, 0, Qt.AlignTop)
 
-    def addItem(self, routeKey: str, icon: Union[str, QIcon, FluentIconBase], text: str, onClick, selectable=True, position=NavigationItemPostion.TOP):
+    def addItem(self, routeKey: str, icon: Union[str, QIcon, FluentIconBase], text: str, onClick, selectable=True, position=NavigationItemPosition.TOP):
         """ add navigation item
 
         Parameters
@@ -129,7 +129,7 @@ class NavigationPanel(QFrame):
         onClick: callable
             the slot connected to item clicked signal
 
-        position: NavigationItemPostion
+        position: NavigationItemPosition
             where the button is added
 
         selectable: bool
@@ -141,7 +141,7 @@ class NavigationPanel(QFrame):
         button = NavigationPushButton(icon, text, selectable, self)
         self.addWidget(routeKey, button, onClick, position)
 
-    def addWidget(self, routeKey: str, widget: NavigationWidget, onClick, position=NavigationItemPostion.TOP):
+    def addWidget(self, routeKey: str, widget: NavigationWidget, onClick, position=NavigationItemPosition.TOP):
         """ add custom widget
 
         Parameters
@@ -155,7 +155,7 @@ class NavigationPanel(QFrame):
         onClick: callable
             the slot connected to item clicked signal
 
-        position: NavigationItemPostion
+        position: NavigationItemPosition
             where the button is added
         """
         if routeKey in self.items:
@@ -166,9 +166,12 @@ class NavigationPanel(QFrame):
         widget.setProperty('routeKey', routeKey)
         self.items[routeKey] = widget
 
+        if self.displayMode in [NavigationDisplayMode.EXPAND, NavigationDisplayMode.MENU]:
+            widget.setCompacted(False)
+
         self._addWidgetToLayout(widget, position)
 
-    def addSeparator(self, position=NavigationItemPostion.TOP):
+    def addSeparator(self, position=NavigationItemPosition.TOP):
         """ add separator
 
         Parameters
@@ -179,12 +182,12 @@ class NavigationPanel(QFrame):
         separator = NavigationSeparator(self)
         self._addWidgetToLayout(separator, position)
 
-    def _addWidgetToLayout(self, widget: NavigationWidget, position: NavigationItemPostion):
+    def _addWidgetToLayout(self, widget: NavigationWidget, position: NavigationItemPosition):
         """ add widget to layout """
-        if position == NavigationItemPostion.TOP:
+        if position == NavigationItemPosition.TOP:
             widget.setParent(self)
             self.topLayout.addWidget(widget, 0, Qt.AlignTop)
-        elif position == NavigationItemPostion.SCROLL:
+        elif position == NavigationItemPosition.SCROLL:
             widget.setParent(self.scrollWidget)
             self.scrollLayout.addWidget(widget, 0, Qt.AlignTop)
         else:
@@ -192,6 +195,21 @@ class NavigationPanel(QFrame):
             self.bottomLayout.addWidget(widget, 0, Qt.AlignBottom)
 
         widget.show()
+
+    def removeWidget(self, routeKey: str):
+        """ remove widget
+
+        Parameters
+        ----------
+        routeKey: str
+            the unique name of item
+        """
+        if routeKey not in self.items:
+            return
+
+        w = self.items.pop(routeKey)
+        w.deleteLater()
+        self.history.remove(routeKey, True)
 
     def setMenuButtonVisible(self, isVisible: bool):
         """ set whether the menu button is visible """
@@ -350,6 +368,7 @@ class NavigationPanel(QFrame):
         """ set the routing key to use when the navigation history is empty """
         self.history.defaultRouteKey = key
 
+
 class NavigationItemLayout(QVBoxLayout):
     """ Navigation layout """
 
@@ -380,11 +399,13 @@ class NavigationHistory(QObject):
     @defaultRouteKey.setter
     def defaultRouteKey(self, key):
         if key not in self.items:
-            raise ValueError(f'The route key `{key}` has not been registered yet.')
+            raise ValueError(
+                f'The route key `{key}` has not been registered yet.')
 
         self._defaultRouteKey = key
 
     def push(self, routeKey: str):
+        """ push history """
         if not self.history and self.defaultRouteKey != routeKey:
             self.history.append(routeKey)
             self.emptyChanged.emit(False)
@@ -392,11 +413,29 @@ class NavigationHistory(QObject):
             self.history.append(routeKey)
 
     def pop(self):
+        """ pop history """
         if not self.history:
             return
 
         self.history.pop()
+        self._navigate()
 
+    def remove(self, routeKey: str, all=False):
+        """ remove history """
+        if routeKey not in self.history:
+            return
+
+        if all:
+            self.history = [i for i in self.history if i != routeKey]
+        else:
+            for i in range(len(self.history)-1, -1, -1):
+                if self.history[i] == routeKey:
+                    self.history.pop(i)
+                    break
+
+        self._navigate()
+
+    def _navigate(self):
         if self.history:
             self.items[self.history[-1]].clicked.emit(False)
         else:

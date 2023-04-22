@@ -10,3 +10,4 @@ pyqt5_plugins
 pyyaml==3.13
 keyboard
 playsound
+mido

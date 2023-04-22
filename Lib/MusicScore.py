@@ -4,6 +4,7 @@
 # @ Time 23:13
 from re import sub
 from util.Util import Util
+from .midi import Midi
 
 key = ["Z", "X", "C", "V", "B", "N", "M", "A", "S", "D", "F", "G", "H", "J", "Q", "W", "E", "R", "T", "Y", "U"]
 
@@ -140,7 +141,7 @@ class MusicScore:
         """
         呱呱格式转刻师傅格式
         :param data: 呱呱格式内容
-        :return: 刻师傅格式，刻师傅时间参数
+        :return: 刻师傅格式
         """
         time = int(data[:data.find("\n")])
         data_tmp = data.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
@@ -263,7 +264,7 @@ class MusicScore:
             if "." not in data_tmp:
                 return False, "首行必须是小数，整数请加\".0\"（如：1.0）！"
             tmp01 = 0
-            for i in data.upper():
+            for i in MusicScore.nuToJp(data[data.find("\n") + 1:]).upper():
                 if i in key:
                     tmp01 = 1
                     break
@@ -414,3 +415,238 @@ class MusicScore:
             data += number[i]
             i += 1
         return data
+
+    @staticmethod
+    def WindsongToVintage(url, output):
+        """风物之诗琴谱转老旧的诗琴谱"""
+        file = open(url, 'r', encoding="UTF-8")
+        data = file.read()
+        file.close()
+        data01 = "ZXCVBNMASDFGHJQWERTYU"
+        data02 = "AZXCVBNMASDFGHJQSERTH"
+        out = ""
+        for j in data:
+            if j in data01:
+                out += data02[data01.find(j)]
+            else:
+                out += j
+        out = sub("MM", "M", out)
+        out = sub("SS", "S", out)
+        out = sub("HH", "H", out)
+        file01 = open(output + url[url.rfind("/"):-4] + "(老旧).txt", 'w', encoding="UTF-8")
+        file01.write(out)
+        file01.close()
+
+    @staticmethod
+    def numberToKey(url, output):
+        """数字转键盘"""
+        # 加第一行数字
+        file = open(url, 'r', encoding="UTF-8")
+        number = file.read()
+        file.close()
+        key_up = 'QWERTYU'
+        key_mid = 'ASDFGHJ'
+        key_down = 'ZXCVBNM'
+        data = ""
+        i = 0
+        length = len(number)
+        while i < length:
+            try:
+                if 1 <= int(number[i]) <= 7:
+                    data += key_mid[int(number[i]) - 1]
+                    i += 1
+                    continue
+            except ValueError:
+                pass
+            if number[i] == '+' and number[i + 1].isalnum():
+                data += key_up[int(number[i + 1]) - 1]
+                i += 2
+                continue
+            if number[i] == '-' and number[i + 1].isalnum():
+                data += key_down[int(number[i + 1]) - 1]
+                i += 2
+                continue
+            if number[i] == '0':
+                data += "L"
+                i += 1
+                continue
+            data += number[i]
+            i += 1
+        file01 = open(output + url[url.rfind("/"):-4] + "(键盘).txt", 'w', encoding="UTF-8")
+        file01.write(data)
+        file01.close()
+
+    @staticmethod
+    def keyToNumber(url, output):
+        """键盘转数字"""
+        key_up = 'QWERTYU'
+        key_mid = 'ASDFGHJ'
+        key_down = 'ZXCVBNM'
+        file = open(url, 'r', encoding="UTF-8")
+        tmp = file.read()
+        file.close()
+        data = ""
+        for i in tmp:
+            if i.upper() in key_up:
+                data += "+" + str(key_up.index(i.upper()) + 1)
+            elif i.upper() in key_mid:
+                data += str(key_mid.index(i.upper()) + 1)
+            elif i.upper() in key_down:
+                data += "-" + str(key_down.index(i.upper()) + 1)
+            elif i.upper() == "L":
+                data += " "
+            else:
+                data += i
+        file01 = open(output + url[url.rfind("/"):-4] + "(数字).txt", 'w', encoding="UTF-8")
+        file01.write(data)
+        file01.close()
+
+    @staticmethod
+    def scriptToJS(url, output):
+        """脚本转js"""
+        file = open(url, 'r', encoding="UTF-8")
+        tmp = file.read()
+        file.close()
+        tmp = MusicScore.keToGua(tmp)
+        MusicScore.guaToJS(tmp[tmp.find("\n"):], float(tmp[:tmp.find("\n")]), url, output)
+
+    @staticmethod
+    def midToJs(url, output):
+        data = Midi.get_keys(url)
+        MusicScore.guaToJS(data[0], data[2], url, output)
+
+    @staticmethod
+    def guaToJS(data, time, url, output):
+        dataKey = data.replace("\n", "").replace("+", "====").replace("-", "==")
+        dataEnd = Midi.jsTitle + "\n"
+        if len(dataKey) > 0:
+            while dataKey[0] == "=":
+                dataKey = dataKey[1:]
+        time = time
+        tmp = 0
+        for i in dataKey:
+            if i == "=":
+                tmp += 1
+            else:
+                if tmp > 0:
+                    dataEnd += "t(" + str(int(tmp * time)) + ");\n"
+                    tmp = 0
+                dataEnd += i + "();\n"
+        file02 = open(output + url[url.rfind("/"):-4] + ".js", 'w', encoding="UTF-8")
+        file02.write(dataEnd)
+        file02.close()
+
+    @staticmethod
+    def midToScript(url, output):
+        """midi转脚本"""
+        data = Midi.get_keys(url)
+
+        keData = MusicScore.guaTokeSou(data[0])  # 刻师傅格式，不带时间
+        # 导出刻师傅脚本琴谱
+        file01 = open(output + url[url.rfind("/"):-4] + "（脚本琴谱）.txt", 'w', encoding="UTF-8")
+        file01.write(str(data[1]) + "\n" + keData)
+        file01.close()
+
+    @staticmethod
+    def midToIntegration(url, output):
+        """mid转整合"""
+        data = Midi.get_keys(url)
+        keData = MusicScore.guaTokeSou(data[0])  # 刻师傅格式，不带时间
+        # 导出刻师傅整合琴谱
+        file01 = open(output + url[url.rfind("/"):-4] + "(整合琴谱).txt", 'w', encoding="UTF-8")
+        file01.write(MusicScore.transition(keData))
+        file01.close()
+
+    @staticmethod
+    def midToGua(url, output):
+        """mid转呱"""
+        data = Midi.get_keys(url)
+        # 导出呱格式
+        file02 = open(output + url[url.rfind("/"):-4] + "(呱).txt", 'w', encoding="UTF-8")
+        file02.write(str(int(data[1] * 125)) + "\n" + data[0])
+        file02.close()
+
+    @staticmethod
+    def transition(InStr):
+        """
+        键盘转整合
+        :param InStr: 键盘
+        :return: 整合
+        """
+        jp = ["Q", "W", "E", "R", "T", "Y", "U", "A", "S", "D", "F", "G", "H", "J", "Z", "X", "C", "V", "B", "N", "M"]
+        sz = ["+1", "+2", "+3", "+4", "+5", "+6", "+7", "1", "2", "3", "4", "5", "6", "7", "-1", "-2", "-3", "-4", "-5",
+              "-6",
+              "-7"]
+        dataStr = ""
+        for k in InStr:
+            if k in jp:
+                dataStr += sz[jp.index(k)]
+            else:
+                dataStr += k
+        end = "键盘:\n" + InStr + "\n\n\n数字:\n" + dataStr
+        return end
+
+    @staticmethod
+    def guaTokeSou(dataGua):
+        """
+        呱呱格式转刻师傅格式
+        :param dataGua: 呱呱格式内容
+        :return: 刻师傅格式，刻师傅时间参数
+        """
+        data_tmp = dataGua.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
+        data_end = ""
+        for i in data_tmp:
+            if i == "=" or i in key:
+                data_end += i
+        data_tmp = data_end
+        # 去掉前面和后面的=
+        while data_tmp[-1] == "=":
+            data_tmp = data_tmp[:-1]
+        while data_tmp[0] == "=":
+            data_tmp = data_tmp[1:]
+        # 补充后面=
+        data_tmp += (4 - (data_tmp.count("=") % 4)) * "="
+        arr = []
+        tmp_num = 0
+        tmp_str = ""
+        for i in data_tmp:
+            tmp_str += i
+            if i == "=":
+                tmp_num += 1
+            if tmp_num == 4:
+                arr.append(tmp_str)
+                tmp_str = ""
+                tmp_num = 0
+        tmp_bracket = False  # 记录是否在括号内
+        for i in range(len(arr)):
+            tmp = ""
+            for j in range(len(arr[i])):
+                if arr[i][j] == "=":
+                    if j == 0:
+                        tmp += " "
+                    elif arr[i][j - 1] == "=":
+                        tmp += " "
+                    elif arr[i][j - 1] in key:
+                        pass
+                elif arr[i][j] in key:
+                    if tmp_bracket:
+                        tmp += arr[i][j]
+                        if arr[i][j + 1] == "=":
+                            tmp += ")"
+                            tmp_bracket = False
+                    elif arr[i][j + 1] in key:
+                        tmp += "(" + arr[i][j]
+                        tmp_bracket = True
+                    else:
+                        tmp += arr[i][j]
+            arr[i] = tmp + "/"
+        data_end = ""
+        for i in range(len(arr)):
+            data_end += arr[i]
+            if (i + 1) % 4 == 0:
+                data_end += "\n"
+        # 后面处理
+        data_end += "    /" * (4 - (len(arr) % 4))
+        if data_end[-21:] == "\n    /    /    /    /":
+            data_end = data_end[:-21]
+        return data_end

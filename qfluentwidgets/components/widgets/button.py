@@ -3,10 +3,10 @@ from typing import Union
 
 from PyQt5.QtCore import QUrl, Qt, QRectF, QSize
 from PyQt5.QtGui import QDesktopServices, QIcon, QPainter
-from PyQt5.QtWidgets import QPushButton, QRadioButton, QToolButton, QAbstractButton
+from PyQt5.QtWidgets import QPushButton, QRadioButton, QToolButton, QApplication
 
 from ...common.icon import FluentIconBase, drawIcon, isDarkTheme, Theme
-from ...common.style_sheet import setStyleSheet
+from ...common.style_sheet import FluentStyleSheet
 
 
 class PushButton(QPushButton):
@@ -14,13 +14,15 @@ class PushButton(QPushButton):
 
     def __init__(self, text: str, parent=None, icon: Union[QIcon, str, FluentIconBase] = None):
         super().__init__(text=text, parent=parent)
-        setStyleSheet(self, 'button')
+        FluentStyleSheet.BUTTON.apply(self)
         self._icon = icon
         self.isPressed = False
         self.setProperty('hasIcon', icon is not None)
         self.setIconSize(QSize(16, 16))
 
     def setIcon(self, icon: Union[QIcon, str, FluentIconBase]):
+        self.setProperty('hasIcon', icon is not None)
+        self.setStyle(QApplication.style())
         self._icon = icon
         self.update()
 
@@ -53,13 +55,17 @@ class PushButton(QPushButton):
         painter.setRenderHints(QPainter.Antialiasing | QPainter.SmoothPixmapTransform)
 
         if not self.isEnabled():
-            painter.setOpacity(0.43)
+            painter.setOpacity(0.3628)
         elif self.isPressed:
-            painter.setOpacity(0.63)
+            painter.setOpacity(0.786)
 
         w, h = self.iconSize().width(), self.iconSize().height()
         y = (self.height() - h) / 2
-        self._drawIcon(self._icon, painter, QRectF(12, y, w, h))
+        mw = self.minimumSizeHint().width()
+        if mw > 0:
+            self._drawIcon(self._icon, painter, QRectF(12+(self.width()-mw)//2, y, w, h))
+        else:
+            self._drawIcon(self._icon, painter, QRectF(12, y, w, h))
 
 
 class PrimaryPushButton(PushButton):
@@ -71,7 +77,7 @@ class PrimaryPushButton(PushButton):
             theme = Theme.DARK if not isDarkTheme() else Theme.LIGHT
             icon = icon.icon(theme)
         elif not self.isEnabled():
-            painter.setOpacity(0.63 if isDarkTheme() else 0.9)
+            painter.setOpacity(0.786 if isDarkTheme() else 0.9)
             icon = icon.icon(Theme.DARK)
 
         super()._drawIcon(icon, painter, rect)
@@ -84,7 +90,7 @@ class HyperlinkButton(QPushButton):
         super().__init__(text, parent)
         self.url = QUrl(url)
         self.clicked.connect(lambda i: QDesktopServices.openUrl(self.url))
-        setStyleSheet(self, 'button')
+        FluentStyleSheet.BUTTON.apply(self)
         self.setCursor(Qt.PointingHandCursor)
 
 
@@ -93,7 +99,7 @@ class RadioButton(QRadioButton):
 
     def __init__(self, text: str, parent=None):
         super().__init__(text, parent)
-        setStyleSheet(self, 'button')
+        FluentStyleSheet.BUTTON.apply(self)
 
 
 class ToolButton(QToolButton):
@@ -103,7 +109,7 @@ class ToolButton(QToolButton):
         super().__init__(parent)
         self._icon = icon
         self.isPressed = False
-        setStyleSheet(self, 'button')
+        FluentStyleSheet.BUTTON.apply(self)
 
     def setIcon(self, icon: Union[QIcon, str, FluentIconBase]):
         self._icon = icon
@@ -147,3 +153,24 @@ class ToolButton(QToolButton):
         y = (self.height() - h) / 2
         x  = (self.width() - w) / 2
         self._drawIcon(self._icon, painter, QRectF(x, y, w, h))
+
+
+class TransparentToolButton(QToolButton):
+    """ Transparent background tool button """
+
+    def __init__(self, icon: Union[QIcon, str, FluentIconBase], parent=None):
+        super().__init__(parent)
+        self._icon = icon
+        self.setCursor(Qt.PointingHandCursor)
+        FluentStyleSheet.BUTTON.apply(self)
+
+    def paintEvent(self, e):
+        super().paintEvent(e)
+        painter = QPainter(self)
+        painter.setRenderHints(QPainter.Antialiasing |
+                               QPainter.SmoothPixmapTransform)
+
+        iw, ih = self.iconSize().width(), self.iconSize().height()
+        w, h = self.width(), self.height()
+        rect = QRectF((w - iw)/2, (h - ih)/2, iw, ih)
+        drawIcon(self._icon, painter, rect)

@@ -2,15 +2,15 @@
 from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, FolderListSettingCard,
                             OptionsSettingCard, PushSettingCard,
                             HyperlinkCard, PrimaryPushSettingCard, ScrollArea,
-                            ComboBoxSettingCard, ExpandLayout, Theme, ToastToolTip, CustomColorSettingCard,
-                            setTheme, setThemeColor, RangeSettingCard, ComboBox)
+                            ComboBoxSettingCard, ExpandLayout, Theme, CustomColorSettingCard,
+                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar)
 from qfluentwidgets import FluentIcon as FIF
 from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 
 from ..common.icon import Icon
-from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, UPDATE_URL
+from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, DOWNLOAD_URL
 
 
 class SettingInterface(ScrollArea):
@@ -154,21 +154,12 @@ class SettingInterface(ScrollArea):
 
     def __showRestartTooltip(self):
         """ show restart tooltip """
-        ToastToolTip.warn(
-            self.tr('Configuration updated successfully'),
+        InfoBar.success(
+            self.tr('Updated successfully'),
             self.tr('Configuration takes effect after restart'),
-            self.window()
+            duration=1500,
+            parent=self
         )
-
-    def __onDownloadFolderCardClicked(self):
-        """ download folder card clicked slot """
-        folder = QFileDialog.getExistingDirectory(
-            self, self.tr("Choose folder"), "./")
-        if not folder or cfg.get(cfg.downloadFolder) == folder:
-            return
-
-        cfg.set(cfg.downloadFolder, folder)
-        self.downloadFolderCard.setContent(folder)
 
     def __onThemeChanged(self, theme: Theme):
         """ theme changed slot """
@@ -194,7 +185,7 @@ class SettingInterface(ScrollArea):
 
         # about
         self.aboutCard.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(UPDATE_URL))
+            lambda: QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
         )
         self.feedbackCard.clicked.connect(
             lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))

@@ -1,39 +1,97 @@
 # coding:utf-8
-from PyQt5.QtCore import Qt, pyqtSignal, QRect, QRectF, QPoint
-from PyQt5.QtGui import QColor, QPainter
-from PyQt5.QtWidgets import QAction, QPushButton, QWidget
+from typing import Union, List, Iterable
+
+from PyQt5.QtCore import Qt, pyqtSignal, QRectF, QPoint, QObject, QEvent
+from PyQt5.QtGui import QPainter, QCursor, QIcon
+from PyQt5.QtWidgets import QAction, QPushButton, QStyledItemDelegate, QStyle
 
 from .menu import RoundMenu
-from ...common.config import isDarkTheme
+from .line_edit import LineEdit, LineEditButton
+from ...common.icon import FluentIconBase, isDarkTheme
 from ...common.icon import FluentIcon as FIF
-from ...common.style_sheet import setStyleSheet, themeColor
+from ...common.style_sheet import FluentStyleSheet, themeColor
 
 
-class ComboBox(QPushButton):
-    """ Combo box """
+class ComboItem:
+    """ Combo box item """
 
-    currentIndexChanged = pyqtSignal(int)
-    currentTextChanged = pyqtSignal(str)
-
-    def __init__(self, parent=None):
-        super().__init__("", parent)
-        self.isHover = False
-        self.isPressed = False
-        self.items = []
-        self._currentIndex = -1
-        setStyleSheet(self, 'combo_box')
-
-    def addItem(self, text):
+    def __init__(self, text: str, icon: Union[str, QIcon, FluentIconBase] = None, userData=None):
         """ add item
 
         Parameters
         ----------
         text: str
             the text of item
-        """
-        self.items.append(text)
 
-    def addItems(self, texts):
+        icon: str | QIcon | FluentIconBase
+            the icon of item
+
+        userData: Any
+            user data
+        """
+        self.text = text
+        self.userData = userData
+        self.icon = icon
+
+    @property
+    def icon(self):
+        if isinstance(self._icon, QIcon):
+            return self._icon
+
+        return self._icon.icon()
+
+    @icon.setter
+    def icon(self, ico: Union[str, QIcon, FluentIconBase]):
+        if ico:
+            self._icon = QIcon(ico) if isinstance(ico, str) else ico
+        else:
+            self._icon = QIcon()
+
+
+class ComboBoxBase(QObject):
+    """ Combo box base """
+
+    currentIndexChanged = pyqtSignal(int)
+    currentTextChanged = pyqtSignal(str)
+
+    def __init__(self, parent=None, **kwargs):
+        super().__init__(parent=parent)
+        self.isHover = False
+        self.isPressed = False
+        self.items = []     # type: List[ComboItem]
+        self._currentIndex = -1
+        self.dropMenu = None
+
+        FluentStyleSheet.COMBO_BOX.apply(self)
+        self.installEventFilter(self)
+
+    def eventFilter(self, obj, e: QEvent):
+        if obj is self:
+            if e.type() == QEvent.MouseButtonPress:
+                self.isPressed = True
+            elif e.type() == QEvent.MouseButtonRelease:
+                self.isPressed = False
+            elif e.type() == QEvent.Enter:
+                self.isHover = True
+            elif e.type() == QEvent.Leave:
+                self.isHover = False
+
+        return super().eventFilter(obj, e)
+
+    def addItem(self, text: str, icon: Union[str, QIcon, FluentIconBase] = None, userData=None):
+        """ add item
+
+        Parameters
+        ----------
+        text: str
+            the text of item
+
+        icon: str | QIcon | FluentIconBase
+        """
+        item = ComboItem(text, icon, userData)
+        self.items.append(item)
+
+    def addItems(self, texts: Iterable[str]):
         """ add items
 
         Parameters
@@ -41,12 +99,32 @@ class ComboBox(QPushButton):
         text: Iterable[str]
             the text of item
         """
-        self.items.extend(texts)
+        for text in texts:
+            self.addItem(text)
+
+    def removeItem(self, index: int):
+        """ Removes the item at the given index from the combobox.
+        This will update the current index if the index is removed.
+        """
+        if not 0 <= index < len(self.items):
+            return
+
+        self.items.pop(index)
+
+        if index < self.currentIndex():
+            self._onItemClicked(self._currentIndex - 1)
+        elif index == self.currentIndex():
+            if index > 0:
+                self._onItemClicked(self._currentIndex - 1)
+            else:
+                self.setCurrentIndex(0)
+                self.currentTextChanged.emit(self.currentText())
+                self.currentIndexChanged.emit(0)
 
     def currentIndex(self):
         return self._currentIndex
 
-    def setCurrentIndex(self, index):
+    def setCurrentIndex(self, index: int):
         """ set current index
 
         Parameters
@@ -54,11 +132,11 @@ class ComboBox(QPushButton):
         index: int
             current index
         """
-        if not 0 <= index < len(self.items) or self.currentIndex() == index:
+        if not 0 <= index < len(self.items):
             return
 
         self._currentIndex = index
-        self.setText(self.items[index])
+        self.setText(self.items[index].text)
 
     def setText(self, text: str):
         super().setText(text)
@@ -68,7 +146,13 @@ class ComboBox(QPushButton):
         if not 0 <= self.currentIndex() < len(self.items):
             return ''
 
-        return self.items[self.currentIndex()]
+        return self.items[self.currentIndex()].text
+
+    def currentData(self):
+        if not 0 <= self.currentIndex() < len(self.items):
+            return None
+
+        return self.items[self.currentIndex()].userData
 
     def setCurrentText(self, text):
         """ set the current text displayed in combo box,
@@ -79,12 +163,14 @@ class ComboBox(QPushButton):
         text: str
             text displayed in combo box
         """
-        if text not in self.items or text == self.currentText():
+        if text == self.currentText():
             return
 
-        self.setCurrentIndex(self.items.index(text))
+        index = self.findText(text)
+        if index >= 0:
+            self.setCurrentIndex(index)
 
-    def setItemText(self, index, text):
+    def setItemText(self, index: int, text: str):
         """ set the text of item
 
         Parameters
@@ -98,28 +184,99 @@ class ComboBox(QPushButton):
         if not 0 <= index < len(self.items):
             return
 
-        self.items[index] = text
+        self.items[index].text = text
         if self.currentIndex() == index:
             self.setText(text)
 
-    def enterEvent(self, e):
-        self.isHover = True
-        self.update()
+    def itemData(self, index: int):
+        """ Returns the data in the given index """
+        if not 0 <= index < len(self.items):
+            return None
 
-    def leaveEvent(self, e):
-        self.isHover = False
-        self.update()
+        return self.items[index].userData
 
-    def mousePressEvent(self, e):
-        super().mousePressEvent(e)
-        self.isPressed = True
-        self.update()
+    def itemText(self, index: int):
+        """ Returns the text in the given index """
+        if not 0 <= index < len(self.items):
+            return ''
 
-    def mouseReleaseEvent(self, e):
-        super().mouseReleaseEvent(e)
-        self.isPressed = False
-        self.update()
-        self._showComboMenu()
+        return self.items[index].text
+
+    def itemIcon(self, index: int):
+        """ Returns the icon in the given index """
+        if not 0 <= index < len(self.items):
+            return QIcon()
+
+        return self.items[index].icon
+
+    def setItemData(self, index: int, value):
+        """ Sets the data role for the item on the given index """
+        if 0 <= index < len(self.items):
+            self.items[index].userData = value
+
+    def setItemIcon(self, index: int, icon: Union[str, QIcon, FluentIconBase]):
+        """ Sets the data role for the item on the given index """
+        if 0 <= index < len(self.items):
+            self.items[index].icon = icon
+
+    def findData(self, data):
+        """ Returns the index of the item containing the given data, otherwise returns -1 """
+        for i, item in enumerate(self.items):
+            if item.userData == data:
+                return i
+
+        return -1
+
+    def findText(self, text: str):
+        """ Returns the index of the item containing the given text; otherwise returns -1. """
+        for i, item in enumerate(self.items):
+            if item.text == text:
+                return i
+
+        return -1
+
+    def clear(self):
+        """ Clears the combobox, removing all items. """
+        if self.currentIndex() >= 0:
+            self.setText('')
+
+        self.items.clear()
+        self._currentIndex = -1
+
+    def count(self):
+        """ Returns the number of items in the combobox """
+        return len(self.items)
+
+    def insertItem(self, index: int, text: str, icon: Union[str, QIcon, FluentIconBase] = None, userData=None):
+        """ Inserts item into the combobox at the given index. """
+        item = ComboItem(text, icon, userData)
+        self.items.insert(index, item)
+
+        if index <= self.currentIndex():
+            self._onItemClicked(self.currentIndex() + 1)
+
+    def insertItems(self, index: int, texts: Iterable[str]):
+        """ Inserts items into the combobox, starting at the index specified. """
+        pos = index
+        for text in texts:
+            item = ComboItem(text)
+            self.items.insert(pos, item)
+            pos += 1
+
+        if index <= self.currentIndex():
+            self._onItemClicked(self.currentIndex() + pos - index)
+
+    def _closeComboMenu(self):
+        if not self.dropMenu:
+            return
+
+        self.dropMenu.close()
+        self.dropMenu = None
+
+    def _onDropMenuClosed(self):
+        pos = self.mapFromGlobal(QCursor.pos())
+        if not self.rect().contains(pos):
+            self.dropMenu = None
 
     def _showComboMenu(self):
         if not self.items:
@@ -128,29 +285,57 @@ class ComboBox(QPushButton):
         menu = ComboBoxMenu(self)
         for i, item in enumerate(self.items):
             menu.addAction(
-                QAction(item, triggered=lambda c, x=i: self._onItemClicked(x)))
+                QAction(item.icon, item.text, triggered=lambda c, x=i: self._onItemClicked(x)))
 
-        menu.view.setMinimumWidth(self.width())
-        menu.adjustSize()
+        if menu.view.width() < self.width():
+            menu.view.setMinimumWidth(self.width())
+            menu.adjustSize()
+
+        menu.closedSignal.connect(self._onDropMenuClosed)
+        self.dropMenu = menu
 
         # set the selected item
-        menu.setDefaultAction(menu.menuActions()[self.currentIndex()])
+        if self.currentIndex() >= 0 and self.items:
+            menu.setDefaultAction(menu.menuActions()[self.currentIndex()])
 
         # show menu
         x = -menu.width()//2 + menu.layout().contentsMargins().left() + self.width()//2
         y = self.height()
         menu.exec(self.mapToGlobal(QPoint(x, y)))
 
+    def _toggleComboMenu(self):
+        if self.dropMenu:
+            self._closeComboMenu()
+        else:
+            self._showComboMenu()
+
     def _onItemClicked(self, index):
         if index == self.currentIndex():
             return
 
         self.setCurrentIndex(index)
+        self.currentTextChanged.emit(self.currentText())
         self.currentIndexChanged.emit(index)
-        self.currentTextChanged.emit(self.items[index])
+
+
+class ComboBox(QPushButton, ComboBoxBase):
+    """ Combo box """
+
+    currentIndexChanged = pyqtSignal(int)
+    currentTextChanged = pyqtSignal(str)
+
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+
+    def setPlaceholderText(self, text: str):
+        self.setText(text)
+
+    def mouseReleaseEvent(self, e):
+        super().mouseReleaseEvent(e)
+        self._toggleComboMenu()
 
     def paintEvent(self, e):
-        super().paintEvent(e)
+        QPushButton.paintEvent(self, e)
         painter = QPainter(self)
         painter.setRenderHints(QPainter.Antialiasing)
         if self.isHover:
@@ -158,52 +343,77 @@ class ComboBox(QPushButton):
         elif self.isPressed:
             painter.setOpacity(0.7)
 
-        FIF.ARROW_DOWN.render(painter, QRectF(
-            self.width()-22, self.height()/2-6, 10, 10))
+        rect = QRectF(self.width()-22, self.height()/2-5, 10, 10)
+        if isDarkTheme():
+            FIF.ARROW_DOWN.render(painter, rect)
+        else:
+            FIF.ARROW_DOWN.render(painter, rect, fill="#646464")
 
 
-class ComboBoxMenuItemWidget(QWidget):
-    """ Combo box menu item widget """
+class EditableComboBox(LineEdit, ComboBoxBase):
+    """ Editable combo box """
 
-    def __init__(self, item, parent=None):
-        super().__init__(parent)
-        self.isPressed = False
-        self.item = item
-        self.text = item.text()
-        item.setText('')
+    currentIndexChanged = pyqtSignal(int)
+    currentTextChanged = pyqtSignal(str)
 
-    def mousePressEvent(self, e):
-        super().mousePressEvent(e)
-        self.isPressed = True
-        self.update()
+    def __init__(self, parent=None):
+        super().__init__(parent=parent)
+        self.dropButton = LineEditButton(FIF.ARROW_DOWN, self)
 
-    def mouseReleaseEvent(self, e):
-        super().mouseReleaseEvent(e)
-        self.isPressed = False
-        self.update()
+        self.setTextMargins(0, 0, 29, 0)
+        self.dropButton.setFixedSize(30, 25)
+        self.hBoxLayout.addWidget(self.dropButton, 0, Qt.AlignRight)
 
-    def paintEvent(self, e):
-        painter = QPainter(self)
+        self.dropButton.clicked.connect(self._toggleComboMenu)
+        self.textEdited.connect(self._onTextEdited)
+        self.returnPressed.connect(self._onReturnPressed)
+
+    def currentText(self):
+        return self.text()
+
+    def _onReturnPressed(self):
+        if not self.text():
+            return
+
+        index = self.findText(self.text())
+        if index >= 0 and index != self.currentIndex():
+            self._currentIndex = index
+            self.currentIndexChanged.emit(index)
+        elif index == -1:
+            self.addItem(self.text())
+            self.setCurrentIndex(self.count() - 1)
+
+    def _onTextEdited(self, text: str):
+        self._currentIndex = -1
+        self.currentTextChanged.emit(text)
+
+        for i, item in enumerate(self.items):
+            if item.text == text:
+                self._currentIndex = i
+                self.currentIndexChanged.emit(i)
+                return
+
+    def _onDropMenuClosed(self):
+        self.dropMenu = None
+
+
+class ComboMenuItemDelegate(QStyledItemDelegate):
+    """ Combo box drop menu item delegate """
+
+    def paint(self, painter: QPainter, option, index):
+        super().paint(painter, option, index)
+        if not option.state & QStyle.State_Selected:
+            return
+
+        painter.save()
         painter.setRenderHints(
             QPainter.Antialiasing | QPainter.SmoothPixmapTransform | QPainter.TextAntialiasing)
 
-        if self.isPressed:
-            painter.setOpacity(0.7)
-
-        # draw text
-        isLight = not isDarkTheme()
-        painter.setPen(Qt.black if isLight else Qt.white)
-        painter.setFont(self.item.font())
-        painter.drawText(QRect(12, 0, self.width()-10,
-                         self.height()), Qt.AlignVCenter, self.text)
-
-        # draw indicator
-        if not self.item.isSelected():
-            return
-
         painter.setPen(Qt.NoPen)
         painter.setBrush(themeColor())
-        painter.drawRoundedRect(0, 8, 3, 16, 1.5, 1.5)
+        painter.drawRoundedRect(0, 11+option.rect.y(), 3, 15, 1.5, 1.5)
+
+        painter.restore()
 
 
 class ComboBoxMenu(RoundMenu):
@@ -211,12 +421,9 @@ class ComboBoxMenu(RoundMenu):
 
     def __init__(self, parent=None):
         super().__init__(title="", parent=parent)
-        setStyleSheet(self, 'combo_box')
-        self.setItemHeight(33)
 
-    def addAction(self, action):
-        super().addAction(action)
-        item = self.view.item(self.view.count()-1)
-        w = ComboBoxMenuItemWidget(item, self)
-        w.resize(item.sizeHint())
-        self.view.setItemWidget(item, w)
+        self.view.setViewportMargins(5, 2, 5, 6)
+        self.view.setItemDelegate(ComboMenuItemDelegate())
+
+        FluentStyleSheet.COMBO_BOX.apply(self)
+        self.setItemHeight(33)
