@@ -1,7 +1,6 @@
 # coding:utf-8
-import json
 
-from PyQt5.QtCore import Qt, pyqtSignal, QRectF
+from PyQt5.QtCore import Qt, QRectF
 from PyQt5.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 

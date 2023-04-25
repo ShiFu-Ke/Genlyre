@@ -101,6 +101,7 @@ class ScoreConversionInterface(GalleryInterface):
         if tmp is not None and path.isdir(tmp):
             self.outputDir = tmp
             self.lineEdit_output.setText(tmp)
+        self.setComoBoxCon(".txt")
 
     def myLabel(self, text):
         """
@@ -122,12 +123,11 @@ class ScoreConversionInterface(GalleryInterface):
             key = OpenKey(HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
             url = QueryValueEx(key, "Desktop")[0]
         fileUrl = QFileDialog.getOpenFileName(self, self.tr("Choice music score"), url,
-                                              self.tr("Music score ") + "(*.txt *.mid)")[0]
+                                              self.tr("Music score ") + "(*.txt)")[0]
         if len(fileUrl) > 0:
             self.inputFile = fileUrl
             self.lineEdit_input.setText(fileUrl)
             ConfigUtil.wYaml(fileUrl, "scoreConversion", "fileUrl")
-            self.setComoBoxCon(fileUrl)
 
     def choiceDir(self):
         """路径选择对话框"""
@@ -154,10 +154,10 @@ class ScoreConversionInterface(GalleryInterface):
 
     def conversion(self):
         if self.conFileType == 0 or not path.isfile(self.inputFile):
-            self.boxError("Please input a file")
+            self.boxError(self.tr("Please input a file"))
             return
         if not path.isdir(self.outputDir):
-            self.boxError("Please select a output path")
+            self.boxError(self.tr("Please select a output path"))
             return
         try:
             if self.conFileType == 1:

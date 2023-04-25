@@ -1,8 +1,10 @@
 autoPlay:
-  fileUrl: null
+  fileUrl: "D:/\u684C\u9762"
   key: {begin: F6, cease: F8, pauseResume: F7}
-  songList: []
+  songList:
+  - ["D:/\u684C\u9762/\u8D85\u517D\u6B66\u88C54(\u5F3A\u6539C2).txt", 1]
+  - ["D:/\u684C\u9762/1.txt", 1]
 keyMapping: {mapping: 0}
 lyre: {key: 0}
-scoreConversion: {dirUrl: '', fileUrl: ''}
+scoreConversion: {dirUrl: '', fileUrl: null}
 writeScoresInterface: {savePath: null}

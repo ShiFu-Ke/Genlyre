@@ -1463,6 +1463,16 @@
         <source>Update success</source>
         <translation>更新成功</translation>
     </message>
+        <message>
+        <location filename="../../view/keyMapping_interface.py" line="92"/>
+        <source>Off</source>
+        <translation>關</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="93"/>
+        <source>On</source>
+        <translation>開</translation>
+    </message>
 </context>
 <context>
     <name>BannerWidget</name>

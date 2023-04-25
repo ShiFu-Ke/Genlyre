@@ -2,6 +2,7 @@ from os import path
 from os import path
 from winreg import OpenKey, HKEY_CURRENT_USER, QueryValueEx
 
+import pywin32_testutil
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel, QFileDialog
 
@@ -26,6 +27,7 @@ class WriteScoresInterface(GalleryInterface):
         self.musicTest = MusicTest()
         self.lyre = 1
         self.pAdd = 0
+        self.textLen = 0
 
         # 文字
         label_lyre = self.myLabel("Select lyre:")
@@ -93,6 +95,7 @@ class WriteScoresInterface(GalleryInterface):
         # 创建文本框
         self.textEdit = TextEdit(self)
         self.textEdit.setFixedHeight(410)  # 设置文本框高度
+        self.textEdit.textChanged.connect(lambda: self.textChang())  # 监听文本框变化
 
         # 将水平布局加入页面
         self.vBoxLayout.addLayout(HLayout_title)
@@ -115,6 +118,34 @@ class WriteScoresInterface(GalleryInterface):
 
     def setPaDD(self):
         self.pAdd = self.comboBox_pADD.currentIndex()
+
+    def textChang(self):
+        text = self.textEdit.toPlainText()
+        if len(text) < self.textLen:
+            self.textLen = len(text)
+            return
+        self.textLen = len(text)
+        index = self.textEdit.textCursor().position()
+        if len(text) < index or index < 1:
+            return
+        try:
+            tmp = index
+            while True:
+                if text[tmp] in [")", "]"]:
+                    return
+                tmp += 1
+        except Exception:
+            pass
+        if text[index - 1] == "(":
+            self.textEdit.insertPlainText(")")
+            cursor = self.textEdit.textCursor()
+            cursor.setPosition(cursor.position() - 1)
+            self.textEdit.setTextCursor(cursor)
+        elif text[index - 1] == "[":
+            self.textEdit.insertPlainText("]")
+            cursor = self.textEdit.textCursor()
+            cursor.setPosition(cursor.position() - 1)
+            self.textEdit.setTextCursor(cursor)
 
     def PlayAll(self):
         text = str(self.doubleSpinBox.value()) + "\n" + self.textEdit.toPlainText()

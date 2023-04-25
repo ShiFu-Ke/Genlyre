@@ -222,6 +222,7 @@ class MainWindow(FramelessWindow):
 
     def switchTo(self, widget, triggerByUser=True):
         self.stackWidget.setCurrentWidget(widget, not triggerByUser)
+        widget.setFocus()
 
     def resizeEvent(self, e):
         self.titleBar.move(46, 0)

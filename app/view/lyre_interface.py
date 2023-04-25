@@ -1,10 +1,13 @@
+import subprocess
 from threading import Thread
 from time import sleep
+import wave
+import pyaudio
 
-from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QEasingCurve, QPropertyAnimation, QRect
+import pygame
+from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QEasingCurve, QPropertyAnimation, QRect, Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from keyboard import add_hotkey, remove_all_hotkeys
-from playsound import playsound
 
 from qfluentwidgets import (ToolButton, ComboBox, SwitchButton)
 from util.ConfigUtil import ConfigUtil
@@ -14,6 +17,11 @@ from ..common.translator import Translator
 
 class LyreInterface(GalleryInterface):
     key = ["Q", "W", "E", "R", "T", "Y", "U", "A", "S", "D", "F", "G", "H", "J", "Z", "X", "C", "V", "B", "N", "M"]
+    key_map = {
+        "65": "A", "66": "B", "67": "C", "68": "D", "69": "E", "70": "F", "71": "G", "72": "H", "74": "J", "77": "M",
+        "78": "N", "81": "Q", "82": "R", "83": "S", "84": "T", "85": "U", "86": "V", "87": "W", "88": "X", "89": "Y",
+        "90": "Z"
+    }
 
     def __init__(self, parent=None):
         t = Translator()
@@ -43,9 +51,8 @@ class LyreInterface(GalleryInterface):
         HLayout_title.addWidget(label_lyre)
         HLayout_title.addWidget(self.comboBox_lyre)
         HLayout_title.addStretch(1)
-        HLayout_title.addWidget(label_switch)
-        HLayout_title.addWidget(self.switchButton)
-
+        # HLayout_title.addWidget(label_switch)
+        # HLayout_title.addWidget(self.switchButton)
         # 创建21个带图标的按钮
         self.buttons = self.newToolButtons()
         # 将按钮放入三个水平布局
@@ -73,9 +80,15 @@ class LyreInterface(GalleryInterface):
         self.vBoxLayout.addLayout(HLayout_key03)
         self.vBoxLayout.addStretch(1)
 
-        if ConfigUtil.rYaml("lyre", "key") == 1:
-            self.switchButton.setChecked(True)
-            self.onSwitchCheckedChanged(self.switchButton)
+        # if ConfigUtil.rYaml("lyre", "key") == 1:
+        #     self.switchButton.setChecked(True)
+        #     self.onSwitchCheckedChanged(self.switchButton)
+
+    def keyPressEvent(self, event):
+        key = self.key_map.get(str(event.key()))
+        if key is None:
+            return
+        self.playKey(key)
 
     def setLyre(self):
         if self.comboBox_lyre.currentIndex() == 0:
@@ -162,11 +175,40 @@ class LyreInterface(GalleryInterface):
 
     def playKey(self, key):
         if self.lyre == 1:
-            Thread(daemon=True, target=lambda: playsound("app/resource/sound/FengWu/" + key + ".mp3")).start()
+            Thread(daemon=True, target=lambda: self.playAKey("app/resource/sound/FengWu/" + key + ".wav")).start()
         elif self.lyre == 2:
-            Thread(daemon=True, target=lambda: playsound("app/resource/sound/LaoJiu/" + key + ".mp3")).start()
+            Thread(daemon=True, target=lambda: self.playAKey("app/resource/sound/LaoJiu/" + key + ".wav")).start()
         else:
-            Thread(daemon=True, target=lambda: playsound("app/resource/sound/JingHua/" + key + ".mp3")).start()
+            Thread(daemon=True, target=lambda: self.playAKey("app/resource/sound/JingHua/" + key + ".wav")).start()
+
+    @staticmethod
+    def playAKey(key):
+        wf = wave.open(key, 'rb')
+        # 初始化 PyAudio
+        p = pyaudio.PyAudio()
+        # 打开音频流
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+        # 播放音频流
+        data = wf.readframes(1024)
+        while data:
+            stream.write(data)
+            data = wf.readframes(1024)
+
+        # # 停止音频流和 PyAudio
+        # stream.stop_stream()
+        # stream.close()
+        # p.terminate()
+        # pygame.init()
+        # # 加载音乐文件
+        # pygame.mixer.music.load(key)
+        # # 播放音乐文件
+        # pygame.mixer.music.play()
+        # # 等待音乐播放完毕
+        # while pygame.mixer.music.get_busy():
+        #     continue
 
     def myLabel(self, text):
         """
