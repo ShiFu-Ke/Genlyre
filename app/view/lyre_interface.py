@@ -4,7 +4,6 @@ from time import sleep
 import wave
 import pyaudio
 
-import pygame
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QEasingCurve, QPropertyAnimation, QRect, Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from keyboard import add_hotkey, remove_all_hotkeys
