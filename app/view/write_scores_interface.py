@@ -197,7 +197,6 @@ class WriteScoresInterface(GalleryInterface):
                 break
         else:
             return
-        print(MusicTest.isKe(text)[1])
         if not MusicTest.isKe(text)[0]:
             InfoBar.error(
                 title=self.tr('Remind'),

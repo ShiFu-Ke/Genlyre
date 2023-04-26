@@ -2,9 +2,11 @@
 # @ Author KeShiFu
 # @ Date 2023/03/19
 # @ Time 19:28
+import wave
 from threading import Event, Thread
 from time import sleep
 
+import pyaudio
 from playsound import playsound
 
 from Lib.MusicScore import MusicScore
@@ -191,15 +193,44 @@ class MusicTest:
                     if k in MusicTest.keys:
                         if lyre == 1:
                             Thread(daemon=True,
-                                   target=lambda: playsound("app/resource/sound/FengWu/" + k + ".mp3")).start()
+                                   target=lambda: MusicTest.playAKey("app/resource/sound/FengWu/" + k + ".wav")).start()
                         elif lyre == 2:
                             Thread(daemon=True,
-                                   target=lambda: playsound("app/resource/sound/LaoJiu/" + k + ".mp3")).start()
+                                   target=lambda: MusicTest.playAKey("app/resource/sound/LaoJiu/" + k + ".wav")).start()
                         else:
                             Thread(daemon=True,
-                                   target=lambda: playsound("app/resource/sound/JingHua/" + k + ".mp3")).start()
+                                   target=lambda: MusicTest.playAKey("app/resource/sound/JingHua/" + k + ".wav")).start()
                 sleep(time_tmp)
                 t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+
+    @staticmethod
+    def playAKey(key):
+        wf = wave.open(key, 'rb')
+        # 初始化 PyAudio
+        p = pyaudio.PyAudio()
+        # 打开音频流
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(),
+                        rate=wf.getframerate(),
+                        output=True)
+        # 播放音频流
+        data = wf.readframes(1024)
+        while data:
+            stream.write(data)
+            data = wf.readframes(1024)
+
+        # # 停止音频流和 PyAudio
+        # stream.stop_stream()
+        # stream.close()
+        # p.terminate()
+        # pygame.init()
+        # # 加载音乐文件
+        # pygame.mixer.music.load(key)
+        # # 播放音乐文件
+        # pygame.mixer.music.play()
+        # # 等待音乐播放完毕
+        # while pygame.mixer.music.get_busy():
+        #     continue
 
     @staticmethod
     def isKe(data):
