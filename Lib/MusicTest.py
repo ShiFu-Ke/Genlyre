@@ -194,10 +194,10 @@ class MusicTest:
                                    target=lambda: MusicTest.playAKey("app/resource/sound/FengWu/" + k + ".wav")).start()
                         elif lyre == 2:
                             Thread(daemon=True,
-                                   target=lambda: MusicTest.playAKey("app/resource/sound/LaoJiu/" + k + ".mp3")).start()
+                                   target=lambda: MusicTest.playAKey("app/resource/sound/LaoJiu/" + k + ".wav")).start()
                         else:
                             Thread(daemon=True,
-                                   target=lambda: MusicTest.playAKey("app/resource/sound/JingHua/" + k + ".mp3")).start()
+                                   target=lambda: MusicTest.playAKey("app/resource/sound/JingHua/" + k + ".wav")).start()
                 sleep(time_tmp)
                 t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
 
