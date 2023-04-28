@@ -1,9 +1,11 @@
 autoPlay:
-  fileUrl: "D:/\u684C\u9762"
+  fileUrl: "F:/\u539F\u7434/\u811A\u672C\u7434\u8C31"
   key: {begin: F6, cease: F8, pauseResume: F7}
   songList:
   - ["D:/\u684C\u9762/\u8D85\u517D\u6B66\u88C54(\u5F3A\u6539C2).txt", 1]
   - ["D:/\u684C\u9762/1.txt", 1]
+  - ["F:/\u539F\u7434/\u811A\u672C\u7434\u8C31/\u6620\u5C71\u7EA2\uFF08\u811A\u672C\
+      \u7434\u8C31\uFF09.txt", 1]
 keyMapping: {mapping: 0}
 lyre: {key: 0}
 scoreConversion: {dirUrl: '', fileUrl: null}

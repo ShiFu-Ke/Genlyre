@@ -1,12 +1,8 @@
-import subprocess
 from threading import Thread
-from time import sleep
-import wave
-import pyaudio
-
 from PyQt5.QtCore import QSize, QSequentialAnimationGroup, QEasingCurve, QPropertyAnimation, QRect, Qt
 from PyQt5.QtWidgets import QHBoxLayout, QLabel
 from keyboard import add_hotkey, remove_all_hotkeys
+from playsound import playsound
 
 from qfluentwidgets import (ToolButton, ComboBox, SwitchButton)
 from util.ConfigUtil import ConfigUtil
@@ -182,32 +178,7 @@ class LyreInterface(GalleryInterface):
 
     @staticmethod
     def playAKey(key):
-        wf = wave.open(key, 'rb')
-        # 初始化 PyAudio
-        p = pyaudio.PyAudio()
-        # 打开音频流
-        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
-                        channels=wf.getnchannels(),
-                        rate=wf.getframerate(),
-                        output=True)
-        # 播放音频流
-        data = wf.readframes(1024)
-        while data:
-            stream.write(data)
-            data = wf.readframes(1024)
-
-        # # 停止音频流和 PyAudio
-        # stream.stop_stream()
-        # stream.close()
-        # p.terminate()
-        # pygame.init()
-        # # 加载音乐文件
-        # pygame.mixer.music.load(key)
-        # # 播放音乐文件
-        # pygame.mixer.music.play()
-        # # 等待音乐播放完毕
-        # while pygame.mixer.music.get_busy():
-        #     continue
+        playsound(key)
 
     def myLabel(self, text):
         """
