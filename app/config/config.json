@@ -1,6 +1,6 @@
 {
     "Material": {
-        "AcrylicBlurRadius": 15
+        "AcrylicBlurRadius": 0
     },
     "Update": {
         "CheckUpdateAtStartUp": true

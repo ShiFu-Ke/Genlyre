@@ -75,7 +75,7 @@ class MusicScore:
         data_end += (4 - (len(arr) % 4)) * "+"
         if data_end[-5:] == "\n++++":
             data_end = data_end[:-5]
-        data_end = str(int((time * 1000) / length_max) / 2) + "\n" + data_end
+        data_end = str(int((time * 1000) / length_max)) + "\n" + data_end
         return data_end
 
     @staticmethod
@@ -200,7 +200,7 @@ class MusicScore:
         data_end += "    /" * (4 - (len(arr) % 4))
         if data_end[-21:] == "\n    /    /    /    /":
             data_end = data_end[:-21]
-        data_end = str(((time * 4) / 1000) * 2) + "\n" + data_end
+        data_end = str(((time * 4) / 1000)) + "\n" + data_end
         return data_end
 
     @staticmethod

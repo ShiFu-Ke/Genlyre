@@ -5,15 +5,13 @@
 import zhconv
 
 b = [
-    "1",
-    "2"
+    "Settings",
 ]
 a = [
-    "开",
-    "关"
+    "网络错误",
 ]
-tmp = 0
-text = "../../view/home_interface.py"
+tmp = 29
+text = "../../view/main_window.py"
 
 l = tmp
 for i, j in zip(a, b):

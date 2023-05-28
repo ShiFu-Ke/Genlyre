@@ -1,14 +1,17 @@
 # coding:utf-8
+import threading
+
 from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, FolderListSettingCard,
                             OptionsSettingCard, PushSettingCard,
                             HyperlinkCard, PrimaryPushSettingCard, ScrollArea,
                             ComboBoxSettingCard, ExpandLayout, Theme, CustomColorSettingCard,
-                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar)
+                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar, InfoBarPosition)
 from qfluentwidgets import FluentIcon as FIF
 from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
 
+from util.updateUtil import UpDate
 from ..common.icon import Icon
 from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, DOWNLOAD_URL
 
@@ -26,6 +29,9 @@ class SettingInterface(ScrollArea):
         super().__init__(parent=parent)
         self.scrollWidget = QWidget()
         self.expandLayout = ExpandLayout(self.scrollWidget)
+        self.update_info = ["0", "0", "0"]
+        # 后台获取更新信息
+        threading.Thread(target=lambda: self.getUpdateInfo()).start()
 
         # setting label
         self.settingLabel = QLabel(self.tr("Settings"), self)
@@ -185,7 +191,39 @@ class SettingInterface(ScrollArea):
 
         # about
         self.aboutCard.clicked.connect(
-            lambda: QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
+            # lambda: threading.Thread(target=lambda: self.update()).start()
+            lambda: self.update()
         )
         self.feedbackCard.clicked.connect(
             lambda: QDesktopServices.openUrl(QUrl(FEEDBACK_URL)))
+
+    def update(self):
+        if self.update_info[0] != "0":
+            if self.update_info[0] != VERSION:
+                QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
+            else:
+                InfoBar.success(
+                    title=self.tr('Remind'),
+                    content=self.tr("It is already the latest version"),
+                    orient=Qt.Horizontal,
+                    isClosable=True,
+                    position=InfoBarPosition.TOP,
+                    duration=2000,  # won't disappear automatically
+                    parent=self
+                )
+        else:
+            InfoBar.error(
+                title=self.tr('Remind'),
+                content=self.tr("Network error"),
+                orient=Qt.Horizontal,
+                isClosable=True,
+                position=InfoBarPosition.TOP,
+                duration=2000,
+                parent=self
+            )
+
+    def getUpdateInfo(self):
+        try:
+            self.update_info = UpDate.getUpdateMsg("MiGacha")
+        except:
+            pass

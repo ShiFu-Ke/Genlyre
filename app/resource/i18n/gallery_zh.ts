@@ -534,8 +534,8 @@
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="116"/>
-        <source>Discover new features and learn useful tips about Genlyr</source>
-        <translation>发现新功能并了解有关 Genlyr 的使用技巧</translation>
+        <source>Discover new features and learn useful tips about Genlyre</source>
+        <translation>发现新功能并了解有关 Genlyre 的使用技巧</translation>
     </message>
     <message>
         <location filename="../../view/setting_interface.py" line="125"/>
@@ -576,6 +576,21 @@
         <location filename="../../view/setting_interface.py" line="198"/>
         <source>Updated successfully</source>
         <translation>更新成功</translation>
+    </message>
+    <message>
+        <location filename="../../view/setting_interface.py" line="200"/>
+        <source>Remind</source>
+        <translation>提示</translation>
+    </message>
+   <message>
+        <location filename="../../view/setting_interface.py" line="201"/>
+        <source>It is already the latest version</source>
+        <translation>已是最新版本</translation>
+    </message>
+    <message>
+        <location filename="../../view/setting_interface.py" line="202"/>
+        <source>Network error</source>
+        <translation>网络错误</translation>
     </message>
 </context>
 <context>
