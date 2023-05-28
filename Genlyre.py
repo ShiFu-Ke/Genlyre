@@ -9,7 +9,7 @@ from Lib.log import Log
 from app.common.config import cfg, Language
 from app.view.main_window import MainWindow
 
-log = Log("data\\midiToKey.log")
+log = Log("data\\Genlyre.log")
 try:
 
     # enable dpi scale
