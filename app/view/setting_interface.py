@@ -5,7 +5,7 @@ from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, FolderListSetti
                             OptionsSettingCard, PushSettingCard,
                             HyperlinkCard, PrimaryPushSettingCard, ScrollArea,
                             ComboBoxSettingCard, ExpandLayout, Theme, CustomColorSettingCard,
-                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar, InfoBarPosition)
+                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar, InfoBarPosition, MessageBox)
 from qfluentwidgets import FluentIcon as FIF
 from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
 from PyQt5.QtGui import QDesktopServices
@@ -200,7 +200,8 @@ class SettingInterface(ScrollArea):
     def update(self):
         if self.update_info[0] != "0":
             if self.update_info[0] != VERSION:
-                QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
+                if self.showMessageDialog("Do you want to download the new version now?"):
+                    QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
             else:
                 InfoBar.success(
                     title=self.tr('Remind'),
@@ -227,3 +228,17 @@ class SettingInterface(ScrollArea):
             self.update_info = UpDate.getUpdateMsg("MiGacha")
         except:
             pass
+
+    def showMessageDialog(self, text):
+        """
+        显示消息对话框
+        :param text:
+        :return:点击确定返回True，否则返回False
+        """
+        title = self.tr("Update prompt")
+        content = self.tr(text)
+        w = MessageBox(title, content, self.window())
+        if w.exec():
+            return True
+        else:
+            return False

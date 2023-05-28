@@ -592,6 +592,16 @@
         <source>Network error</source>
         <translation>網絡錯誤</translation>
     </message>
+    <message>
+        <location filename="../../view/setting_interface.py" line="203"/>
+        <source>Update prompt</source>
+        <translation>更新提醒</translation>
+    </message>
+   <message>
+        <location filename="../../view/setting_interface.py" line="204"/>
+        <source>Do you want to download the new version now?</source>
+        <translation>是否現在下載新版本？</translation>
+    </message>
 </context>
 <context>
     <name>StatusInfoInterface</name>
