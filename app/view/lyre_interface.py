@@ -53,17 +53,17 @@ class LyreInterface(GalleryInterface):
         # 将按钮放入三个水平布局
         HLayout_key01 = QHBoxLayout()
         HLayout_key01.addStretch(1)
-        for i in range(0, 6):
+        for i in range(0, 7):
             HLayout_key01.addWidget(self.buttons[i])
         HLayout_key01.addStretch(1)
         HLayout_key02 = QHBoxLayout()
         HLayout_key02.addStretch(1)
-        for i in range(7, 13):
+        for i in range(7, 14):
             HLayout_key02.addWidget(self.buttons[i])
         HLayout_key02.addStretch(1)
         HLayout_key03 = QHBoxLayout()
         HLayout_key03.addStretch(1)
-        for i in range(14, 20):
+        for i in range(14, 21):
             HLayout_key03.addWidget(self.buttons[i])
         HLayout_key03.addStretch(1)
 
