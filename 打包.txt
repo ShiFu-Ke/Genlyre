@@ -1,0 +1,1 @@
+pyinstaller -D -w Genlyre.py -i ico.ico --uac-admin

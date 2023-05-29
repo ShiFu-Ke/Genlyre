@@ -223,7 +223,7 @@ class SettingInterface(ScrollArea):
 
     def getUpdateInfo(self):
         try:
-            self.update_info = UpDate.getUpdateMsg("MiGacha")
+            self.update_info = UpDate.getUpdateMsg("Genlyre")
         except:
             pass
 
