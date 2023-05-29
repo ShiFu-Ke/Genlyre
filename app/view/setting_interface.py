@@ -1,19 +1,17 @@
 # coding:utf-8
 import threading
 
-from qfluentwidgets import (SettingCardGroup, SwitchSettingCard, FolderListSettingCard,
-                            OptionsSettingCard, PushSettingCard,
-                            HyperlinkCard, PrimaryPushSettingCard, ScrollArea,
-                            ComboBoxSettingCard, ExpandLayout, Theme, CustomColorSettingCard,
-                            setTheme, setThemeColor, RangeSettingCard, ComboBox, InfoBar, InfoBarPosition, MessageBox)
-from qfluentwidgets import FluentIcon as FIF
-from PyQt5.QtCore import Qt, pyqtSignal, QUrl, QStandardPaths
+from PyQt5.QtCore import Qt, pyqtSignal, QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtWidgets import QWidget, QLabel, QFileDialog
+from PyQt5.QtWidgets import QWidget, QLabel
 
+from qfluentwidgets import FluentIcon as FIF
+from qfluentwidgets import (SettingCardGroup, OptionsSettingCard, HyperlinkCard, PrimaryPushSettingCard, ScrollArea,
+                            ComboBoxSettingCard, ExpandLayout, Theme, CustomColorSettingCard,
+                            setTheme, setThemeColor, RangeSettingCard, InfoBar, InfoBarPosition, MessageBox)
 from util.updateUtil import UpDate
-from ..common.icon import Icon
 from ..common.config import cfg, HELP_URL, FEEDBACK_URL, AUTHOR, VERSION, YEAR, DOWNLOAD_URL
+from ..common.icon import Icon
 
 
 class SettingInterface(ScrollArea):
