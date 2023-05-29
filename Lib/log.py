@@ -9,10 +9,9 @@ import traceback  # 将原始报错的信息返回出来
 
 class Log:
     def __init__(self, LogName):
-        logging.basicConfig(level='DEBUG', filename=LogName, filemode='a+')
+        logging.basicConfig(level='INFO', filename=LogName, filemode='a+')
 
     @staticmethod
     def addLog():
         error = traceback.format_exc()
-        print(error)
         logging.error(time.strftime('%y-%m-%d %H:%M:%S') + "\n" + error + '-------------- \n')
