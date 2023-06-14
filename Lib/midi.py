@@ -58,6 +58,13 @@ class Midi:
                67: "G", 69: "H", 71: "J", 72: "Q", 74: "W", 76: "E", 77: "R", 79: "T", 81: "Y", 83: "U"}
 
     @staticmethod
+    def sort(str_sort):
+        """音符排序"""
+        order = ["Q", "W", "E", "R", "T", "Y", "U", "A", "S", "D", "F", "G", "H", "J", "Z", "X", "C", "V", "B", "N",
+                 "M"]
+        return ''.join(sorted(str_sort, key=lambda x: order.index(x)))
+
+    @staticmethod
     def find_all_indexes(input_string, character):
         """
         查找索引匹配索引
@@ -212,7 +219,8 @@ class Midi:
         tmp01 = 0
         tmp02 = 0
         for i in range(len(index01)):
-            dataAdd += dataTmp01[tmp01:index01[i]] + dataTmp02[tmp02:index02[i]] + "="
+            dataTmp = dataTmp01[tmp01:index01[i]] + dataTmp02[tmp02:index02[i]]
+            dataAdd += Midi.sort(dataTmp) + "="
             tmp01 = index01[i] + 1
             tmp02 = index02[i] + 1
         dataAdd += dataTmp01[tmp01:] + dataTmp02[tmp02:]
