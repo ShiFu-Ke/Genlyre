@@ -361,7 +361,7 @@ class AutoPlayInterface(GalleryInterface):
             key = OpenKey(HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
             url = QueryValueEx(key, "Desktop")[0]
         flies = QFileDialog.getOpenFileNames(self, self.tr("Choice music score"),
-                                             url, self.tr("Music score ") + "(*.txt *.mid)")[0]
+                                             url, self.tr("Music score ") + "(*.txt)")[0]
         if len(flies) > 0:
             ConfigUtil.wYaml(flies[0][:flies[0].rfind("/")], "autoPlay", "fileUrl")
         return flies

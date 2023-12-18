@@ -50,9 +50,7 @@ class PlayMusic:
         self.t.arr.clear()
 
         if self.t.fileType == "mid":
-            mid_tmp = Midi.get_midKey(filePath)
-            self.t.arr.append(mid_tmp[0])
-            self.t.midTime = mid_tmp[1]
+            self.t.arr.append(filePath)
         elif self.t.fileType == "txt":
             file = open(filePath, encoding='utf-8')
             data = file.read()
@@ -176,7 +174,6 @@ class PlayMusic:
         # 将每拍放入数组
         data_tmp = data_end
         arr_tmp = data_tmp.split("/")
-        print("arr_tmp:", arr_tmp)
         arr = []
         for i in arr_tmp:
             if len(i) > 0:
@@ -233,29 +230,16 @@ class PlayMusic:
             arr_data.append(arr_tmp.copy())
         arr.clear()
         # 开始演奏
-        keys = ""  # 存放同时按的按键
-        print("arr_data:", arr_data)
         for i in arr_data:
             length = len(i)
             time_tmp = time / length
             for j in i:
-                if j.replace(" ", "") != "":
-                    # 如果即将按其他音等待时间结束后抬起按键
-                    for k in keys:
-                        PlayMusic.key_up(k)
-                keys = ""
-                # 将同时按的音放入变量keys
                 for k in j:
                     if k in PlayMusic.keys:
-                        keys += k
-                # 按下按键
-                print(keys)
-                for k in keys:
-                    PlayMusic.key_down(k)
+                        PlayMusic.key_down(k)
+                        PlayMusic.key_up(k)
                 sleep(time_tmp)
                 t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
-        # 演奏完毕抬起所有按键
-        PlayMusic.key_upAll()
 
     @staticmethod
     def playMid(t, data, lyre, time):
@@ -300,6 +284,9 @@ class MyThread(Thread):
         self.flag = Event()  # 用于暂停线程的标识
         self.flag.set()  # 设置为True
         self.arr = []
+        '''
+        文件为txt时存放音符，文件为mid在数组第一个位置时存放文件路径
+        '''
         self.lyre = 1
         self.pADD = 0
         self.fileType = "txt"
@@ -335,14 +322,14 @@ class MyThread(Thread):
     def run(self):
         print("开始演奏")
         try:
-            for i in self.arr:
-                if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
-                    i += "L"
-                if self.fileType == "txt":
+            if self.fileType == "mid":
+                print("是mid")
+                # PlayMusic.playMid(self, self.arr[0], self.lyre, self.midTime)
+            elif self.fileType == "txt":
+                for i in self.arr:
+                    if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
+                        i += "L"
                     PlayMusic.playMusic(self, i, self.lyre, self.pADD)
-                elif self.fileType == "mid":
-                    print(self.midTime)
-                    PlayMusic.playMid(self, i, self.lyre, self.midTime)
             self.ready = True
             print("演奏完成")
         except Exception:
