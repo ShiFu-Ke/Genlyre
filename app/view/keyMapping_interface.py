@@ -203,7 +203,7 @@ class KeyPicker(KeyBase):
                      '/'],
                     ['NumLock', 'Numpad0', 'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7',
                      'Numpad8',
-                     'Numpad9', 'NumpadDiv', 'NumpadMult', 'NumpadAdd', 'NumpadSub', 'NumpadEnter'],
+                     'Numpad9', 'NumpadDiv', 'NumpadMult', 'NumpadAdd', 'NumpadSub', 'NumpadDot', 'NumpadEnter'],
                     ['CapsLock', 'Space', 'Tab', 'Enter', 'Escape', 'Backspace', 'F1', 'F2', 'F3', 'F4', 'F5', 'F6',
                      'F7', 'F8',
                      'F9', 'F10', 'F11', 'F12', 'F13', 'F14', 'F15', 'F16', 'F17', 'F18', 'F19', 'F20', 'F21', 'F22',
@@ -232,7 +232,6 @@ class KeyPicker(KeyBase):
                 self.setColumnValue(0, self.k.tr(self.keyType[i]))
                 self.setColumnValue(1, self.k.tr(key))
                 self.data = key
-
 
     def _onColumnValueChanged(self, panel: PickerPanel, index, value):
         if index == 0:

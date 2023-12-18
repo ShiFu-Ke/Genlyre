@@ -3,7 +3,7 @@ from winreg import OpenKey, HKEY_CURRENT_USER, QueryValueEx
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QButtonGroup, QHBoxLayout, QLabel, QFileDialog
-from keyboard import add_hotkey, remove_all_hotkeys
+from pynput import keyboard
 
 from Lib.MusicScore import MusicScore
 from Lib.PlayMusic import PlayMusic
@@ -25,12 +25,14 @@ class AutoPlayInterface(GalleryInterface):
         )
         # 局部变量
         self.key = ["None", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12"]
-        self.songList = []  # 完整路径
+        self.songList = []  # [[完整路径，（0mid,1刻师傅,2呱呱,3伊蕾娜）],...]
         self.songListLength = len(self.songList)
         self.scoreType = 1  # 琴谱格式
         self.lyre = 1  # 琴的类型
         self.pADD = 0  # 琶音提速
         self.playMusic = PlayMusic()  # 创建演奏对象
+        self.QKey = ["", "", ""]  # 快捷键保存位置[开始，暂停/继续，结束]
+        self.listener = keyboard.Listener(on_press=self.on_press).start()
         # 快捷键设置
         # 文本
         label_key = self.myLabel("Shortcut key settings:")
@@ -171,24 +173,29 @@ class AutoPlayInterface(GalleryInterface):
             for i, j in songList:
                 self.addList(False, [i], j)
 
+    def on_press(self, key):
+        """
+        相应快捷键
+        :param key:
+        :return:
+        """
+        if self.QKey[0] in str(key):
+            self.button_begin.click()
+        elif self.QKey[1] in str(key):
+            self.button_pauseResume.click()
+        elif self.QKey[2] in str(key):
+            self.button_cease.click()
+
     def setKey(self):
         """
         从配置文件设置快捷键并修改按键文本
         :return:
         """
-        try:
-            remove_all_hotkeys()
-        except Exception:
-            pass
         begin = ConfigUtil.rYaml("autoPlay", "key", "begin")
         pauseResume = ConfigUtil.rYaml("autoPlay", "key", "pauseResume")
         cease = ConfigUtil.rYaml("autoPlay", "key", "cease")
-        if begin != "None":
-            add_hotkey(begin, lambda: self.button_begin.click())
-        if pauseResume != "None":
-            add_hotkey(pauseResume, lambda: self.button_pauseResume.click())
-        if cease != "None":
-            add_hotkey(cease, lambda: self.button_cease.click())
+        # 设置快捷键
+        self.QKey = [begin.lower(), pauseResume.lower(), cease.lower()]
         self.button_begin.setText(self.tr('Begin') + " (" + begin + ")")
         self.button_pauseResume.setText(self.tr('Pause/Resume') + " (" + pauseResume + ")")
         self.button_cease.setText(self.tr('Cease') + " (" + cease + ")")
@@ -254,6 +261,9 @@ class AutoPlayInterface(GalleryInterface):
         for i in newList:
             if [i, scoreType] in self.songList:
                 false = True
+            elif i[-3:] == "mid":
+                self.songList.append([i, 0])
+                true = True
             elif scoreType == 1:
                 if MusicScore.isKe(i)[0]:
                     self.songList.append([i, 1])
@@ -326,11 +336,10 @@ class AutoPlayInterface(GalleryInterface):
         """
         开始演奏
         """
-        tmp = 0 - self.buttonGroup.checkedId() - 2
-        if tmp == -1:
-            # self.showMessageDialog("No element selected")
+        tmp_order = 0 - self.buttonGroup.checkedId() - 2
+        if tmp_order == -1:
             return
-        self.playMusic.start(self.songList[tmp][0], self.songList[tmp][1], self.lyre, self.pADD)
+        self.playMusic.start(self.songList[tmp_order][0], self.songList[tmp_order][1], self.lyre, self.pADD)
 
     def myLabel(self, text):
         """
@@ -352,7 +361,7 @@ class AutoPlayInterface(GalleryInterface):
             key = OpenKey(HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
             url = QueryValueEx(key, "Desktop")[0]
         flies = QFileDialog.getOpenFileNames(self, self.tr("Choice music score"),
-                                             url, self.tr("Music score ") + "(*.txt)")[0]
+                                             url, self.tr("Music score ") + "(*.txt *.mid)")[0]
         if len(flies) > 0:
             ConfigUtil.wYaml(flies[0][:flies[0].rfind("/")], "autoPlay", "fileUrl")
         return flies

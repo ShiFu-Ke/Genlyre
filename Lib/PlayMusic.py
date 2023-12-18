@@ -9,6 +9,7 @@ from win32api import keybd_event, MapVirtualKey
 from win32con import KEYEVENTF_KEYUP
 
 from Lib.MusicScore import MusicScore
+from Lib.midi import Midi
 from util.Util import Util
 
 
@@ -37,43 +38,51 @@ class PlayMusic:
         :param lyre: 1.风物；2.老旧
         :param pAdd: 琶音提速
         """
-        print(pAdd)
         if self.t is None or self.t.ready:
             self.state = False
         if self.state:
             return
         self.state = True
-        file = open(filePath, encoding='utf-8')
-        data = file.read()
-        file.close()
-        if scoreType == 1:
-            pass
-        elif scoreType == 2:
-            data = MusicScore.guaToke(data)
-        elif scoreType == 3:
-            data = MusicScore.guaToke(MusicScore.yiToGua(data))
-        data.replace(" ", "L")
         self.t = MyThread()
         self.t.setDaemon(True)
-        try:
-            self.t.lyre = lyre
-            self.t.pADD = pAdd
-            data_tmp = data.split("\n")
-            self.t.arr.clear()
-            tmp = -1
-            for i in data_tmp:
-                try:
-                    if "." in i:
-                        self.t.arr.append("")
-                        tmp += 1
-                except IndexError:
-                    pass
-                if i.replace(" ", "") != "":
-                    self.t.arr[tmp] += i + "\n"
-        except Exception:
-            return
-        for i in range(len(self.t.arr)):
-            self.t.arr[i] = MusicScore.nuToJp(self.t.arr[i])
+        self.t.fileType = filePath[-3:]
+        self.t.lyre = lyre
+        self.t.arr.clear()
+
+        if self.t.fileType == "mid":
+            mid_tmp = Midi.get_midKey(filePath)
+            self.t.arr.append(mid_tmp[0])
+            self.t.midTime = mid_tmp[1]
+        elif self.t.fileType == "txt":
+            file = open(filePath, encoding='utf-8')
+            data = file.read()
+            file.close()
+            if scoreType == 1:
+                pass
+            elif scoreType == 2:
+                data = MusicScore.guaToke(data)
+            elif scoreType == 3:
+                data = MusicScore.guaToke(MusicScore.yiToGua(data))
+            data.replace(" ", "L")
+            try:
+                self.t.pADD = pAdd
+                data_tmp = data.split("\n")
+                tmp = -1
+                for i in data_tmp:
+                    try:
+                        if "." in i:
+                            self.t.arr.append("")
+                            tmp += 1
+                    except IndexError:
+                        pass
+                    if i.replace(" ", "") != "":
+                        self.t.arr[tmp] += i + "\n"
+            except Exception:
+                return
+            for i in range(len(self.t.arr)):
+                self.t.arr[i] = MusicScore.nuToJp(self.t.arr[i])
+
+        # 开始调用演奏进程
         self.t.start()
         self.t.ready = False
         self.t.state = True
@@ -106,6 +115,7 @@ class PlayMusic:
                 self.state = False
         except Exception:
             pass
+        PlayMusic.key_upAll()
 
     @staticmethod
     def key_down(key):
@@ -126,6 +136,11 @@ class PlayMusic:
         key = key.upper()
         vk_code = PlayMusic.key_map[key]
         keybd_event(vk_code, MapVirtualKey(vk_code, 0), KEYEVENTF_KEYUP, 0)
+
+    @staticmethod
+    def key_upAll():
+        for i in PlayMusic.keys:
+            PlayMusic.key_up(i)
 
     @staticmethod
     def playMusic(t, data, lyre, pAdd=0):
@@ -161,7 +176,7 @@ class PlayMusic:
         # 将每拍放入数组
         data_tmp = data_end
         arr_tmp = data_tmp.split("/")
-        print(arr_tmp)
+        print("arr_tmp:", arr_tmp)
         arr = []
         for i in arr_tmp:
             if len(i) > 0:
@@ -218,16 +233,61 @@ class PlayMusic:
             arr_data.append(arr_tmp.copy())
         arr.clear()
         # 开始演奏
+        keys = ""  # 存放同时按的按键
+        print("arr_data:", arr_data)
         for i in arr_data:
             length = len(i)
             time_tmp = time / length
             for j in i:
+                if j.replace(" ", "") != "":
+                    # 如果即将按其他音等待时间结束后抬起按键
+                    for k in keys:
+                        PlayMusic.key_up(k)
+                keys = ""
+                # 将同时按的音放入变量keys
                 for k in j:
                     if k in PlayMusic.keys:
-                        PlayMusic.key_down(k)
-                        PlayMusic.key_up(k)
+                        keys += k
+                # 按下按键
+                print(keys)
+                for k in keys:
+                    PlayMusic.key_down(k)
                 sleep(time_tmp)
                 t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+        # 演奏完毕抬起所有按键
+        PlayMusic.key_upAll()
+
+    @staticmethod
+    def playMid(t, data, lyre, time):
+        """
+        开始演奏Mid
+        :param t:线程
+        :param data: 琴谱
+        :param lyre: 1.风物；2.老旧
+        :param time: 时间参数
+        """
+        # 如果是老旧，转换谱
+        if lyre == 2:
+            print("老旧")
+            data = MusicScore.fwToLj(data)
+        tmp = ""
+        bef = False  # 上一个是否为=
+        for i in data:
+            if i == "=":
+                sleep(time)
+                bef = True
+            else:
+                # 全部抬起
+                if bef:
+                    for k in tmp:
+                        PlayMusic.key_up(k)
+                    tmp = ""
+                PlayMusic.key_down(i)
+                tmp += i
+                bef = False
+            t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+        # 演奏完毕抬起所有按键
+        PlayMusic.key_upAll()
 
 
 class MyThread(Thread):
@@ -242,6 +302,8 @@ class MyThread(Thread):
         self.arr = []
         self.lyre = 1
         self.pADD = 0
+        self.fileType = "txt"
+        self.midTime = 0.5
         self.ready = True
         self.state = False
 
@@ -276,7 +338,11 @@ class MyThread(Thread):
             for i in self.arr:
                 if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
                     i += "L"
-                PlayMusic.playMusic(self, i, self.lyre, self.pADD)
+                if self.fileType == "txt":
+                    PlayMusic.playMusic(self, i, self.lyre, self.pADD)
+                elif self.fileType == "mid":
+                    print(self.midTime)
+                    PlayMusic.playMid(self, i, self.lyre, self.midTime)
             self.ready = True
             print("演奏完成")
         except Exception:

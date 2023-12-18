@@ -24,7 +24,7 @@ class ScoreConversionInterface(GalleryInterface):
         self.inputFile = ""
         self.outputDir = ""
         # mid文件转换类型
-        self.arrMid = [self.tr("Mid to script"), self.tr("Mid to integration"), self.tr("Mid to JS")]
+        self.arrMid = [self.tr("Mid to script"), self.tr("Mid to JS")]
         # txt文件转换类型
         self.arrText = [self.tr("Keyboard to number"), self.tr("Number to keyboard"),
                         self.tr("Script to JS"),
@@ -101,7 +101,6 @@ class ScoreConversionInterface(GalleryInterface):
         if tmp is not None and path.isdir(tmp):
             self.outputDir = tmp
             self.lineEdit_output.setText(tmp)
-        self.setComoBoxCon(".txt")
 
     def myLabel(self, text):
         """
@@ -123,7 +122,9 @@ class ScoreConversionInterface(GalleryInterface):
             key = OpenKey(HKEY_CURRENT_USER, r'Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders')
             url = QueryValueEx(key, "Desktop")[0]
         fileUrl = QFileDialog.getOpenFileName(self, self.tr("Choice music score"), url,
-                                              self.tr("Music score ") + "(*.txt)")[0]
+                                              self.tr("Music score ") + "(*.txt *.mid)")[0]
+        # 设置下拉框内容
+        self.setComoBoxCon(fileUrl)
         if len(fileUrl) > 0:
             self.inputFile = fileUrl
             self.lineEdit_input.setText(fileUrl)
@@ -164,8 +165,6 @@ class ScoreConversionInterface(GalleryInterface):
                 if self.comboBox_con.currentIndex() == 0:
                     MusicScore.midToScript(self.inputFile, self.outputDir)
                 elif self.comboBox_con.currentIndex() == 1:
-                    MusicScore.midToIntegration(self.inputFile, self.outputDir)
-                else:
                     MusicScore.midToJs(self.inputFile, self.outputDir)
             elif self.conFileType == 2:
                 if self.comboBox_con.currentIndex() == 0:

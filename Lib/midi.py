@@ -105,10 +105,27 @@ class Midi:
             return None
 
     @staticmethod
-    def get_keys(file):
+    def customSort(string, rvs=False):
+        """
+        排序琴键
+        :param string: 带排序琴键
+        :param rvs: 默认False，设置为True可以倒序
+        :return: 排序后字符
+        """
+        order = "QWERTYUASDFGHJZXCVBNM"
+        for char in string:
+            if char not in order:
+                return string
+        if rvs:
+            order = order[::-1]
+        return ''.join(sorted(string, key=lambda x: order.index(x)))
+
+    @staticmethod
+    def get_keys(file, rvs=False):
         """
         midi转键盘
         :param file: midi文件路径 str
+        :param rvs:  同时按的按键顺序反转
         :return: 呱格式，刻师傅时间，最短时间
         """
         mid = MidiFile(file)
@@ -144,7 +161,19 @@ class Midi:
         if len(dataGua) > 1:
             for i in range(1, len(dataGua)):
                 data = Midi.addData(data, dataGua[i])
-        data = Midi.GuaFormat(data)
+        # 括号内排序
+        dataTmp = ""
+        data01 = ""
+        for i in data:
+            if i == "=":
+                data01 += Midi.customSort(dataTmp, rvs)
+                dataTmp = ""
+            else:
+                dataTmp += i
+                continue
+            data01 += i
+        data01 += Midi.customSort(dataTmp, rvs)
+        data = Midi.GuaFormat(data01)
         return data, speed, timeMin
 
     @staticmethod
@@ -271,3 +300,13 @@ class Midi:
             data_arr[i] = data_arr[i].replace("====", "+").replace("==", "-")
             data += data_arr[i] + "\n"
         return data
+
+    @staticmethod
+    def get_midKey(file):
+        """
+        通过mid文件获取键盘按键，延迟用=表示
+        :param file: mid文件路径
+        :return: 键盘按键，时间间隔
+        """
+        data = Midi.get_keys(file)
+        return data[0].replace("\n", "").replace("+", "====").replace("-", "=="), data[2] / 700

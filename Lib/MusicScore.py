@@ -137,12 +137,19 @@ class MusicScore:
         return data_end
 
     @staticmethod
-    def guaToke(data):
+    def guaToke(data, bar=4, pat=4, shotPat=16):
         """
         呱呱格式转刻师傅格式
         :param data: 呱呱格式内容
+        :param bar: 每小结拍数
+        :param pat: 每拍长度分之一
+        :param shotPat: 最短音长分音符
         :return: 刻师傅格式
         """
+        tmp_pat = shotPat / pat
+        if tmp_pat != int(tmp_pat):
+            raise Exception("shotPat不是pat整数倍")
+        tmp_pat = int(tmp_pat)
         time = int(data[:data.find("\n")])
         data_tmp = data.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
         data_end = ""
@@ -156,7 +163,7 @@ class MusicScore:
         while data_tmp[0] == "=":
             data_tmp = data_tmp[1:]
         # 补充后面=
-        data_tmp += (4 - (data_tmp.count("=") % 4)) * "="
+        data_tmp += (tmp_pat - (data_tmp.count("=") % tmp_pat)) * "="
         arr = []
         tmp_num = 0
         tmp_str = ""
@@ -164,7 +171,7 @@ class MusicScore:
             tmp_str += i
             if i == "=":
                 tmp_num += 1
-            if tmp_num == 4:
+            if tmp_num == tmp_pat:
                 arr.append(tmp_str)
                 tmp_str = ""
                 tmp_num = 0
@@ -194,13 +201,13 @@ class MusicScore:
         data_end = ""
         for i in range(len(arr)):
             data_end += arr[i]
-            if (i + 1) % 4 == 0:
+            if (i + 1) % bar == 0:
                 data_end += "\n"
         # 后面处理
         data_end += "    /" * (4 - (len(arr) % 4))
         if data_end[-21:] == "\n    /    /    /    /":
             data_end = data_end[:-21]
-        data_end = str(((time * 4) / 1000)) + "\n" + data_end
+        data_end = str(((time * tmp_pat) / 1000)) + "\n" + data_end
         return data_end
 
     @staticmethod
@@ -540,21 +547,11 @@ class MusicScore:
     def midToScript(url, output):
         """midi转脚本"""
         data = Midi.get_keys(url)
-
-        keData = MusicScore.guaTokeSou(data[0])  # 刻师傅格式，不带时间
+        gua = str(int(data[1] * 250)) + "\n" + data[0]
+        keData = MusicScore.guaToke(gua)
         # 导出刻师傅脚本琴谱
-        file01 = open(output + url[url.rfind("/"):-4] + "（脚本琴谱）.txt", 'w', encoding="UTF-8")
-        file01.write(str(data[1]) + "\n" + keData)
-        file01.close()
-
-    @staticmethod
-    def midToIntegration(url, output):
-        """mid转整合"""
-        data = Midi.get_keys(url)
-        keData = MusicScore.guaTokeSou(data[0])  # 刻师傅格式，不带时间
-        # 导出刻师傅整合琴谱
-        file01 = open(output + url[url.rfind("/"):-4] + "(整合琴谱).txt", 'w', encoding="UTF-8")
-        file01.write(MusicScore.transition(keData))
+        file01 = open(output + url[url.rfind("/"):-4] + "(刻师傅).txt", 'w', encoding="UTF-8")
+        file01.write(keData)
         file01.close()
 
     @staticmethod
@@ -585,68 +582,3 @@ class MusicScore:
                 dataStr += k
         end = "键盘:\n" + InStr + "\n\n\n数字:\n" + dataStr
         return end
-
-    @staticmethod
-    def guaTokeSou(dataGua):
-        """
-        呱呱格式转刻师傅格式
-        :param dataGua: 呱呱格式内容
-        :return: 刻师傅格式，刻师傅时间参数
-        """
-        data_tmp = dataGua.upper().replace(" ", "").replace("\n", "").replace("+", "====").replace("-", "==")
-        data_end = ""
-        for i in data_tmp:
-            if i == "=" or i in key:
-                data_end += i
-        data_tmp = data_end
-        # 去掉前面和后面的=
-        while data_tmp[-1] == "=":
-            data_tmp = data_tmp[:-1]
-        while data_tmp[0] == "=":
-            data_tmp = data_tmp[1:]
-        # 补充后面=
-        data_tmp += (4 - (data_tmp.count("=") % 4)) * "="
-        arr = []
-        tmp_num = 0
-        tmp_str = ""
-        for i in data_tmp:
-            tmp_str += i
-            if i == "=":
-                tmp_num += 1
-            if tmp_num == 4:
-                arr.append(tmp_str)
-                tmp_str = ""
-                tmp_num = 0
-        tmp_bracket = False  # 记录是否在括号内
-        for i in range(len(arr)):
-            tmp = ""
-            for j in range(len(arr[i])):
-                if arr[i][j] == "=":
-                    if j == 0:
-                        tmp += " "
-                    elif arr[i][j - 1] == "=":
-                        tmp += " "
-                    elif arr[i][j - 1] in key:
-                        pass
-                elif arr[i][j] in key:
-                    if tmp_bracket:
-                        tmp += arr[i][j]
-                        if arr[i][j + 1] == "=":
-                            tmp += ")"
-                            tmp_bracket = False
-                    elif arr[i][j + 1] in key:
-                        tmp += "(" + arr[i][j]
-                        tmp_bracket = True
-                    else:
-                        tmp += arr[i][j]
-            arr[i] = tmp + "/"
-        data_end = ""
-        for i in range(len(arr)):
-            data_end += arr[i]
-            if (i + 1) % 4 == 0:
-                data_end += "\n"
-        # 后面处理
-        data_end += "    /" * (4 - (len(arr) % 4))
-        if data_end[-21:] == "\n    /    /    /    /":
-            data_end = data_end[:-21]
-        return data_end

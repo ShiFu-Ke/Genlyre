@@ -1,13 +1,18 @@
-# @ Created with PyCharm Community Edition
-# @ Author KeShiFu
-# @ Date 2023/04/17
-# @ Time 18:30
-key_map = {
-    "A": 65, "B": 66, "C": 67, "D": 68, "E": 69, "F": 70, "G": 71, "H": 72, "J": 74,
-    "M": 77, "N": 78, "Q": 81, "R": 82, "S": 83, "T": 84,
-    "U": 85, "V": 86, "W": 87, "X": 88, "Y": 89, "Z": 90
-}
-k = list(key_map.keys())
-v = list(key_map.values())
-for i, j in zip(v, k):
-    print("\"" + str(i) + "\":\"" + j + "\"", end=",")
+from time import sleep
+
+from pynput import keyboard
+
+
+class GetKey:
+
+    def on_press(self, key):
+        if "f8" in str(key):
+            print(6)
+
+    def start(self):
+        self.listener = keyboard.Listener(on_press=self.on_press).start()
+
+
+g = GetKey()
+g.start()
+sleep(30)

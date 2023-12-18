@@ -968,11 +968,6 @@
         <translation>mid转脚本</translation>
     </message>
     <message>
-        <location filename="../../view/score_conversion_interface.py" line="14"/>
-        <source>Mid to integration</source>
-        <translation>mid转整合</translation>
-    </message>
-    <message>
         <location filename="../../view/score_conversion_interface.py" line="15"/>
         <source>Mid to JS</source>
         <translation>mid转js</translation>
@@ -1252,6 +1247,11 @@
         <location filename="../../view/keyMapping_interface.py" line="43"/>
         <source>NumpadSub</source>
         <translation>小键盘减</translation>
+    </message>
+    <message>
+        <location filename="../../view/keyMapping_interface.py" line="44"/>
+        <source>NumpadDot</source>
+        <translation>小键盘点</translation>
     </message>
    <message>
         <location filename="../../view/keyMapping_interface.py" line="44"/>
