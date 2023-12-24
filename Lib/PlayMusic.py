@@ -173,7 +173,7 @@ class PlayMusic:
 
         # 将每拍放入数组
         data_tmp = data_end
-        arr_tmp = data_tmp.split("/")
+        arr_tmp = data_tmp.split("/")[:-1]  # split切割后，后面会增加一个空字符串用[:-1]只取前面的
         arr = []
         for i in arr_tmp:
             if len(i) > 0:
@@ -229,6 +229,7 @@ class PlayMusic:
             length_max = Util.lcm(length_max, len(arr_tmp))
             arr_data.append(arr_tmp.copy())
         arr.clear()
+        print(arr_data)
         # 开始演奏
         for i in arr_data:
             length = len(i)

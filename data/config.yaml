@@ -1,9 +1,8 @@
 autoPlay:
-  fileUrl: "E:/\u539F\u7434/eop mid"
+  fileUrl: "E:/\u684C\u9762"
   key: {begin: F7, cease: F9, pauseResume: F8}
   songList:
-  - ["E:/\u684C\u9762/\u65B0\u5EFA\u6587\u672C\u6587\u6863 (2).txt", 1]
-  - ["E:/\u539F\u7434/eop mid/\u559C\u5E16\u8857.mid", 0]
+  - ["E:/\u684C\u9762/1.txt", 1]
 keyMapping: {mapping: 0}
 lyre: {key: 0}
 scoreConversion: {dirUrl: "E:/\u684C\u9762", fileUrl: "E:/\u684C\u9762/\u96E8\u8776\
