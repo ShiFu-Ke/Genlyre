@@ -2,6 +2,7 @@
 # @ Author KeShiFu
 # @ Date 2023/03/18
 # @ Time 22:24
+from re import findall
 import subprocess
 from inspect import isclass
 from ctypes import pythonapi, c_long, py_object
@@ -37,6 +38,17 @@ NumpadSub::U"""
             file = open("../data/default.ahk", 'w', encoding="UTF-8")
             file.write(testMap)
             file.close()
+
+    @staticmethod
+    def getMaxArpeggioLen(beat):
+        """
+        获取一拍中所有琶音中音的个数最大值，括号内同时按的音视为一个音。
+        :param beat: 一拍音符。
+        :return: 最大长度；int类型。
+        """
+        return max(
+            list(
+                map(lambda arr: len(findall(r'[a-zA-Z](?![a-zA-Z]*\))|\(\w+\)', arr)), findall(r'\[.*?]', beat))))
 
     @staticmethod
     def stop():

@@ -39,7 +39,7 @@ class Config(QConfig):
 
 YEAR = 2023
 AUTHOR = "keshifu"
-VERSION = "v1.1.3"
+VERSION = "v1.1.4"
 HOME_URL = "https://space.bilibili.com/660801861"  # up主页
 HELP_URL = "https://b23.tv/GnTA6Y5"  # 帮助
 DOWNLOAD_URL = "https://keshifu.lanzouk.com/b03vbisqd"  # 下载链接

@@ -150,7 +150,7 @@ class PlayMusic:
         :param pAdd: 琶音提速，默认值为0
         """
         if "L" in data:
-            data = data.replace("L", " ")
+            data = data.replace("L", " ").replace("（", "(").replace("）", ")")
         time = float(data[:data.find("\n")])
         data_tmp = data.upper().replace("\n", "")
         data_end = ""
@@ -161,15 +161,16 @@ class PlayMusic:
         if lyre == 2:
             print("老旧")
             data_end = MusicScore.fwToLj(data_end)
-        # 找琶音长度
-        p_num = 0
-        p_data = data_end[data_end.find("["):]
-        while p_data.find("[") > -1:
-            p_tmpLen = p_data.find("]") - p_data.find("[") - 1
-            if p_tmpLen > p_num:
-                p_num = p_tmpLen
-            p_data = p_data[p_data.find("]") + 1:]
-        p_num += pAdd
+
+        # # 找琶音长度
+        # p_num = 0
+        # p_data = data_end[data_end.find("["):]
+        # while p_data.find("[") > -1:
+        #     p_tmpLen = p_data.find("]") - p_data.find("[") - 1
+        #     if p_tmpLen > p_num:
+        #         p_num = p_tmpLen
+        #     p_data = p_data[p_data.find("]") + 1:]
+        # p_num += pAdd
 
         # 将每拍放入数组
         data_tmp = data_end
@@ -182,6 +183,7 @@ class PlayMusic:
                 arr.append(" ")
         for i in range(len(arr)):
             if "[" in arr[i]:
+                p_num = Util.getMaxArpeggioLen(arr[i]) + pAdd
                 p_tmp = ""
                 p_kh = False
                 p_py = False

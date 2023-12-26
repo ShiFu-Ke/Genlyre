@@ -261,7 +261,7 @@ class MusicScore:
         """
         try:
             file = open(filePath, encoding='utf-8')
-            data = file.read()
+            data = file.read().replace("（", "(").replace("）", ")")
             file.close()
         except Exception:
             return False, "文件不存在！"
