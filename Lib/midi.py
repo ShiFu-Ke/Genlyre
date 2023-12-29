@@ -112,12 +112,14 @@ class Midi:
         :param rvs: 默认False，设置为True可以倒序
         :return: 排序后字符
         """
-        order = "QWERTYUASDFGHJZXCVBNM"
+        if rvs:
+            order = "ZXCVBNMASDFGHJQWERTYU"
+        else:
+            order = "QWERTYUASDFGHJZXCVBNM"
+
         for char in string:
             if char not in order:
                 return string
-        if rvs:
-            order = order[::-1]
         return ''.join(sorted(string, key=lambda x: order.index(x)))
 
     @staticmethod
