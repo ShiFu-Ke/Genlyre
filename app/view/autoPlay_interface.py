@@ -78,8 +78,10 @@ class AutoPlayInterface(GalleryInterface):
         label_MusicalScore = self.myLabel("Format of musical score:")
         # 下拉框
         self.comboBox_head = ComboBox()  # 琴谱格式
-        # self.comboBox_head.addItems([self.tr("Format of KeShiFu"), self.tr('Format of GuaGua')])
-        self.comboBox_head.addItems([self.tr("Format of KeShiFu")])
+        # self.comboBox_head.addItems(
+        #     [self.tr("Format of KeShiFu"), self.tr('Format of GuaGua'), self.tr('Format of YiLeiNa')])
+        self.comboBox_head.addItems([self.tr("Format of KeShiFu"), self.tr('Format of GuaGua')])
+        # self.comboBox_head.addItems([self.tr("Format of KeShiFu")])
         self.comboBox_head.setCurrentIndex(0)
         self.comboBox_head.setMinimumWidth(165)
         self.comboBox_head.currentIndexChanged.connect(lambda: self.setScoreType())

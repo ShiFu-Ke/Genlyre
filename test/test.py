@@ -8,7 +8,7 @@ b = [
     "Settings",
 ]
 a = [
-    "网络错误",
+    "伊蕾娜",
 ]
 tmp = 29
 text = "../../view/main_window.py"

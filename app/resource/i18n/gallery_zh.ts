@@ -790,6 +790,11 @@
         <translation>呱呱格式</translation>
     </message>
     <message>
+        <location filename="../../view/autoPlay_interface.py" line="59"/>
+        <source>Format of YiLeiNa</source>
+        <translation>伊蕾娜格式</translation>
+    </message>
+    <message>
         <location filename="../../view/autoPlay_interface.py" line="60"/>
         <source>Input</source>
         <translation>导入</translation>

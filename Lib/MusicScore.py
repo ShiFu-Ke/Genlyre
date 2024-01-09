@@ -325,10 +325,7 @@ class MusicScore:
             int(data[:data.find("\n")])
         except Exception:
             return False, "首行必须是数字！"
-        for i in data.upper():
-            if i in key:
-                return True, "格式正确！"
-        return False, "琴谱内容为空！"
+        return True, "格式正确！"
 
     @staticmethod
     def isYi(filePath):
