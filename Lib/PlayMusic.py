@@ -9,7 +9,6 @@ from win32api import keybd_event, MapVirtualKey
 from win32con import KEYEVENTF_KEYUP
 
 from Lib.MusicScore import MusicScore
-from Lib.midi import Midi
 from util.Util import Util
 
 
@@ -29,13 +28,14 @@ class PlayMusic:
         self.t = None
         self.state = False
 
-    def start(self, filePath, scoreType, lyre, pAdd):
+    def start(self, filePath, scoreType, lyre, bufTime, pAdd):
         """
         开始弹琴
         调用此方法自动创建守护进程进行演奏
         :param filePath: 琴谱文件路径
         :param scoreType: 琴谱格式；1：刻师傅，2：呱呱，3：伊蕾娜
         :param lyre: 1.风物；2.老旧
+        :param bufTime: 缓冲时间
         :param pAdd: 琶音提速
         """
         if self.t is None or self.t.ready:
@@ -47,6 +47,8 @@ class PlayMusic:
         self.t.setDaemon(True)
         self.t.fileType = filePath[-3:]
         self.t.lyre = lyre
+        self.t.bufTime = bufTime
+        self.t.pADD = pAdd
         self.t.arr.clear()
 
         if self.t.fileType == "mid":
@@ -63,7 +65,6 @@ class PlayMusic:
                 data = MusicScore.guaToke(MusicScore.yiToGua(data))
             data.replace(" ", "L")
             try:
-                self.t.pADD = pAdd
                 data_tmp = data.split("\n")
                 tmp = -1
                 for i in data_tmp:
@@ -95,6 +96,10 @@ class PlayMusic:
                     print("暂停")
                     self.t.pause()
                     self.t.state = False
+                    global k_tmp
+                    for upKey in k_tmp:
+                        PlayMusic.key_up(upKey)
+                    k_tmp.clear()
                 else:
                     print("继续")
                     self.t.resume()
@@ -141,12 +146,13 @@ class PlayMusic:
             PlayMusic.key_up(i)
 
     @staticmethod
-    def playMusic(t, data, lyre, pAdd=0):
+    def playMusic(t, data, lyre, bufTime, pAdd=0):
         """
         开始演奏
         :param t:线程
         :param data: 琴谱
         :param lyre: 1.风物；2.老旧
+        :param bufTime: 缓冲时间（ms）
         :param pAdd: 琶音提速，默认值为0
         """
         if "L" in data:
@@ -155,22 +161,12 @@ class PlayMusic:
         data_tmp = data.upper().replace("\n", "")
         data_end = ""
         for i in data_tmp:
-            if i in ["/", "(", ")", "[", "]", " "] or i in PlayMusic.keys:
+            if i in PlayMusic.keys + ["/", "(", ")", "[", "]", " ", "~"]:
                 data_end += i
         # 如果是老旧，转换谱
         if lyre == 2:
             print("老旧")
             data_end = MusicScore.fwToLj(data_end)
-
-        # # 找琶音长度
-        # p_num = 0
-        # p_data = data_end[data_end.find("["):]
-        # while p_data.find("[") > -1:
-        #     p_tmpLen = p_data.find("]") - p_data.find("[") - 1
-        #     if p_tmpLen > p_num:
-        #         p_num = p_tmpLen
-        #     p_data = p_data[p_data.find("]") + 1:]
-        # p_num += pAdd
 
         # 将每拍放入数组
         data_tmp = data_end
@@ -224,25 +220,38 @@ class PlayMusic:
                         arr_tmp.append(p_tmpLen)
                         p_tmpLen = ""
                 else:
-                    if i[j] in PlayMusic.keys or i[j] == " ":
+                    if i[j] in PlayMusic.keys+[" ", "~"]:
                         arr_tmp.append(i[j])
                     elif i[j] == "(":
                         tmp_bracket = True
             length_max = Util.lcm(length_max, len(arr_tmp))
             arr_data.append(arr_tmp.copy())
         arr.clear()
-        print(arr_data)
         # 开始演奏
+        global k_tmp
+        k_tmp = []
         for i in arr_data:
             length = len(i)
-            time_tmp = time / length
+            buf_time = bufTime / 1000
+            time_tmp = (time / length)
+            if time_tmp < buf_time:
+                buf_time = 0.01
+            time_tmp -= buf_time
             for j in i:
-                for k in j:
-                    if k in PlayMusic.keys:
-                        PlayMusic.key_down(k)
-                        PlayMusic.key_up(k)
+                if j != " ":
+                    for upKey in k_tmp:
+                        PlayMusic.key_up(upKey)
+                    k_tmp.clear()
+                sleep(buf_time)
+                for downKey in j:
+                    if downKey in PlayMusic.keys:
+                        PlayMusic.key_down(downKey)
+                        k_tmp.append(downKey)
                 sleep(time_tmp)
                 t.flag.wait()  # 为True时立即返回, 为False时阻塞直到内部的标识位为True后返回
+        for upKey in k_tmp:
+            PlayMusic.key_up(upKey)
+        k_tmp.clear()
 
     @staticmethod
     def playMid(t, data, lyre, time):
@@ -292,6 +301,7 @@ class MyThread(Thread):
         '''
         self.lyre = 1
         self.pADD = 0
+        self.bufTime = 10
         self.fileType = "txt"
         self.midTime = 0.5
         self.ready = True
@@ -332,7 +342,7 @@ class MyThread(Thread):
                 for i in self.arr:
                     if len(i.split("\n")) <= 2:  # 防止没有音符导致卡死
                         i += "L"
-                    PlayMusic.playMusic(self, i, self.lyre, self.pADD)
+                    PlayMusic.playMusic(self, i, self.lyre, self.bufTime, self.pADD)
             self.ready = True
             print("演奏完成")
         except Exception:

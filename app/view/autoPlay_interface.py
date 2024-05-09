@@ -7,7 +7,7 @@ from pynput import keyboard
 
 from Lib.MusicScore import MusicScore
 from Lib.PlayMusic import PlayMusic
-from qfluentwidgets import (PushButton, PrimaryPushButton, ComboBox, RadioButton, MessageBox)
+from qfluentwidgets import (PushButton, PrimaryPushButton, ComboBox, RadioButton, MessageBox, SpinBox)
 from util.ConfigUtil import ConfigUtil
 from util.PlayUtil import PlayUtil
 from .gallery_interface import GalleryInterface
@@ -30,6 +30,7 @@ class AutoPlayInterface(GalleryInterface):
         self.scoreType = 1  # 琴谱格式
         self.lyre = 1  # 琴的类型
         self.pADD = 0  # 琶音提速
+        self.bufTime = 10  # 缓冲时间
         self.playMusic = PlayMusic()  # 创建演奏对象
         self.QKey = ["", "", ""]  # 快捷键保存位置[开始，暂停/继续，结束]
         self.listener = keyboard.Listener(on_press=self.on_press).start()
@@ -93,17 +94,6 @@ class AutoPlayInterface(GalleryInterface):
         button_empty = PushButton(self.tr('Empty'))
         button_empty.clicked.connect(lambda: self.clearSong())
 
-        # 水平布局
-        HLayout_head = QHBoxLayout()
-        HLayout_head.setAlignment(Qt.AlignTop)
-        HLayout_head.setSpacing(10)
-        HLayout_head.addWidget(label_MusicalScore, 0, Qt.AlignLeft)
-        HLayout_head.addWidget(self.comboBox_head, 0, Qt.AlignLeft)
-        HLayout_head.addWidget(button_input, 0, Qt.AlignLeft)
-        HLayout_head.addStretch(1)
-        HLayout_head.addWidget(button_delete, 0, Qt.AlignRight)
-        HLayout_head.addWidget(button_empty, 0, Qt.AlignRight)
-
         # 中间单选框
         self.radioWidget = QWidget()
         self.radioLayout = QVBoxLayout(self.radioWidget)
@@ -115,6 +105,7 @@ class AutoPlayInterface(GalleryInterface):
         # 文本
         label_SelectInstrument = self.myLabel("Select lyre:")
         label_pADD = self.myLabel("Arpeggio acceleration:")
+        label_BufTime=self.myLabel("Buffer time:")
         # 下拉框
         self.comboBox_lyre = ComboBox()  # 琴谱格式
         self.comboBox_lyre.addItems([self.tr("Windsong Lyre"), self.tr('Vintage Lyre')])
@@ -127,6 +118,13 @@ class AutoPlayInterface(GalleryInterface):
         self.comboBox_pADD.setCurrentIndex(0)
         self.comboBox_pADD.setMinimumWidth(10)
         self.comboBox_pADD.currentIndexChanged.connect(lambda: self.setPaDD())
+        # 可调大小数字框
+        self.spinBox_bufTime = SpinBox(self)
+        self.spinBox_bufTime.setRange(10, 200)
+        self.spinBox_bufTime.setValue(self.bufTime)  # 设置初始值
+        self.spinBox_bufTime.setSingleStep(5)  # 设置增量
+        self.spinBox_bufTime.valueChanged.connect(lambda: self.setBufTime())
+
         # 按钮
         self.button_begin = PrimaryPushButton(self.tr('Begin'))
         self.button_begin.setMinimumWidth(135)
@@ -139,12 +137,25 @@ class AutoPlayInterface(GalleryInterface):
         self.button_cease.clicked.connect(lambda: self.playMusic.finish())
 
         # 水平布局
+        HLayout_head = QHBoxLayout()
+        HLayout_head.setAlignment(Qt.AlignTop)
+        HLayout_head.setSpacing(10)
+        HLayout_head.addWidget(label_SelectInstrument, 0, Qt.AlignLeft)
+        HLayout_head.addWidget(self.comboBox_lyre, 0, Qt.AlignLeft)
+        HLayout_head.addWidget(label_MusicalScore, 0, Qt.AlignLeft)
+        HLayout_head.addWidget(self.comboBox_head, 0, Qt.AlignLeft)
+        HLayout_head.addWidget(button_input, 0, Qt.AlignLeft)
+        HLayout_head.addStretch(1)
+        HLayout_head.addWidget(button_delete, 0, Qt.AlignRight)
+        HLayout_head.addWidget(button_empty, 0, Qt.AlignRight)
+
         HLayout_end = QHBoxLayout()
         HLayout_end.setSpacing(10)
-        HLayout_end.addWidget(label_SelectInstrument, 0, Qt.AlignLeft)
-        HLayout_end.addWidget(self.comboBox_lyre, 0, Qt.AlignLeft)
+
         HLayout_end.addWidget(label_pADD)
         HLayout_end.addWidget(self.comboBox_pADD)
+        HLayout_end.addWidget(label_BufTime)
+        HLayout_end.addWidget(self.spinBox_bufTime)
         HLayout_end.addStretch(1)
         HLayout_end.addWidget(self.button_begin, 0, Qt.AlignRight)
         HLayout_end.addWidget(self.button_pauseResume, 0, Qt.AlignRight)
@@ -152,9 +163,9 @@ class AutoPlayInterface(GalleryInterface):
 
         # 设置头部组件
         titleLayout = QVBoxLayout()
+        titleLayout.addLayout(HLayout_head)
         titleLayout.addLayout(HLayout_key)
         titleLayout.addLayout(HLayout_end)
-        titleLayout.addLayout(HLayout_head)
         # 将头部组件添加到总布局
         self.vBoxLayout.addLayout(titleLayout)
         # 添加组件到总组件
@@ -247,6 +258,10 @@ class AutoPlayInterface(GalleryInterface):
     def setPaDD(self):
         """设置拍提速"""
         self.pADD = self.comboBox_pADD.currentIndex()
+
+    def setBufTime(self):
+        """设置缓冲时间"""
+        self.bufTime = self.spinBox_bufTime.value()
 
     def addList(self, box=True, songList=None, scoreType=None):
         """
@@ -341,7 +356,8 @@ class AutoPlayInterface(GalleryInterface):
         tmp_order = 0 - self.buttonGroup.checkedId() - 2
         if tmp_order == -1:
             return
-        self.playMusic.start(self.songList[tmp_order][0], self.songList[tmp_order][1], self.lyre, self.pADD)
+        self.playMusic.start(self.songList[tmp_order][0], self.songList[tmp_order][1], self.lyre,
+                             self.bufTime, self.pADD)
 
     def myLabel(self, text):
         """
