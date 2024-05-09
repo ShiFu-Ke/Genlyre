@@ -850,6 +850,11 @@
         <translation>选择琴：</translation>
     </message>
     <message>
+        <location filename="../../view/autoPlay_interface.py" line="80"/>
+        <source>Buffer time:</source>
+        <translation>缓冲时间：</translation>
+    </message>
+    <message>
         <location filename="../../view/autoPlay_interface.py" line="71"/>
         <source>No element selected</source>
         <translation>请先选中曲目</translation>

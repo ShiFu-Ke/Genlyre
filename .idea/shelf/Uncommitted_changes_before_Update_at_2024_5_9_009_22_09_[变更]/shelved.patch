@@ -1,0 +1,83 @@
+Index: test/1.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># @ Created with PyCharm Professional 2021.2.1\r\n# @ Author KeShiFu\r\n# @ Date 2023/09/13\r\n# @ Time 23:14\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/test/1.py b/test/1.py
+--- a/test/1.py	(revision 8e3a5656d057172ad2f793ccec4d9d0df233cc9d)
++++ b/test/1.py	(date 1705118221655)
+@@ -3,3 +3,72 @@
+ # @ Date 2023/09/13
+ # @ Time 23:14
+ 
++from Lib.MusicScore import MusicScore
++
++m = MusicScore()
++data = '''0.92
++(ADCN) (CN)(AHN)/Q(WCN)(QN)W/(DCN)Q(CN)(QAN)/ (HCN)N /
++(AFVN) (ZV)(HVN)/Q(WAV)(QF)W/(AFV)Q(ZV)(QVN)/(VN)(GZV)VE/
++(AZB)W(QAB)(QZ)/ (AGB)ZE/(AZB)Q(AB)(QZ)/ (AGB)Z(EGJ)/
++(DCBM)W(QDBM)(WC)/ (DBM)(QC)W/(DCBM) (DBM)(WC)/ (EDBM)(WC)Q/
++(ADCN) (CN)(AHN)/Q(WCN)(QN)W/(DCN)Q(CN)(QAN)/ (HCN)N /
++(AFVN) (ZV)(HVN)/Q(WAV)(QF)W/(AFV)Q(ZV)(QVN)/(VN)(GZV)VE/
++(AZB)W(QAB)(QZ)/ (AGB)ZE/(AZB)Q(AB)(QZ)/ (AGB)Z(EGJ)/
++(DCBM)W(QDBM)(WC)/ (DBM)(QC)W/(DCBM) (DBM)(WC)/ (EDBM)(WC)Q/
++(AFHVN) (VN)V/(FJV)(VN)VV/(QFHV) (VN)V/(EFHV)(VN)VV/
++(ADHN)(CN)NN/(ADJCN)NNB/(TGJ)(XB)BB/(SGJXB)BBB/
++(AAFHVN) (VN)V/(FJV)(VN)VV/(QFHV) (VN)V/(EFHV)(VN)VV/
++(WGJCBM) (BM)B/(EGJB)(BM)BB/(WTJB) (BM)B/(WYJB)(BM)B(QRY)/
++(AVN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)N(AFHV)/V(ADGN)V(ADB)/
++Z (AB)Z/Z(AB)Z(QDGZ)/(CB)(DGJ)(SM)(HC)/C(DGM)C(AFH)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(ADN)/
++C (AN)N/(ADCN)(AGCN)(AN)(ASGJN)/B (GJ)(DGJB)/B(SGXBM)B(AFHB)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(QAD)/
++Z(ADG)(AB)(ADGZ)/Z(AADB)Z(DGZM)/(CB)(DM)(SM)(SCBM)/C(DXBM)C(SBM)/
++V(QH)(AN)(HV)/(EV)(EAN)(TV)(WG)/(CB) (SB)(EGJC)/(CB)C(DBM) /
++(QEHN) (QEHN) /(QEHN)(WGJB) (QFHV)/  (QSFH)V/(QFHV)(DGJC) (QFHX)/
++ X(QSFH)X/(QFHX)(DGJZ) (QFHX)/ X(QSFH) /X(WGJC) D/
++(QEHN) (QEHN) /(QEHN)(SGJB) (QFHV)/  (QSFH)V/(QFHV)(DGJC) (QFHX)/
++ X(QSFH)X/(QFHX)(DGJZ) (QFHX)/ XS(WGJCB)/ (CB)D /
++(DHN)(DHN)(DHCN)(DHCN)/(QDHN)(WDHN)(QDHN)(WDHN)/(DHN)(QDHN)(DHN)(QDHN)/(DHN)(DHCN)(DHN)(DHN)/
++(AFV)(AFV)(AHVN)(AHVN)/(QAFV)(WAFV)(QAFV)(WAFV)/(AFV)(QAFV)(AFV)(QAFV)/(AFV)(AGVN)(AFV)(EAFV)/
++(AZB)(WAZB)(QAZB)(QAZB)/(AZB)(AGZB)(AZB)(EAZB)/(AZB)(WAZB)(QAZB)(QAZB)/(AZB)(AGZB)(AZB)(EAGJZB)/
++(DCM)(WDCM)(QDCM)(WDCM)/(DCM)(DCM)(QDCM)(WDCM)/(DCM)(DCM)(DCM)(WDCM)/(DCM)(EDCM)(WDCM)(QDCM)/
++(DHN)(DHN)(DHCN)(DHCN)/(QDHN)(WDHN)(QDHN)(WDHN)/(DHN)(QDHN)(DHN)(QDHN)/(DHN)(DHCN)(DHN)(DHN)/
++(AFV)(AFV)(AHVN)(AHVN)/(QAFV)(WAFV)(QAFV)(WAFV)/(AFV)(QAFV)(AFV)(QAFV)/(AFV)(AGVN)(AFV)(EAFV)/
++(AZB)(WAZB)(QAZB)(QAZB)/(AZB)(AGZB)(AZB)(EAZB)/(AZB)(WAZB)(QAZB)(QAZB)/(AZB)(AGZB)(AZB)(EAGJZB)/
++(DCM)(WDCM)(QDCM)(WDCM)/(DCM)(DCM)(QDCM)(WDCM)/(DCM)(DCM)(DCM)(WDCM)/(DCM)(EDCM)(WDCM)(QDCM)/
++(AFHVN) (VN)V/(FJV)(VN)VV/(QFHV) (VN)V/(EFHV)(VN)VV/
++(ADHN)(CN)NN/(ADJCN)NNB/(TGJ)(XB)BB/(SGJXB)BBB/
++(AAFHVN) (VN)V/(FJV)(VN)VV/(QFHV) (VN)V/(EFHV)(VN)VV/
++(WGJCBM) (BM)B/(EGJB)(BM)BB/(WTJB) (BM)B/(WYJB)(BM)B(QRY)/
++(AVN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)N(AFHV)/V(ADGN)V(ADB)/
++Z (AB)Z/Z(AB)Z(QDGZ)/(CB)(DGJ)(SM)(HC)/C(DGM)C(AFH)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(ADN)/
++C (AN)N/(ADCN)(AGCN)(AN)(ASGJN)/B (GJ)(DGJB)/B(SGXBM)B(AFHB)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(QAD)/
++Z(ADG)(AB)(ADGZ)/Z(AADB)Z(DGZM)/(CB)(DM)(SM)(SCBM)/C(DXBM)C(SBM)/
++V(QH)(AN)(HV)/(EV)(EAN)(TV)(WG)/(CB) (SB)(EGJC)/(CB)C(DBM) /
++(ADVN)   /RRRE/(ADGZB)  G/EEEW/
++(SDBM)   /EEEW/(ADN)Q Q/(SBM)J H/
++(ADVN)   /RRRE/(ADGZB)  G/EEEW/
++(SDBM)   /EEEW/(ADN)Q Q/(SBM)J H/
++(AVN)  (AHVN)/RR(RAVN)T/(AZB)  (AGZB)/EE(EAZB)W/
++(SCBM)  (SCBM)/(ESCBM)E(ESCBM)W/(ADN)Q Q/(DBM)J H/
++VV(QV)(WHV)/V(EHV)VV/(ADHV)VV(ADHV)/VV(ADHV)V/
++(SGBM)B(QB)(WGB)/B(EGJB)BB/(EGJB)(GJB)(GJB)(TGJB)/(GJB)(GJB)(GJB)(QYHB)/
++V (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(ADB)/
++Z (AB)Z/Z(AB)Z(QDGZ)/(CB)(DGJ)(SM)(HC)/C(DGM)C(AFH)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(ADN)/
++C (AN)N/(ADCN)(AGCN)(AN)(ASGJN)/B (GJ)(DGJB)/B(SGXBM)B(AFHB)/
++(VN) (AN)V/V(AN)V(QAFVN)/(VN)(AFJ)(AN)(AFHV)/V(ADGN)V(QAD)/
++Z(ADG)(AB)(ADGZ)/Z(AADB)Z(DGZM)/(CB)(DM)(SM)(SCBM)/C(DXBM)C(SBM)/
++V(QH)(AN)(HV)/(EV)(EAN)(TV)(WG)/(CB) (SB)(EGJC)/(CB)C(DBM)(WFH)/
++VQ(AN)(HV)/(EV)(EAN)(TV)(WGJ)/(CB) (SB)(EGJC)/(CB)C(DBM)(WFH)/
++VQ(AN)(HV)/(EV)(EAN)(TV)(WYJ)/(SCM)W (WSM)/(SM)ECW/
++(QEHN) (QEHN) /(QEHN)(WGJB) (QFHV)/(QFH) (QSFH)V/(QFHV)(DGJC) (QFHX)/
++ X(QSFH)X/(QFHX)(DGJZ) (QFHX)/ X(QSFH) /X(WGJC) D/
++(QEHN) (QEHN) /(QEHN)(SGJB) (QFHV)/  (QSFH)V/(QFHV)(DGJC) (QFHX)/
++ X(QSFH)X/(QFHX)(DGJZ) (QFHX)/ XS(WGJCB)/    /
++'''
++print(m.keToGua(data))

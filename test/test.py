@@ -5,13 +5,13 @@
 import zhconv
 
 b = [
-    "Settings",
+    "Buffer time:",
 ]
 a = [
-    "伊蕾娜",
+    "缓冲时间：",
 ]
-tmp = 29
-text = "../../view/main_window.py"
+tmp = 79
+text = "../../view/autoPlay_interface.py"
 
 l = tmp
 for i, j in zip(a, b):
