@@ -1,7 +1,9 @@
 autoPlay:
-  fileUrl: "E:/\u684C\u9762"
-  key: {begin: F7, cease: F9, pauseResume: F8}
-  songList: []
+  fileUrl: C:/Users/work/Desktop
+  key: {begin: F8, cease: F9, pauseResume: None}
+  songList:
+  - ["C:/Users/work/Desktop/\u4E2D\u56FD\u519B\u9B42(\u53F7).txt", 1]
+  - ["C:/Users/work/Desktop/\u4E2D\u56FD\u519B\u9B42.txt", 1]
 keyMapping: {mapping: 0}
 lyre: {key: 0}
 scoreConversion: {dirUrl: "E:/\u684C\u9762", fileUrl: "E:/\u684C\u9762/\u96E8\u8776\
