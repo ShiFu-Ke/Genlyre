@@ -101,7 +101,7 @@
       <workItem from="1715226747027" duration="2641000" />
       <workItem from="1715238400025" duration="5021000" />
       <workItem from="1715243479241" duration="1076000" />
-      <workItem from="1715244578216" duration="441000" />
+      <workItem from="1715244578216" duration="565000" />
     </task>
     <task id="LOCAL-00001" summary="更新长按功能">
       <created>1715244627067</created>
@@ -117,7 +117,14 @@
       <option name="project" value="LOCAL" />
       <updated>1715244850166</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="更新长按功能">
+      <created>1715245031149</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1715245031149</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
