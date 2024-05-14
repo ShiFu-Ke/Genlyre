@@ -201,7 +201,8 @@ class SettingInterface(ScrollArea):
     def getUpdateInfo(self):
         try:
             self.update_info = UpDate.getUpdateMsg("Genlyre")
-            self.updateSignal.emit()
+            if self.update_info[0] != VERSION:
+                self.updateSignal.emit()
         except:
             pass
 
