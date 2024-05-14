@@ -220,7 +220,7 @@ class PlayMusic:
                         arr_tmp.append(p_tmpLen)
                         p_tmpLen = ""
                 else:
-                    if i[j] in PlayMusic.keys+[" ", "~"]:
+                    if i[j] in PlayMusic.keys + [" ", "~"]:
                         arr_tmp.append(i[j])
                     elif i[j] == "(":
                         tmp_bracket = True
@@ -235,15 +235,15 @@ class PlayMusic:
             buf_time = bufTime / 1000
             time_tmp = (time / length)
             if time_tmp < buf_time:
-                buf_time = 0.01
+                buf_time = time_tmp / 2
             time_tmp -= buf_time
             for j in i:
                 if j != " ":
-                    for upKey in k_tmp:
+                    for upKey in k_tmp:  # 抬起按键
                         PlayMusic.key_up(upKey)
                     k_tmp.clear()
                 sleep(buf_time)
-                for downKey in j:
+                for downKey in j:  # 按下同时按键
                     if downKey in PlayMusic.keys:
                         PlayMusic.key_down(downKey)
                         k_tmp.append(downKey)
@@ -301,7 +301,7 @@ class MyThread(Thread):
         '''
         self.lyre = 1
         self.pADD = 0
-        self.bufTime = 10
+        self.bufTime = 20
         self.fileType = "txt"
         self.midTime = 0.5
         self.ready = True

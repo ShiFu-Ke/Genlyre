@@ -16,18 +16,14 @@ from ..common.icon import Icon
 
 class SettingInterface(ScrollArea):
     """ Setting interface """
-
-    checkUpdateSig = pyqtSignal()
-    musicFoldersChanged = pyqtSignal(list)
-    acrylicEnableChanged = pyqtSignal(bool)
-    downloadFolderChanged = pyqtSignal(str)
-    minimizeToTrayChanged = pyqtSignal(bool)
+    updateSignal = pyqtSignal()  # 自定义更新提醒弹窗曹函数
 
     def __init__(self, parent=None):
         super().__init__(parent=parent)
         self.scrollWidget = QWidget()
         self.expandLayout = ExpandLayout(self.scrollWidget)
         self.update_info = ["0", "0", "0"]
+        self.updateSignal.connect(self.showUpdateMessageDialog)  # 绑定更新提醒弹窗曹函数
         # 后台获取更新信息
         threading.Thread(target=lambda: self.getUpdateInfo()).start()
 
@@ -75,16 +71,6 @@ class SettingInterface(ScrollArea):
             parent=self.personalGroup
         )
 
-        # material
-        self.materialGroup = SettingCardGroup(
-            self.tr('Material'), self.scrollWidget)
-        self.blurRadiusCard = RangeSettingCard(
-            cfg.blurRadius,
-            Icon.ALBUM,
-            self.tr('Acrylic blur radius'),
-            self.tr('The greater the radius, the more blurred the image'),
-            self.materialGroup
-        )
         # application
         self.aboutGroup = SettingCardGroup(self.tr('About'), self.scrollWidget)
         self.helpCard = HyperlinkCard(
@@ -135,7 +121,6 @@ class SettingInterface(ScrollArea):
         self.personalGroup.addSettingCard(self.themeColorCard)
         self.personalGroup.addSettingCard(self.zoomCard)
         self.personalGroup.addSettingCard(self.languageCard)
-        self.materialGroup.addSettingCard(self.blurRadiusCard)
         self.aboutGroup.addSettingCard(self.helpCard)
         self.aboutGroup.addSettingCard(self.feedbackCard)
         self.aboutGroup.addSettingCard(self.aboutCard)
@@ -144,7 +129,6 @@ class SettingInterface(ScrollArea):
         self.expandLayout.setSpacing(28)
         self.expandLayout.setContentsMargins(36, 10, 36, 0)
         self.expandLayout.addWidget(self.personalGroup)
-        self.expandLayout.addWidget(self.materialGroup)
         self.expandLayout.addWidget(self.aboutGroup)
 
     def __setQss(self, theme: Theme):
@@ -178,12 +162,6 @@ class SettingInterface(ScrollArea):
         cfg.appRestartSig.connect(self.__showRestartTooltip)
         cfg.themeChanged.connect(self.__onThemeChanged)
 
-        # music in the pc
-        # self.musicFolderCard.folderChanged.connect(
-        #     self.musicFoldersChanged)
-        # self.downloadFolderCard.clicked.connect(
-        #     self.__onDownloadFolderCardClicked)
-
         # personalization
         self.themeColorCard.colorChanged.connect(setThemeColor)
 
@@ -198,8 +176,7 @@ class SettingInterface(ScrollArea):
     def update(self):
         if self.update_info[0] != "0":
             if self.update_info[0] != VERSION:
-                if self.showMessageDialog("Do you want to download the new version now?"):
-                    QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))
+                self.updateSignal.emit()
             else:
                 InfoBar.success(
                     title=self.tr('Remind'),
@@ -224,6 +201,7 @@ class SettingInterface(ScrollArea):
     def getUpdateInfo(self):
         try:
             self.update_info = UpDate.getUpdateMsg("Genlyre")
+            self.updateSignal.emit()
         except:
             pass
 
@@ -240,3 +218,8 @@ class SettingInterface(ScrollArea):
             return True
         else:
             return False
+
+    def showUpdateMessageDialog(self):
+        """显示更新软件弹框"""
+        if self.showMessageDialog("Discovered a new version, do you want to download it?"):
+            QDesktopServices.openUrl(QUrl(DOWNLOAD_URL))

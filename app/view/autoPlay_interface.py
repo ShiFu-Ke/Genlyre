@@ -30,7 +30,7 @@ class AutoPlayInterface(GalleryInterface):
         self.scoreType = 1  # 琴谱格式
         self.lyre = 1  # 琴的类型
         self.pADD = 0  # 琶音提速
-        self.bufTime = 10  # 缓冲时间
+        self.bufTime = 30  # 缓冲时间
         self.playMusic = PlayMusic()  # 创建演奏对象
         self.QKey = ["", "", ""]  # 快捷键保存位置[开始，暂停/继续，结束]
         self.listener = keyboard.Listener(on_press=self.on_press).start()
@@ -120,7 +120,7 @@ class AutoPlayInterface(GalleryInterface):
         self.comboBox_pADD.currentIndexChanged.connect(lambda: self.setPaDD())
         # 可调大小数字框
         self.spinBox_bufTime = SpinBox(self)
-        self.spinBox_bufTime.setRange(10, 200)
+        self.spinBox_bufTime.setRange(20, 200)
         self.spinBox_bufTime.setValue(self.bufTime)  # 设置初始值
         self.spinBox_bufTime.setSingleStep(5)  # 设置增量
         self.spinBox_bufTime.valueChanged.connect(lambda: self.setBufTime())

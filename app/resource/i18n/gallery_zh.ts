@@ -599,8 +599,8 @@
     </message>
    <message>
         <location filename="../../view/setting_interface.py" line="204"/>
-        <source>Do you want to download the new version now?</source>
-        <translation>是否现在下载新版本？</translation>
+        <source>Discovered a new version, do you want to download it?</source>
+        <translation>发现新版本，是否下载？</translation>
     </message>
 </context>
 <context>
@@ -1644,13 +1644,13 @@
     </message>
    <message>
         <location filename="../../view/home_interface.py" line="6"/>
-        <source>Click to check for updates to the latest version of Genlyre.</source>
-        <translation>点击可以检查更新为最新版本的Genlyre。</translation>
+        <source>Click here to download all historical versions of Genlyre.</source>
+        <translation>点击此处可以下载Genlyre所有历史版本。</translation>
     </message>
    <message>
         <location filename="../../view/home_interface.py" line="7"/>
-        <source>Help us improve Genlyre by providing feedback.</source>
-        <translation>提供反馈可以帮助我们改进Genlyre。</translation>
+        <source>Clicking here to provide feedback can help us improve Genlyre.</source>
+        <translation>点击此处提供反馈可以帮助我们改进Genlyre。</translation>
     </message>
    <message>
         <location filename="../../view/home_interface.py" line="8"/>

@@ -5,7 +5,7 @@ from PyQt5.QtGui import QPixmap, QPainter, QColor, QBrush, QPainterPath
 from PyQt5.QtWidgets import QWidget, QVBoxLayout, QLabel
 
 from qfluentwidgets import ScrollArea, isDarkTheme, FluentIcon
-from ..common.config import cfg, HELP_URL, DOWNLOAD_URL, FEEDBACK_URL
+from ..common.config import cfg, HELP_URL, DOWNLOAD_ALL_URL,FEEDBACK_URL
 from ..common.icon import Icon
 from ..components.link_card import LinkCardView
 from ..components.sample_card import SampleCardView
@@ -47,14 +47,14 @@ class BannerWidget(QWidget):
         self.linkCardView.addCard(
             Icon.DOWNLOAD,
             self.tr('Download'),
-            self.tr('Click to check for updates to the latest version of Genlyre.'),
-            DOWNLOAD_URL
+            self.tr('Click here to download all historical versions of Genlyre.'),
+            DOWNLOAD_ALL_URL
         )
 
         self.linkCardView.addCard(
             FluentIcon.FEEDBACK,
             self.tr('Send feedback'),
-            self.tr('Help us improve Genlyre by providing feedback.'),
+            self.tr('Clicking here to provide feedback can help us improve Genlyre.'),
             FEEDBACK_URL
         )
 

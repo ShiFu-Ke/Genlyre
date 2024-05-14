@@ -8,7 +8,7 @@ b = [
     "Buffer time:",
 ]
 a = [
-    "缓冲时间：",
+    "发现新版本，是否下载？",
 ]
 tmp = 79
 text = "../../view/autoPlay_interface.py"
