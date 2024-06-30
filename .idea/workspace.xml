@@ -5,6 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="af759a9b-2ba5-4bc2-a3e7-9505a6fa41ec" name="Changes" comment="修复卡顿问题，打开软件自动检查更新">
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024_5_9_009_22_09_[变更]/shelved.patch" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_2024_5_9_009_22_09___.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/common/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/common/config.py" afterDir="false" />
     </list>
@@ -90,7 +92,12 @@
       <workItem from="1715264704157" duration="33000" />
       <workItem from="1715314125720" duration="39000" />
       <workItem from="1715675010750" duration="4602000" />
-      <workItem from="1715680305101" duration="102000" />
+      <workItem from="1715680305101" duration="251000" />
+      <workItem from="1715680657182" duration="35000" />
+      <workItem from="1715767937740" duration="27000" />
+      <workItem from="1716638973310" duration="1020000" />
+      <workItem from="1716640029229" duration="15000" />
+      <workItem from="1719729089458" duration="45000" />
     </task>
     <task id="LOCAL-00001" summary="更新长按功能">
       <created>1715244627067</created>
@@ -141,7 +148,14 @@
       <option name="project" value="LOCAL" />
       <updated>1715680382378</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="修复卡顿问题，打开软件自动检查更新">
+      <created>1715680533464</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1715680533464</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -190,7 +204,7 @@
     <SUITE FILE_PATH="coverage/Genlyre$main.coverage" NAME="main Coverage Results" MODIFIED="1681282137841" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Genlyre$config.coverage" NAME="config Coverage Results" MODIFIED="1694342777148" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app/common" />
     <SUITE FILE_PATH="coverage/Genlyre$PlayMusicTest.coverage" NAME="PlayMusicTest 覆盖结果" MODIFIED="1680096786642" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
-    <SUITE FILE_PATH="coverage/Genlyre$Genlyre.coverage" NAME="Genlyre Coverage Results" MODIFIED="1715680347450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Genlyre$Genlyre.coverage" NAME="Genlyre Coverage Results" MODIFIED="1715680662550" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Genlyre$.coverage" NAME=" 覆盖结果" MODIFIED="1680021747251" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/Genlyre$LyreGPT.coverage" NAME="LyreGPT 覆盖结果" MODIFIED="1679923345919" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />
     <SUITE FILE_PATH="coverage/Genlyre$test.coverage" NAME="test Coverage Results" MODIFIED="1715679266123" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test" />

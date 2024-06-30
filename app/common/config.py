@@ -39,9 +39,9 @@ class Config(QConfig):
 
 YEAR = 2023
 AUTHOR = "keshifu"
-VERSION = "v2.1.1"
+VERSION = "v2.1.2"
 HOME_URL = "https://space.bilibili.com/660801861"  # up主页
-HELP_URL = "https://b23.tv/GnTA6Y5"  # 帮助
+HELP_URL = "https://www.bilibili.com/video/BV1Gs4y1X7Xt"  # 帮助
 DOWNLOAD_URL = "https://keshifu.lanzouk.com/b03vbisqd"  # 下载链接
 DOWNLOAD_ALL_URL = "https://keshifu.lanzouj.com/b00b3o46qb"  # 下载所有链接
 FEEDBACK_URL = "https://f.wps.cn/g/8neqcjae/"  # 反馈的链接
